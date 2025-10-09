@@ -17,7 +17,7 @@ export const ReadingContent = ({
 }: ReadingContentProps) => {
   return (
     <div className="h-screen relative overflow-hidden">
-      {/* <AnimatedBackground /> */}
+      <AnimatedBackground />
 
       {/* Backdrop blur overlay */}
       <div className="absolute inset-0 bg-white dark:bg-black/10 backdrop-blur-sm z-10" />
