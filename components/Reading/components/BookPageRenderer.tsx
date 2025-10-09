@@ -245,7 +245,7 @@ const QuotePage = ({
               lineHeight: "1.6",
             }}
           >
-            "{page.content.text}"
+            {page.content.text}
           </blockquote>
         </div>
       </div>
@@ -291,7 +291,7 @@ const QuotePage = ({
               lineHeight: "1.6",
             }}
           >
-            "{page.content.text}"
+            {page.content.text}
           </blockquote>
         </div>
       </div>

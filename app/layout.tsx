@@ -33,8 +33,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Biblical Blogs Team" }],
   icons: {
-    icon: "/mabcs.png",
-    apple: "/mabcs.png",
+    icon: "https://messageabcs.vercel.app/mabcs.png",
+    apple: "https://messageabcs.vercel.app/mabcs.png",
+    // shortcut: "https://messageabcs.vercel.app/favicon.ico",
   },
   openGraph: {
     title:
@@ -47,10 +48,11 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/mabcs.png",
+        url: "https://messageabcs.vercel.app/mabcs.png",
         width: 1200,
         height: 630,
         alt: "MessageABCs - Biblical Truth and Wisdom",
+        type: "image/png",
       },
     ],
   },
@@ -64,10 +66,18 @@ export const metadata: Metadata = {
       "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians.",
     images: [
       {
-        url: "/mabcs.png",
+        url: "https://messageabcs.vercel.app/mabcs.png",
         alt: "MessageABCs - Biblical Truth and Wisdom",
       },
     ],
+  },
+  verification: {
+    other: {
+      "og:image": "https://messageabcs.vercel.app/mabcs.png",
+      "og:image:type": "image/png",
+      "og:image:width": "1200",
+      "og:image:height": "630",
+    },
   },
   robots: {
     index: true,

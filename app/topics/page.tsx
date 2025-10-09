@@ -51,7 +51,7 @@ export default function Topics() {
     <div className="h-screen overflow-hidden relative ">
       <AnimatedBackground />
       {/* white blur over animation background  */}
-      <div className="bg-blue-50/20 backdrop-blur-md dark:bg-[#07072d] md:dark:bg-black/20 dark:backdrop-blur-[1px] inset-0 absolute" />
+      <div className="bg-blue-50/20 backdrop-blur-md dark:bg-[#07072dbc] md:dark:bg-black/20 dark:backdrop-blur-[1px] inset-0 absolute" />
       {/* Mobile Navigation Drawer with MESSAGEABCS logo */}
       <div className="md:hidden py-2 px-6 pb-2 relative z-10 flex justify-between items-center">
         <NavigationDrawer
@@ -69,7 +69,7 @@ export default function Topics() {
             {/* Fixed Search Bar and Pagination within panel */}
             <div className="sticky top-0 z-10 bg-transparent backdrop-blur-md border-b border-white/10 dark:border-blue-500/20 p-0 sm:p-4 rounded-t-2xl">
               {/* Mobile: Stacked layout */}
-              <div className="space-y-4">
+              {/* <div className="space-y-4">
                 <div className="flex items-center w-  justify-between ">
                   <SearchAndPagination
                     searchQuery={searchQuery}
@@ -79,7 +79,7 @@ export default function Topics() {
                     onPageChange={setCurrentPage}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Mobile Scrollable Content Area */}

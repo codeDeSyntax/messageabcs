@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { BiblicalTopic } from "@/services/api";
@@ -75,7 +76,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
     <>
       {/* Mobile Card Layout */}
       <div
-        className="relative group cursor-pointer transition-all duration-300 md:hidden h-28 rounded-lg border bg-card/30 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm"
+        className="relative group cursor-pointer transition-all duration-300 md:hidden h-28 rounded-tr-3xl border bg-card/30 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm"
         onClick={handleCardClick}
       >
         {/* Mobile - Avatar Image */}

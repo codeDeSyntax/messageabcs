@@ -17,10 +17,10 @@ export const ReadingContent = ({
 }: ReadingContentProps) => {
   return (
     <div className="h-screen relative overflow-hidden">
-      <AnimatedBackground />
+      {/* <AnimatedBackground /> */}
 
       {/* Backdrop blur overlay */}
-      <div className="absolute inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm z-10" />
+      <div className="absolute inset-0 bg-white dark:bg-black/10 backdrop-blur-sm z-10" />
 
       <div className="relative z-20 h-screen flex flex-col overflow-hidden">
         {/* Main Content */}
@@ -28,7 +28,7 @@ export const ReadingContent = ({
           <div className="w-full mx-auto h-full overflow-hidden">
             <div className="flex h-full">
               {/* Main Reading Content */}
-              <div className="flex-1 flex flex-col h-full bg-white/5 dark:bg-[#07072d]/60 rounded-lg overflow-hidden">
+              <div className="flex-1 flex flex-col h-full bg-white dark:bg-[#07072d]/60 rounded-lg overflow-hidden">
                 {/* Fixed Header with Background Image (Mobile + Desktop) */}
                 <div className="relative flex-shrink-0 border-b border-gray-200/10">
                   {/* Mobile Header */}
