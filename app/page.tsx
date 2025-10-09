@@ -25,6 +25,7 @@ import { BottomNavigation } from "@/components/BottomNavigation";
 import { ProfileCard } from "@/components/ProfileCard";
 import { Logo } from "@/components/Logo";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
+import { FullscreenWelcomeModal } from "@/components/FullscreenWelcomeModal";
 
 // Type definitions for spiral design
 interface SpiralPoint {
@@ -103,7 +104,7 @@ const SpiralBackground = () => {
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       <AnimatedBackground />
       {/* Blue gradient background - using our biblical theme */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/10 via-blue-50/5 to-blue-50/5 dark:from-black/20 dark:via-black/10 backdrop-blur-sm dark:to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-blue-50 to-blue-50 dark:from-black/20 dark:via-black/10 backdrop-blur-sm dark:to-transparent" />
 
       {/* Subtle blue accent in the ce backdrop-blur-smnter */}
       <div
@@ -273,8 +274,30 @@ const navigationItems = [
 
 export default function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [showFullscreenModal, setShowFullscreenModal] = useState(false);
   const { theme, setTheme } = useTheme();
   const router = useRouter();
+
+  // Check if user has seen the fullscreen modal before
+  useEffect(() => {
+    const hasSeenFullscreenModal = localStorage.getItem(
+      "hasSeenFullscreenModal"
+    );
+    if (!hasSeenFullscreenModal) {
+      // Show modal after a short delay for better UX
+      const timer = setTimeout(() => {
+        setShowFullscreenModal(true);
+      }, 3000); // Show after 3 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleCloseFullscreenModal = () => {
+    setShowFullscreenModal(false);
+    // Mark that user has seen the modal
+    localStorage.setItem("hasSeenFullscreenModal", "true");
+  };
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -388,6 +411,12 @@ export default function Home() {
 
       {/* Bottom Navigation */}
       <BottomNavigation />
+
+      {/* Fullscreen Welcome Modal */}
+      <FullscreenWelcomeModal
+        isOpen={showFullscreenModal}
+        onClose={handleCloseFullscreenModal}
+      />
     </div>
   );
 }
