@@ -31,26 +31,25 @@ export const metadata: Metadata = {
     "faith",
     "MessageABCs",
   ],
-  authors: [{ name: "Biblical Blogs Team" }],
+  authors: [{ name: "MessageABCS Brothers" }],
   icons: {
-    icon: "https://messageabcs.vercel.app/mabcs.png",
-    apple: "https://messageabcs.vercel.app/mabcs.png",
-    // shortcut: "https://messageabcs.vercel.app/favicon.ico",
+    icon: "https://messageabcs.vercel.app/mabcs.png?v=3",
+    apple: "https://messageabcs.vercel.app/mabcs.png?v=3",
+    shortcut: "https://messageabcs.vercel.app/favicon.ico?v=3",
   },
   openGraph: {
-    title:
-      "Biblical Blogs - Ye shall know the truth and the truth shall make you free",
+    title: "MessageABCs - Biblical Truth & Wisdom",
     description:
-      "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians.",
+      "Discover inspiring biblical content and deeper understanding of Christian subjects",
     type: "website",
     url: "https://messageabcs.vercel.app",
     siteName: "MessageABCs",
     locale: "en_US",
     images: [
       {
-        url: "https://messageabcs.vercel.app/mabcs.png",
+        url: "https://messageabcs.vercel.app/mabcs.png?v=3",
         width: 1200,
-        height: 630,
+        height: 300,
         alt: "MessageABCs - Biblical Truth and Wisdom",
         type: "image/png",
       },
@@ -66,18 +65,25 @@ export const metadata: Metadata = {
       "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians.",
     images: [
       {
-        url: "https://messageabcs.vercel.app/mabcs.png",
+        url: "https://messageabcs.vercel.app/mabcs.png?v=2",
         alt: "MessageABCs - Biblical Truth and Wisdom",
       },
     ],
   },
-  verification: {
-    other: {
-      "og:image": "https://messageabcs.vercel.app/mabcs.png",
-      "og:image:type": "image/png",
-      "og:image:width": "1200",
-      "og:image:height": "630",
-    },
+  other: {
+    // WhatsApp specific meta tags (as per official documentation)
+    "og:title": "MessageABCs - Biblical Truth & Wisdom",
+    "og:description":
+      "Discover inspiring biblical content and deeper understanding of Christian subjects",
+    "og:url": "https://messageabcs.vercel.app",
+    "og:image": "https://messageabcs.vercel.app/mabcs.png?v=3",
+    "og:image:type": "image/png",
+    "og:image:width": "1200",
+    "og:image:height": "300",
+    "og:image:alt": "MessageABCs - Biblical Truth and Wisdom",
+    "theme-color": "#1e3a8a",
+    "msapplication-TileColor": "#1e3a8a",
+    "msapplication-TileImage": "https://messageabcs.vercel.app/mabcs.png?v=3",
   },
   robots: {
     index: true,

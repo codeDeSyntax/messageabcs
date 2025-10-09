@@ -1,0 +1,68 @@
+/* Social Media Image Specifications for MessageABCs */
+
+/* 
+WHATSAPP/FACEBOOK OPEN GRAPH REQUIREMENTS:
+- Recommended: 1200x630 pixels (1.91:1 ratio)
+- Minimum: 600x315 pixels  
+- Maximum file size: 8MB (recommend <1MB)
+- Formats: JPG, PNG, WebP
+- Must be publicly accessible via HTTPS
+
+TWITTER CARD REQUIREMENTS:
+- Summary Large Image: 1200x675 pixels (16:9 ratio)
+- Summary: 240x240 pixels (1:1 ratio)
+- File size: <5MB
+
+CURRENT ISSUES ANALYSIS:
+1. Your mabcs.png might not be 1200x630 - this is critical
+2. WhatsApp caches previews aggressively (24-48 hours)
+3. The image needs to be properly sized for social platforms
+
+SOLUTIONS:
+1. Create properly sized OG image (1200x630)
+2. Add cache-busting parameters to URLs
+3. Ensure favicon.ico exists and is properly formatted
+4. Use WhatsApp's cache refresh trick
+
+CACHE BUSTING METHODS:
+- Add version parameter: ?v=2
+- Change the URL slightly
+- Wait 24-48 hours for natural cache expiry
+- Use WhatsApp Business API tools to clear cache
+*/
+
+/* CSS Template for Creating 1200x630 Social Image */
+.messageabcs-social-card {
+  width: 1200px;
+  height: 630px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  position: relative;
+}
+
+.messageabcs-logo {
+  font-size: 72px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.messageabcs-tagline {
+  font-size: 32px;
+  font-weight: 300;
+  margin-bottom: 30px;
+  opacity: 0.95;
+}
+
+.messageabcs-description {
+  font-size: 24px;
+  opacity: 0.8;
+  max-width: 800px;
+  line-height: 1.3;
+}
