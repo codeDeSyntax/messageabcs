@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -49,7 +50,7 @@ export function EditTopicContent() {
 
   useEffect(() => {
     if (!id) {
-      navigate("/topics");
+      router.push("/topics");
       return;
     }
 
@@ -76,7 +77,7 @@ export function EditTopicContent() {
             description: "Topic not found",
             variant: "destructive",
           });
-          navigate("/topics");
+          router.push("/topics");
         }
       } catch (error) {
         console.error("Error loading topic:", error);
@@ -91,7 +92,7 @@ export function EditTopicContent() {
     };
 
     loadTopic();
-  }, [id, navigate, toast]);
+  }, [id, router, toast]);
 
   const handleInputChange = (
     field: keyof EditTopicForm,
@@ -165,7 +166,7 @@ export function EditTopicContent() {
           title: "Success",
           description: "Topic updated successfully!",
         });
-        navigate("/topics");
+        router.push("/topics");
       } else {
         toast({
           title: "Error",
@@ -257,7 +258,7 @@ export function EditTopicContent() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate("/topics")}
+                    onClick={() => router.push("/topics")}
                     className="flex items-center gap-2"
                   >
                     <ArrowLeft className="h-4 w-4" />
@@ -444,7 +445,7 @@ export function EditTopicContent() {
                             className="flex items-start gap-2 p-3 bg-white/20 dark:bg-black/10 rounded border border-blue-500/20"
                           >
                             <div className="flex-1 text-sm italic text-foreground">
-                              "{quote}"
+                              {quote}
                             </div>
                             <Button
                               type="button"
@@ -543,7 +544,7 @@ export function EditTopicContent() {
                             key={index}
                             className="border-l-4 border-blue-500/30 pl-4 italic text-foreground"
                           >
-                            "{quote}"
+                            {quote}
                           </blockquote>
                         ))}
                       </div>

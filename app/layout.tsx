@@ -18,6 +18,7 @@ const crimsonPro = Crimson_Pro({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://messageabcs.vercel.app"),
   title: "Biblical subjects Blogs - Know the truth concerning bible subjects",
   description:
     "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians",
