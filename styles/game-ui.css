@@ -1,0 +1,253 @@
+/* Game-style UI Components - Blue Biblical Theme Only */
+
+/* Crystal Navigation Bar */
+.game-crystal-bar {
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 12px 24px;
+  /* border: 1px solid rgba(59, 130, 246, 0.2); */
+}
+
+/* Light mode crystal bar */
+.light .game-crystal-bar {
+  background: #f8fbff;
+  /* box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.2),
+    0 0 0 1px rgba(59, 130, 246, 0.1); */
+}
+
+/* Dark mode crystal bar */
+.dark .game-crystal-bar {
+  background: rgba(59, 130, 246, 0.1);
+  /* box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(59, 130, 246, 0.2); */
+}
+
+/* Game Navigation Buttons */
+/* Game-style navigation buttons with inner shadows */
+.game-nav-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.8) 50%,
+    rgba(241, 245, 249, 0.9) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  /* box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(148, 163, 184, 0.2),
+    0 4px 8px rgba(148, 163, 184, 0.15); */
+  transition: all 0.2s ease;
+}
+
+.game-nav-button:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(248, 250, 252, 0.95) 50%,
+    rgba(226, 232, 240, 0.9) 100%
+  );
+  box-shadow: inset 3px 3px 6px rgba(255, 255, 255, 1),
+    inset -3px -3px 6px rgba(148, 163, 184, 0.3),
+    0 6px 12px rgba(148, 163, 184, 0.2);
+  transform: translateY(-1px);
+}
+
+.game-nav-button:active {
+  background: linear-gradient(
+    145deg,
+    rgba(226, 232, 240, 0.9) 0%,
+    rgba(241, 245, 249, 0.8) 50%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.6),
+    inset 2px 2px 4px rgba(148, 163, 184, 0.4),
+    0 2px 4px rgba(148, 163, 184, 0.15);
+  transform: translateY(1px);
+}
+
+/* Dark mode variations */
+.dark .game-nav-button {
+  background: linear-gradient(
+    145deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(59, 130, 246, 0.2) 50%,
+    rgba(59, 130, 246, 0.3) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  box-shadow: inset 2px 2px 4px rgba(59, 130, 246, 0.3),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.6), 0 4px 8px rgba(59, 130, 246, 0.2);
+}
+
+.dark .game-nav-button:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(59, 130, 246, 0.25) 50%,
+    rgba(59, 130, 246, 0.35) 100%
+  );
+  box-shadow: inset 3px 3px 6px rgba(59, 130, 246, 0.4),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.7), 0 6px 12px rgba(59, 130, 246, 0.25);
+}
+
+.dark .game-nav-button:active {
+  background: linear-gradient(
+    145deg,
+    rgba(59, 130, 246, 0.3) 0%,
+    rgba(59, 130, 246, 0.4) 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  box-shadow: inset -2px -2px 4px rgba(59, 130, 246, 0.2),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(59, 130, 246, 0.15);
+}
+
+/* Game-style reading navigation buttons */
+.game-reading-nav-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(59, 130, 246, 0.08) 50%,
+    rgba(59, 130, 246, 0.15) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.18),
+    inset -2px -2px 4px rgba(59, 130, 246, 0.25),
+    0 3px 6px rgba(59, 130, 246, 0.08);
+  transition: all 0.2s ease;
+}
+
+.game-reading-nav-button:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(59, 130, 246, 0.12) 50%,
+    rgba(59, 130, 246, 0.22) 100%
+  );
+  box-shadow: inset 3px 3px 6px rgba(255, 255, 255, 0.22),
+    inset -3px -3px 6px rgba(59, 130, 246, 0.35),
+    0 5px 10px rgba(59, 130, 246, 0.12);
+  transform: translateY(-1px);
+}
+
+.game-reading-nav-button:active {
+  background: linear-gradient(
+    145deg,
+    rgba(59, 130, 246, 0.15) 0%,
+    rgba(59, 130, 246, 0.25) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.12),
+    inset 2px 2px 4px rgba(59, 130, 246, 0.4),
+    0 2px 4px rgba(59, 130, 246, 0.08);
+  transform: translateY(1px);
+}
+
+.game-reading-nav-button:disabled {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(59, 130, 246, 0.03) 50%,
+    rgba(59, 130, 246, 0.08) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.08),
+    inset -1px -1px 2px rgba(59, 130, 246, 0.15),
+    0 1px 3px rgba(59, 130, 246, 0.05);
+  opacity: 0.5;
+  transform: none;
+}
+
+/* Dark mode variations for reading navigation */
+.dark .game-reading-nav-button {
+  background: linear-gradient(
+    145deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(59, 130, 246, 0.15) 50%,
+    rgba(59, 130, 246, 0.25) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  box-shadow: inset 2px 2px 4px rgba(59, 130, 246, 0.25),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(59, 130, 246, 0.15);
+}
+
+.dark .game-reading-nav-button:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(59, 130, 246, 0.2) 50%,
+    rgba(59, 130, 246, 0.3) 100%
+  );
+  box-shadow: inset 3px 3px 6px rgba(59, 130, 246, 0.35),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.6), 0 5px 10px rgba(59, 130, 246, 0.2);
+}
+
+.dark .game-reading-nav-button:active {
+  background: linear-gradient(
+    145deg,
+    rgba(59, 130, 246, 0.25) 0%,
+    rgba(59, 130, 246, 0.35) 50%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  box-shadow: inset -2px -2px 4px rgba(59, 130, 246, 0.15),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.7), 0 2px 4px rgba(59, 130, 246, 0.12);
+}
+
+.dark .game-reading-nav-button:disabled {
+  background: linear-gradient(
+    145deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(59, 130, 246, 0.05) 50%,
+    rgba(59, 130, 246, 0.12) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: inset 1px 1px 2px rgba(59, 130, 246, 0.12),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(59, 130, 246, 0.08);
+}
+
+/* Separator Glow Effect */
+.game-separator {
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.5));
+  animation: separatorPulse 2s ease-in-out infinite alternate;
+}
+
+/* Active state for navigation buttons */
+.game-nav-button-active {
+  background: linear-gradient(
+    145deg,
+    rgb(188, 217, 240) 0%,
+    rgba(214, 234, 253, 0.95) 50%,
+    rgba(201, 222, 250, 0.998) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 1),
+    inset -2px -2px 4px rgba(148, 163, 184, 0.3),
+    0 8px 16px rgba(148, 163, 184, 0.25);
+  color: rgb(51, 65, 85);
+  font-weight: 600;
+}
+
+.dark .game-nav-button-active {
+  background: linear-gradient(
+    145deg,
+    rgba(59, 130, 246, 0.5) 0%,
+    rgba(59, 130, 246, 0.7) 50%,
+    rgba(147, 197, 253, 0.2) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.8);
+  box-shadow: inset 2px 2px 4px rgba(147, 197, 253, 0.3),
+    inset -2px -2px 4px rgba(59, 130, 246, 0.8),
+    0 8px 16px rgba(59, 130, 246, 0.4);
+  color: rgb(203, 213, 225);
+}
+
+/* Simple separator pulse */
+@keyframes separatorPulse {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

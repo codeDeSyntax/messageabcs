@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Biblical Blogs App Design System - All colors MUST be HSL */
+body {
+  font-family: "Crimson Pro", serif;
+}
+
+@layer base {
+  :root {
+    /* Light mode colors - HSL Biblical Theme */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 25 95% 53%;
+
+    /* Custom biblical app colors */
+    --biblical-navy: 220 26% 14%;
+    --biblical-navy-light: 220 26% 18%;
+    --biblical-purple: 262 83% 58%;
+    --biblical-purple-light: 262 83% 68%;
+    --biblical-blue: 213 94% 68%;
+    --biblical-blue-light: 213 94% 78%;
+    --biblical-text-light: 0 0% 85%;
+    --biblical-card: 220 26% 16%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode - Exact Biblical Navy Theme from Images */
+    --background: 215 44% 7%;
+    --foreground: 0 0% 95%;
+
+    --card: 210 32% 19%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 210 32% 19%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 214 100% 77%;
+    --primary-foreground: 210 32% 17%;
+
+    --secondary: 210 32% 22%;
+    --secondary-foreground: 0 0% 85%;
+
+    --muted: 210 32% 22%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 214 100% 77%;
+    --accent-foreground: 210 32% 17%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 32% 22%;
+    --input: 210 32% 22%;
+    --ring: 214 100% 77%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    /* background-color: hsl(var(--background)); */
+    /* color: hsl(var(--foreground)); */
+  }
+}
+
+@layer utilities {
+  /* Utility classes */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .backdrop-blur-3xl {
+    backdrop-filter: blur(64px);
+  }
+
+  .backdrop-saturate-150 {
+    backdrop-filter: saturate(1.5);
+  }
+}
+
+/* Remove scrollbar track appearance */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+/* Font Family Utilities */
+.font-crimson {
+  font-family: "Crimson Pro", serif;
+}
+
+.font-inter {
+  font-family: "Inter", sans-serif;
+}
+
+/* Reading-optimized typography */
+.font-reading {
+  font-family: "Crimson Pro", serif;
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.font-reading-light {
+  font-family: "Crimson Pro", serif;
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: 0.015em;
+}
+
+.font-reading-medium {
+  font-family: "Crimson Pro", serif;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.005em;
+}
+
+.font-heading {
+  font-family: "Crimson Pro", serif;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.font-ui {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Mesh float animation for ReadingBackground */
+@keyframes meshFloat {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-10px, -20px) scale(1.02);
+  }
+  50% {
+    transform: translate(20px, -10px) scale(0.98);
+  }
+  75% {
+    transform: translate(-5px, 15px) scale(1.01);
+  }
+}
+
+/* Force whitespace preservation for content areas */
+.prose.whitespace-pre-wrap,
+.prose.whitespace-pre-wrap p,
+.prose.whitespace-pre-wrap div {
+  white-space: pre-wrap !important;
+}
+
+/* Ensure line breaks are preserved in TipTap rendered content */
+.prose.whitespace-pre-wrap br {
+  display: block !important;
+}
+
+/* Preserve formatting in editor content */
+.ProseMirror.whitespace-pre-wrap {
+  white-space: pre-wrap !important;
+}
