@@ -58,10 +58,12 @@ export async function generateMetadata({
     topic.subtitle ||
     topic.mainExtract?.substring(0, 160) ||
     "Discover biblical truth and wisdom.";
-  
+
   // Enhanced image handling with fallback
   const image = topic.image || "/mabcs.png";
-  const imageUrl = image.startsWith('http') ? image : `https://messageabcs.vercel.app${image}`;
+  const imageUrl = image.startsWith("http")
+    ? image
+    : `https://messageabcs.vercel.app${image}`;
 
   return {
     title,
@@ -79,7 +81,9 @@ export async function generateMetadata({
       ],
       type: "article",
       siteName: "MessageABCs",
-      url: `https://messageabcs.vercel.app/reading/${generateSlug(topic.title)}`,
+      url: `https://messageabcs.vercel.app/reading/${generateSlug(
+        topic.title
+      )}`,
       locale: "en_US",
     },
     twitter: {

@@ -9,7 +9,10 @@ export function StructuredData({ topic }: StructuredDataProps) {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: topic.title,
-    description: topic.subtitle || topic.mainExtract?.substring(0, 200) || "Biblical wisdom and truth",
+    description:
+      topic.subtitle ||
+      topic.mainExtract?.substring(0, 200) ||
+      "Biblical wisdom and truth",
     image: topic.image || "/mabcs.png",
     datePublished: topic.createdAt,
     dateModified: topic.updatedAt,
@@ -44,13 +47,14 @@ export function StructuredData({ topic }: StructuredDataProps) {
       "wisdom",
       ...(topic.scriptures || []),
     ],
-    ...(topic.scriptures && topic.scriptures.length > 0 && {
-      citation: topic.scriptures.map((scripture) => ({
-        "@type": "CreativeWork",
-        name: scripture,
-        description: "Biblical scripture reference",
-      })),
-    }),
+    ...(topic.scriptures &&
+      topic.scriptures.length > 0 && {
+        citation: topic.scriptures.map((scripture) => ({
+          "@type": "CreativeWork",
+          name: scripture,
+          description: "Biblical scripture reference",
+        })),
+      }),
   };
 
   return (
@@ -70,13 +74,15 @@ export function WebsiteStructuredData() {
     "@type": "WebSite",
     name: "MessageABCs",
     alternateName: "Biblical Blogs",
-    description: "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians",
+    description:
+      "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians",
     url: "https://messageabcs.vercel.app",
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://messageabcs.vercel.app/topics?search={search_term_string}",
+        urlTemplate:
+          "https://messageabcs.vercel.app/topics?search={search_term_string}",
       },
       "query-input": "required name=search_term_string",
     },
@@ -88,9 +94,7 @@ export function WebsiteStructuredData() {
         url: "https://messageabcs.vercel.app/mabcs.png",
       },
     },
-    sameAs: [
-      "https://twitter.com/messageabcs",
-    ],
+    sameAs: ["https://twitter.com/messageabcs"],
   };
 
   return (

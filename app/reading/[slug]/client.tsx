@@ -66,9 +66,8 @@ export default function ReadingTopicClient({
     <div className="h-screen no-scrollbar overflow-auto relative">
       {/* Structured Data for SEO and social platforms */}
       <StructuredData topic={currentTopic} />
-      
+
       {/* Keep animated background for desktop only */}
-    
 
       {/* Mobile Navigation Header */}
       {!isFullscreen && (

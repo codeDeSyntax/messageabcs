@@ -57,8 +57,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@messageabcs",
     creator: "@messageabcs",
-    title: "Biblical Blogs - Ye shall know the truth and the truth shall make you free",
-    description: "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians.",
+    title:
+      "Biblical Blogs - Ye shall know the truth and the truth shall make you free",
+    description:
+      "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians.",
     images: [
       {
         url: "/mabcs.png",
@@ -72,9 +74,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 };
@@ -101,6 +103,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${crimsonPro.variable} font-crimson bg-background text-foreground transition-colors duration-300`}
       >
+        <WebsiteStructuredData />
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
