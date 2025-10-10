@@ -11,7 +11,14 @@ import { TopicGridSkeleton } from "@/components/LoadingSkeleton";
 import { LoadingFailedIcon } from "@/components/LoadingFailedIcon";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { Plus, AlertCircle, RefreshCw, LayoutGrid, List } from "lucide-react";
+import {
+  Plus,
+  AlertCircle,
+  RefreshCw,
+  LayoutGrid,
+  List,
+  MessageSquare,
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTopics } from "@/hooks/useTopics";
 
@@ -51,7 +58,7 @@ export default function Topics() {
     <div className="h-screen overflow-hidden relative ">
       <AnimatedBackground />
       {/* white blur over animation background  */}
-      <div className="bg-blue-50/20 backdrop-blur-md dark:bg-[#07072dbc] md:dark:bg-black/20 dark:backdrop-blur-[1px] inset-0 absolute" />
+      <div className="bg-blue-50/20 backdrop-blur-md dark:bg-[#07072d74] md:dark:bg-black/20 dark:backdrop-blur-[1px] inset-0 absolute" />
       {/* Mobile Navigation Drawer with MESSAGEABCS logo */}
       <div className="md:hidden py-2 px-6 pb-2 relative z-10 flex justify-between items-center">
         <NavigationDrawer
@@ -59,6 +66,14 @@ export default function Topics() {
           onOpenChange={setIsDrawerOpen}
         />
         <Logo variant="compact" />
+        <Button
+          onClick={() => router.push("/ask-question")}
+          size="sm"
+          className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-3 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
+        >
+          <MessageSquare className="h-4 w-4" />
+          Ask
+        </Button>
       </div>
 
       {/* Main Content Panel - Split Layout */}
@@ -166,6 +181,15 @@ export default function Topics() {
                   />
 
                   <div className="flex gap-2">
+                    {/* Ask Question Button */}
+                    <Button
+                      onClick={() => router.push("/ask-question")}
+                      className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                      Ask a Question
+                    </Button>
+
                     {/* View Toggle */}
                     <div className="flex border border-gray-200 dark:border-gray-700 rounded-lg p-1">
                       <button
@@ -241,7 +265,7 @@ export default function Topics() {
                     <div
                       className={`${
                         viewMode === "grid"
-                          ? "w-[80%] m-auto grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-3 auto-rows-fr"
+                          ? "w-[80%] m-auto grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 auto-rows-fr"
                           : "space-y-3"
                       }`}
                     >

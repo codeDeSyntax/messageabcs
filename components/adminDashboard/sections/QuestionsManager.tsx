@@ -252,7 +252,7 @@ const QuestionsManager: React.FC = () => {
       case "pending":
         return (
           <button
-            className={`${GAME_BUTTON_SMALL.warning} text-xs px-3 py-1 cursor-default`}
+            className={` bg-red-500 text-black dark:text-blue-50 shadow-inner rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 cursor-default`}
           >
             Pending
           </button>
@@ -260,7 +260,7 @@ const QuestionsManager: React.FC = () => {
       case "answered":
         return (
           <button
-            className={`${GAME_BUTTON_SMALL.success} text-xs px-3 py-0 cursor-default`}
+            className={`${GAME_BUTTON_SMALL.success} bg-green-500 shadow-white shadow-inner text-xs px-3 py-0 cursor-default`}
           >
             Answered
           </button>
@@ -404,7 +404,7 @@ const QuestionsManager: React.FC = () => {
                               </div>
 
                               <button
-                                className={`${GAME_BUTTON_SMALL.primary} text-xs px-2  cursor-default`}
+                                className={`bg-blue-700 text-white shadow-inner rounded-full shadow-white dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-0 cursor-default`}
                               >
                                 {question.topicTitle}
                               </button>
@@ -413,7 +413,7 @@ const QuestionsManager: React.FC = () => {
                         </div>
 
                         {question.answers.length > 0 && (
-                          <div className="pl-7">
+                          <div className="pl-2">
                             <button
                               onClick={() => toggleAnswerExpansion(question.id)}
                               className="flex items-center gap-2 mb-3 px-3 py-2 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg border border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-100/50 dark:hover:bg-blue-800/30 transition-all duration-200 w-full text-left group"
@@ -450,7 +450,7 @@ const QuestionsManager: React.FC = () => {
                                         {answer.adminUser}
                                       </span>
                                       <button
-                                        className={`${GAME_BUTTON_SMALL.primary} text-xs px-2 py-1 cursor-default`}
+                                        className={`bg-green-500 text-white shadow-inner rounded-full shadow-white dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 cursor-default`}
                                       >
                                         Official
                                       </button>
@@ -475,7 +475,7 @@ const QuestionsManager: React.FC = () => {
                             <div className="flex items-center gap-2 px-3 py-2 bg-orange-50/50 dark:bg-orange-900/20 rounded-lg border border-orange-500/20">
                               <AlertCircle className="h-4 w-4 text-orange-500" />
                               <span className="text-sm text-orange-700 dark:text-orange-300">
-                                No answers yet - Needs attention
+                                No answers yet -
                               </span>
                             </div>
                           </div>
@@ -484,7 +484,7 @@ const QuestionsManager: React.FC = () => {
 
                       <div className="flex flex-row lg:flex-col items-start lg:items-end gap-2 mt-2 lg:mt-0">
                         <div className="flex items-center gap-2">
-                          {getStatusBadge(question.status)}
+                          {/* {getStatusBadge(question.status)} */}
                         </div>
 
                         <DropdownMenu>

@@ -17,7 +17,7 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
 }) => {
   // Glass-style shimmer that matches our theme
   const baseClasses =
-    "animate-shimmer bg-gradient-to-r from-white/10 via-white/20 to-white/10 dark:from-white/5 dark:via-white/10 dark:to-white/5 bg-[length:200%_100%]";
+    "animate-shimmer bg-gradient-to-r from-blue-50/30 via-blue-100/50 to-blue-50/30 dark:from-white/5 dark:via-white/10 dark:to-white/5 bg-[length:200%_100%]";
 
   const variantClasses = {
     text: "h-4 rounded",
@@ -71,7 +71,7 @@ export const TopicCardSkeleton: React.FC<TopicCardSkeletonProps> = ({
     className: string;
   }) => (
     <div
-      className={`animate-shimmer border-none bg-gradient-to-r from-white/10 via-white/20 to-white/10 dark:from-white/5 dark:via-white/10 dark:to-white/5 bg-[length:200%_100%] ${skeletonClassName}`}
+      className={`animate-shimmer border-none bg-gradient-to-r from-blue-100/40 via-blue-200/60 to-blue-100/40 dark:from-white/5 dark:via-white/10 dark:to-white/5 bg-[length:200%_100%] ${skeletonClassName}`}
       style={{
         clipPath: "polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%)",
       }}
@@ -111,7 +111,7 @@ export const TopicCardSkeleton: React.FC<TopicCardSkeletonProps> = ({
     <>
       {/* Mobile Card Skeleton */}
       <div
-        className={`relative group cursor-pointer transition-all duration-300 md:hidden h-24 rounded-lg border-none bg-card/40 flex items-center space-x-3 shadow-sm ${className}`}
+        className={`relative group cursor-pointer transition-all duration-300 md:hidden h-24 rounded-lg border-none bg-blue-50/20 dark:bg-card/40 flex items-center space-x-3 shadow-sm ${className}`}
       >
         {/* Mobile - Avatar Image Skeleton */}
         <div className="flex-shrink-0">
@@ -135,7 +135,7 @@ export const TopicCardSkeleton: React.FC<TopicCardSkeletonProps> = ({
 
       {/* Desktop Grid Card Skeleton */}
       <div className="hidden md:block cursor-pointer transition-all duration-300">
-        <div className="relative flex flex-col items-start gap-0 p-0 bg-white dark:bg-blue-900/10 rounded-lg border border-gray-200/30 dark:border-gray-700/30 shadow-sm h-60">
+        <div className="relative flex flex-col items-start gap-0 p-0 bg-blue-50/30 backdrop-blur-sm dark:bg-blue-900/10 rounded-lg border border-blue-200/40 dark:border-gray-700/30 shadow-sm h-60">
           {/* Top: Image and Action Button Skeleton */}
           <div className="flex-shrink-0 flex justify-between items-center w-full h-1/2 rounded-l-lg overflow-hidden relative">
             <LoadingSkeleton

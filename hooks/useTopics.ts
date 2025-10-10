@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
-import { apiService, BiblicalTopic } from "@/services/api";
+import { apiService, BiblicalTopicWithCount } from "@/services/api";
 
 interface UseTopicsResult {
-  topics: BiblicalTopic[];
+  topics: BiblicalTopicWithCount[];
   loading: boolean;
   error: string | null;
   totalPages: number;
@@ -22,7 +22,7 @@ interface UseTopicsOptions {
 export const useTopics = (options: UseTopicsOptions = {}): UseTopicsResult => {
   const { itemsPerPage = 8, initialPage = 1, initialSearch = "" } = options;
 
-  const [topics, setTopics] = useState<BiblicalTopic[]>([]);
+  const [topics, setTopics] = useState<BiblicalTopicWithCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -37,10 +37,10 @@ export const useTopics = (options: UseTopicsOptions = {}): UseTopicsResult => {
         topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         topic.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         topic.mainExtract?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        topic.scriptures?.some((scripture) =>
+        topic.scriptures?.some((scripture: string) =>
           scripture.toLowerCase().includes(searchQuery.toLowerCase())
         ) ||
-        topic.quotes?.some((quote) =>
+        topic.quotes?.some((quote: string) =>
           quote.toLowerCase().includes(searchQuery.toLowerCase())
         )
     );
@@ -59,7 +59,10 @@ export const useTopics = (options: UseTopicsOptions = {}): UseTopicsResult => {
       setLoading(true);
       setError(null);
 
-      const response = await apiService.getTopics();
+      const response = await apiService.getTopicsWithQuestionCounts({
+        page: 1,
+        limit: 100, // Get more topics to support client-side filtering
+      });
 
       if (response.success && response.data) {
         setTopics(response.data);

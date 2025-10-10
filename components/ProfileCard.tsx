@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
 import { LogIn, LogOut, User, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -59,11 +60,11 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
               console.log("Profile button clicked, isOpen:", !isOpen);
               setIsOpen(!isOpen);
             }}
-            className={`${GAME_BUTTON_VARIANTS.primary} h-10 w-10 p-0 rounded-full`}
+            className={`${GAME_BUTTON_VARIANTS.primary}  h-10 w-10 p-0 rounded-full`}
           >
             <div className={`${GAME_SHINE_OVERLAY} rounded-full`}></div>
             <img
-              className={` ${GAME_Z_INDEX.overlay}`}
+              className={` ${GAME_Z_INDEX.overlay} `}
               src="./mabcs.png"
               alt="Profile"
             />
@@ -74,7 +75,7 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
           variant="ghost"
           size="sm"
           onClick={handleLogin}
-          className={`${GAME_BUTTON_VARIANTS.primary} h-10 w-10 p-0 rounded-full`}
+          className={`${GAME_BUTTON_VARIANTS.primary} bg-blue-600 hover:bg-blue-500 h-10 w-10 p-0 rounded-full`}
           title="Admin Login"
         >
           <div className={`${GAME_SHINE_OVERLAY} rounded-full`}></div>

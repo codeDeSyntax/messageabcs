@@ -457,7 +457,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="max-h-80 overflow-y-auto no-scrollbar p-6 space-y-4">
+            <div className="max-h-80 overflow-y-auto no-scrollbar p-2 space-y-4">
               {recentActivity.map((activity) => (
                 <div
                   key={activity.id}

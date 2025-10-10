@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from "react";
 import {
   Dialog,
@@ -18,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MessageCircle, User, Send, X } from "lucide-react";
+import { MessageCircle, User, Send, X, HelpCircle } from "lucide-react";
 import { apiService, BiblicalTopic } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -168,6 +169,7 @@ export function AskQuestionModal({
   };
 
   const selectedTopic = topics.find((topic) => topic.id === formData.topicId);
+  const isOtherSelected = formData.topicId === "other";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -246,26 +248,52 @@ export function AskQuestionModal({
                       </div>
                     </SelectItem>
                   ))}
+                  {/* Other Option */}
+                  <SelectItem value="other">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center border border-blue-500/20">
+                        <HelpCircle className="h-4 w-4 text-white" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium">Other</span>
+                        <span className="text-xs text-muted-foreground">
+                          General or uncategorized questions
+                        </span>
+                      </div>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
-              {selectedTopic && (
+              {(selectedTopic || isOtherSelected) && (
                 <Card className="bg-blue-50/50 dark:bg-blue-900/20 border-blue-500/20">
                   <CardContent className="p-3">
                     <div className="flex items-center gap-3">
-                      <img
-                        src={selectedTopic.image}
-                        alt={selectedTopic.title}
-                        className="w-6 h-6 rounded-full object-cover border border-blue-500/20"
-                      />
+                      {isOtherSelected ? (
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center border border-blue-500/20">
+                          <HelpCircle className="h-3 w-3 text-white" />
+                        </div>
+                      ) : (
+                        <img
+                          src={selectedTopic!.image}
+                          alt={selectedTopic!.title}
+                          className="w-6 h-6 rounded-full object-cover border border-blue-500/20"
+                        />
+                      )}
                       <div className="flex items-center gap-2">
-                        <Badge className="bg-blue-500 text-white text-xs">
-                          {selectedTopic.title}
+                        <Badge
+                          className={
+                            isOtherSelected
+                              ? "bg-gray-500 text-white text-xs"
+                              : "bg-blue-500 text-white text-xs"
+                          }
+                        >
+                          {isOtherSelected ? "Other" : selectedTopic!.title}
                         </Badge>
-                        {selectedTopic.subtitle && (
-                          <span className="text-sm text-muted-foreground">
-                            {selectedTopic.subtitle}
-                          </span>
-                        )}
+                        <span className="text-sm text-muted-foreground">
+                          {isOtherSelected
+                            ? "General or uncategorized question"
+                            : selectedTopic!.subtitle}
+                        </span>
                       </div>
                     </div>
                   </CardContent>

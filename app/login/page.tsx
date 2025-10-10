@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -265,7 +266,7 @@ export default function Login() {
                         handleInputChange("username", e.target.value)
                       }
                       placeholder="Enter your username..."
-                      className="game-input-inset shadow-inner rounded-full h-11 px-4 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className="game-input-inse shadow-inner rounded-full h-11 px-4 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
                       required
                       autoComplete="username"
                     />
@@ -288,7 +289,7 @@ export default function Login() {
                           handleInputChange("password", e.target.value)
                         }
                         placeholder="Enter your password..."
-                        className="game-input-inset shadow-inner rounded-full h-11 px-4 pr-12 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="game-input-inse shadow-inner rounded-full h-11 px-4 pr-12 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
                         required
                         autoComplete="current-password"
                       />

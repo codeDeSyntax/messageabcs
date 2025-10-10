@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { BiblicalTopic } from "@/services/api";
+import { BiblicalTopicWithCount, BiblicalTopic } from "@/services/api";
 import { generateSlug } from "@/utils/slugs";
-import { BookOpen, LibrarySquare, Users } from "lucide-react";
+import { BookOpen, BookUp, LibrarySquare, Users } from "lucide-react";
+import { GAME_BUTTON_SMALL } from "@/constants/gameStyles";
 
 interface TopicCardProps {
-  topic: BiblicalTopic;
+  topic: BiblicalTopicWithCount | BiblicalTopic;
   viewMode: "grid" | "list";
 }
 
@@ -75,13 +76,10 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
   return (
     <>
       {/* Mobile Card Layout */}
-      <div
-        className="relative group cursor-pointer transition-all duration-300 md:hidden h-28 rounded-tr-3xl border bg-card/30 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm"
-        onClick={handleCardClick}
-      >
+      <div className="relative group cursor-pointer transition-all duration-300 md:hidden h-24 rounded-lg border bg-card/20 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm">
         {/* Mobile - Avatar Image */}
         <div className="flex-shrink-0">
-          <div className="w-20 h-24 border-none rounded-br-3xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 border-2 border-primary/20">
+          <div className="w-20 h-20 rounded-br-3xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 border-2 border-primary/20">
             {topic.image ? (
               <img
                 src={topic.image}
@@ -90,7 +88,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                <LibrarySquare className="h-6 w-6 text-white" />
+                <BookOpen className="h-6 w-6 text-white" />
               </div>
             )}
           </div>
@@ -106,19 +104,29 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
               {topic.subtitle}
             </p>
           )}
+          <div className="flex items-center gap-2 mt-1">
+            <button
+              className={`bg-white text-black dark:text-blue-50 shadow-inner rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 `}
+            >
+              {("questionsCount" in topic ? topic.questionsCount : 0) || 0}{" "}
+              question
+              {(("questionsCount" in topic ? topic.questionsCount : 0) || 0) !==
+              1
+                ? "s"
+                : ""}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile - Clipped Action Button - Bottom Right */}
-        <div className="absolute bottom-0 right-0 z-20">
-          <div
+        {/* Mobile - Action Buttons */}
+        <div className="flex flex-col gap-1">
+          <button
             onClick={handleReadMore}
-            className={`relative bg-blue-500/90 hover:bg-blue-600/95 text-black dark:text-blue-50 px-3 py-2 cursor-pointer transition-all duration-200 hover:scale-105 shadow-lg game-nav-button`}
-            style={{
-              clipPath: "polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%)",
-            }}
+            className="p-2 rounded-lg game-nav-button bg-blue-100/50 hover:bg-blue-200/50 dark:bg-blue-900/30 dark:hover:bg-blue-800/50 transition-colors"
+            title="Read topic"
           >
-            <span className="text-xs font-medium">Read</span>
-          </div>
+            <BookUp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          </button>
         </div>
       </div>
 
@@ -127,7 +135,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
         className="hidden md:block cursor-pointer transition-all duration-300"
         onClick={handleCardClick}
       >
-        <div className="relative flex flex-col items-start gap-0 p-0 bg-blue-50/20 backdrop-blur-sm dark:bg-blue-900/10 rounded-lg border border-gray-200/30 dark:border-gray-700/30 shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 h-60">
+        <div className="relative flex flex-col items-start gap-0 p-0 bg-blue-50/30 backdrop-blur-sm dark:bg-blue-900/10 rounded-lg border border-gray-200/50 dark:border-blue-900/40 shadow-sm  hover:shadow-md hover:border-blue-300 dark:hover:border-blue-800/80 hover:border-dashed hover:border-2 transition-all duration-200 h-60">
           {/* Left: Square Image touching the left edge */}
           <div className="flex-shrink-0 flex justify-between items-center w-full h-1/2 rounded-l-lg overflow-hidden">
             {topic.image ? (
@@ -144,7 +152,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
 
             <div
               onClick={handleReadMore}
-              className={`absolute right-1 bg-white dark:bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center hover:bg-blue-600/95 text-black dark:text-white px-3 py-2 cursor-pointer transition-all duration-200 hover:scale-105 shadow-lg h-10 w-[40%] mr-2 game-na-button`}
+              className={`absolute right-1 bg-white dark:bg-blue-900/80 roundedxl flex items-center justify-center hover:text-black text-blue-800 dark:text-white px-3 py-2 cursor-pointer transition-all duration-200 hover:scale-105 shadow-lg h-10 w-[40%] mr-2 game-na-button`}
               // style={{
               //   clipPath: "polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%)",
               // }}

@@ -194,9 +194,44 @@ const TopicsManager: React.FC = () => {
               Manage biblical topics and their content
             </p>
           </div>
+          <Card className="bg-white/20 border-none shadow-none dark:bg-transparent backdrop-blur-sm border-blue-500/20">
+            <CardContent className=" p-0 bg-none">
+              <div className="flex flex-row sm:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search topics..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 bg-white dark:bg-blue-900/30 border-none rounded-full border-blue-500/20 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Select
+                    value={filterStatus}
+                    onValueChange={(value) =>
+                      setFilterStatus(value as "all" | "active" | "inactive")
+                    }
+                  >
+                    <SelectTrigger className="w-40 bg-white dark:bg-blue-900/30 border-none rounded-full border-blue-500/20 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500">
+                      <Filter className="h-4 w-4 mr-2" />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Topics</SelectItem>
+                      <SelectItem value="active">Active Only</SelectItem>
+                      <SelectItem value="inactive">Inactive Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           <button
             onClick={() => router.push("/admin/topics/new")}
-            className={`${GAME_BUTTON_SMALL.primary} px-4 py-2 flex items-center gap-2`}
+            className={`${GAME_BUTTON_SMALL.primary} bg-blue-500 px-4 py-2 flex items-center gap-2`}
           >
             <Plus className="h-4 w-4" />
             Add Topic
@@ -204,7 +239,7 @@ const TopicsManager: React.FC = () => {
         </div>
 
         {/* Filters */}
-        <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-sm border-blue-500/20">
+        {/* <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-sm border-blue-500/20">
           <CardContent className="p-4">
             <div className="flex flex-row sm:flex-row gap-4">
               <div className="flex-1">
@@ -238,12 +273,12 @@ const TopicsManager: React.FC = () => {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       {/* Scrollable Topics Grid */}
       <div className="flex-1 overflow-y-auto no-scrollbar">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 md:gap-4 pb-20">
           {loading
             ? // Loading Skeletons
               Array.from({ length: 6 }).map((_, index) => (
@@ -287,12 +322,12 @@ const TopicsManager: React.FC = () => {
                       )}
                       <div className="flex items-center gap-2 mt-1">
                         <button
-                          className={`${GAME_BUTTON_SMALL.primary} text-xs px-2 py-1 cursor-default`}
+                          className={`bg-white text-black dark:text-blue-50 shadow-inner rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 cursor-default`}
                         >
                           {topic.isActive ? "Active" : "Inactive"}
                         </button>
                         <button
-                          className={`${GAME_BUTTON_SMALL.secondary} text-xs px-2 py-1 cursor-default`}
+                          className={` bg-white text-black dark:text-blue-50 shadow-inner rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 cursor-default`}
                         >
                           {topic.questionsCount} question
                           {topic.questionsCount !== 1 ? "s" : ""}

@@ -210,7 +210,7 @@ export function TiptapEditor({
       }),
       Underline,
       TextStyle,
-      // FontSize,
+      FontSize,
       Color,
       Highlight.configure({
         multicolor: true,
@@ -409,7 +409,7 @@ export function TiptapEditor({
               <ChevronDown className="h-3 w-3" />
             </Button>
 
-            {/* {showFontSizePicker && (
+            {showFontSizePicker && (
               <div className="absolute top-10 left-0 z-50 bg-background border rounded-lg p-1 shadow-lg min-w-[120px]">
                 {[
                   { label: "Small", size: "12px" },
@@ -449,7 +449,7 @@ export function TiptapEditor({
                   Reset Size
                 </button>
               </div>
-            )} */}
+            )} 
           </div>
 
           {/* Color Picker */}
