@@ -115,7 +115,7 @@ const AdminDashboard: React.FC = () => {
         {/* Sidebar */}
         <aside
           className={`
-          fixed inset-y-0 left-0 z-[70] w-80 bg-blue-50/20 dark:bg-gray-900/20 backdrop-blur-md border-r border-gray-200 dark:border-gray-800 
+          fixed inset-y-0 left-0 z-[70] w-80 bg-blue-50 dark:bg-gray-900 backdrop-blur-md border-r border-gray-200 dark:border-gray-800 
           transform transition-transform duration-300 ease-in-out
           lg:translate-x-0 lg:static lg:inset-0
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -223,9 +223,7 @@ const AdminDashboard: React.FC = () => {
             <div className="p-4 space-y-3">
               {/* User Profile - Minimal */}
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <img src="./mabcs.png" alt="admin" className="w-4 h-4" />
-                </div>
+                <Logo />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-normal text-gray-900 dark:text-white truncate">
                     {user?.username || "Admin User"}
@@ -278,9 +276,7 @@ const AdminDashboard: React.FC = () => {
                   </h1>
                 </div>
               </div>
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <img src="./mabcs.png" alt="admin" className=" text-blue-500" />
-              </div>
+              <Logo />
             </div>
           </header>
 

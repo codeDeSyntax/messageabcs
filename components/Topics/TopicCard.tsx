@@ -76,7 +76,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
   return (
     <>
       {/* Mobile Card Layout */}
-      <div className="relative group cursor-pointer transition-all duration-300 md:hidden h-24 rounded-lg border bg-card/20 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm">
+      <div className="relative group cursor-pointer transition-all duration-300 md:hidden min-h-24 py-1 rounded-lg border bg-card/20 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm">
         {/* Mobile - Avatar Image */}
         <div className="flex-shrink-0">
           <div className="w-20 h-20 rounded-br-3xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 border-2 border-primary/20">
@@ -96,7 +96,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
 
         {/* Mobile - Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-base font-bold text-foreground leading-tight line-clamp-1 mb-1">
+          <h3 className="text-base font-bold text-foreground leading-tight text mb-1">
             {topic.title}
           </h3>
           {topic.subtitle && (
@@ -106,7 +106,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
           )}
           <div className="flex items-center gap-2 mt-1">
             <button
-              className={`bg-white text-black dark:text-blue-50 shadow-inner rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 `}
+              className={`bg-white text-black dark:text-blue-50  rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 `}
             >
               {("questionsCount" in topic ? topic.questionsCount : 0) || 0}{" "}
               question

@@ -350,7 +350,7 @@ const AnswersManager: React.FC = () => {
                       placeholder="Search answers, questions, or authors..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 bg-background/50 border-blue-500/20 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                      className="pl-10 bg-background/50 border-none rounded-full border-blue-500/20 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
                     />
                   </div>
                 </div>
@@ -361,7 +361,7 @@ const AnswersManager: React.FC = () => {
                       setFilterType(value as typeof filterType)
                     }
                   >
-                    <SelectTrigger className="w-full sm:w-40 bg-background/50 border-blue-500/20 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500">
+                    <SelectTrigger className="w-full sm:w-40 bg-background/50 border-none rounded-full border-blue-500/20 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500">
                       <CheckCircle className="h-4 w-4 mr-2" />
                       <SelectValue />
                     </SelectTrigger>
@@ -473,7 +473,7 @@ const AnswersManager: React.FC = () => {
                                 </DropdownMenuContent>
                               </DropdownMenu>
                             </div>
-                            <p className="md:text-[15px]  dark:text-blue-100 text-blue-900 line-clamp-3 break-words">
+                            <p className="md:text-[15px]  dark:text-blue-100 text-black line-clamp-3 break-words">
                               {answer.content}
                             </p>
                           </div>
@@ -606,7 +606,7 @@ const AnswersManager: React.FC = () => {
 
       {/* Edit Answer Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="max-w-3xl bg-white/20 dark:bg-black/20 backdrop-blur-sm border-blue-500/20">
+        <DialogContent className="max-w-3xl bg-white focus:ring-blue-500 dark:bg-black/20 backdrop-blur-sm border-blue-500/20">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Edit className="h-5 w-5 text-blue-500" />
@@ -640,7 +640,7 @@ const AnswersManager: React.FC = () => {
                       }))
                     }
                     placeholder="Provide a thoughtful, biblical answer..."
-                    className="bg-background/50 border-blue-500/20 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 min-h-[200px]"
+                    className="bg-background/50 text-base focus-visible:ring-blue-400 dark:focus-visible:ring-blue-500 border-blue-500/20  focus:ring-blue-500/30 focus:border-blue-500 min-h-[200px]"
                     required
                   />
                 </div>

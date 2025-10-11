@@ -239,7 +239,7 @@ const QuestionsManager: React.FC = () => {
   const getStatusIcon = (status: "pending" | "answered" | "closed") => {
     switch (status) {
       case "pending":
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="h-4 w-4 text-blue-500" />;
       case "answered":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "closed":
@@ -344,7 +344,7 @@ const QuestionsManager: React.FC = () => {
 
       {/* Scrollable Questions List */}
       <div className="flex-1 overflow-y-auto no-scrollbar">
-        <div className="space-y-6 pb-40">
+        <div className=" pb-40">
           {loading
             ? // Loading Skeletons
               Array.from({ length: 5 }).map((_, index) => (
@@ -379,7 +379,7 @@ const QuestionsManager: React.FC = () => {
                 </div>
               ))
             : filteredQuestions.map((question, index) => (
-                <div key={question.id}>
+                <div key={question.id} className="">
                   <div className="px-2 md:px-6 hover:bg-white/5 dark:hover:bg-black/5 transition-all duration-200 rounded-lg">
                     <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                       <div className="flex-1 space-y-3 min-w-0">
@@ -401,6 +401,83 @@ const QuestionsManager: React.FC = () => {
                                     question.dateAsked
                                   ).toLocaleDateString()}
                                 </span>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    {question.status === "pending" && (
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          setSelectedQuestion(question);
+                                          setIsAnswerModalOpen(true);
+                                        }}
+                                      >
+                                        <MessageSquare className="h-4 w-4 mr-2" />
+                                        Answer Question
+                                      </DropdownMenuItem>
+                                    )}
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        updateQuestionStatus(
+                                          question.id,
+                                          "pending"
+                                        )
+                                      }
+                                    >
+                                      <Clock className="h-4 w-4 mr-2" />
+                                      Mark as Pending
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        updateQuestionStatus(
+                                          question.id,
+                                          "answered"
+                                        )
+                                      }
+                                    >
+                                      <CheckCircle className="h-4 w-4 mr-2" />
+                                      Mark as Answered
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        updateQuestionStatus(
+                                          question.id,
+                                          "closed"
+                                        )
+                                      }
+                                    >
+                                      <XCircle className="h-4 w-4 mr-2" />
+                                      Close Question
+                                    </DropdownMenuItem>
+                                    {/* <DropdownMenuItem
+                        onClick={() =>
+                          updateQuestionPriority(question.id, "high")
+                        }
+                      >
+                        <AlertCircle className="h-4 w-4 mr-2" />
+                        High Priority
+                      </DropdownMenuItem> */}
+                                    {/* <DropdownMenuItem
+                        onClick={() =>
+                          updateQuestionPriority(question.id, "medium")
+                        }
+                      >
+                        <AlertCircle className="h-4 w-4 mr-2" />
+                        Medium Priority
+                      </DropdownMenuItem> */}
+                                    {/* <DropdownMenuItem
+                        onClick={() =>
+                          updateQuestionPriority(question.id, "low")
+                        }
+                      >
+                        <AlertCircle className="h-4 w-4 mr-2" />
+                        Low Priority
+                      </DropdownMenuItem> */}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
 
                               <button
@@ -472,89 +549,14 @@ const QuestionsManager: React.FC = () => {
 
                         {question.answers.length === 0 && (
                           <div className="pl-7">
-                            <div className="flex items-center gap-2 px-3 py-2 bg-orange-50/50 dark:bg-orange-900/20 rounded-lg border border-orange-500/20">
-                              <AlertCircle className="h-4 w-4 text-orange-500" />
-                              <span className="text-sm text-orange-700 dark:text-orange-300">
+                            <div className="flex items-center gap-2 px-3 py-2 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg border border-blue-500/20">
+                              <AlertCircle className="h-4 w-4 text-red-500" />
+                              <span className="text-sm text-blue-700 dark:text-blue-300">
                                 No answers yet -
                               </span>
                             </div>
                           </div>
                         )}
-                      </div>
-
-                      <div className="flex flex-row lg:flex-col items-start lg:items-end gap-2 mt-2 lg:mt-0">
-                        <div className="flex items-center gap-2">
-                          {/* {getStatusBadge(question.status)} */}
-                        </div>
-
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            {question.status === "pending" && (
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  setSelectedQuestion(question);
-                                  setIsAnswerModalOpen(true);
-                                }}
-                              >
-                                <MessageSquare className="h-4 w-4 mr-2" />
-                                Answer Question
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem
-                              onClick={() =>
-                                updateQuestionStatus(question.id, "pending")
-                              }
-                            >
-                              <Clock className="h-4 w-4 mr-2" />
-                              Mark as Pending
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                updateQuestionStatus(question.id, "answered")
-                              }
-                            >
-                              <CheckCircle className="h-4 w-4 mr-2" />
-                              Mark as Answered
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                updateQuestionStatus(question.id, "closed")
-                              }
-                            >
-                              <XCircle className="h-4 w-4 mr-2" />
-                              Close Question
-                            </DropdownMenuItem>
-                            {/* <DropdownMenuItem
-                        onClick={() =>
-                          updateQuestionPriority(question.id, "high")
-                        }
-                      >
-                        <AlertCircle className="h-4 w-4 mr-2" />
-                        High Priority
-                      </DropdownMenuItem> */}
-                            {/* <DropdownMenuItem
-                        onClick={() =>
-                          updateQuestionPriority(question.id, "medium")
-                        }
-                      >
-                        <AlertCircle className="h-4 w-4 mr-2" />
-                        Medium Priority
-                      </DropdownMenuItem> */}
-                            {/* <DropdownMenuItem
-                        onClick={() =>
-                          updateQuestionPriority(question.id, "low")
-                        }
-                      >
-                        <AlertCircle className="h-4 w-4 mr-2" />
-                        Low Priority
-                      </DropdownMenuItem> */}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
                       </div>
                     </div>
                   </div>

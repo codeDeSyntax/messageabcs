@@ -322,12 +322,14 @@ const TopicsManager: React.FC = () => {
                       )}
                       <div className="flex items-center gap-2 mt-1">
                         <button
-                          className={`bg-white text-black dark:text-blue-50 shadow-inner rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 cursor-default`}
+                          className={`bg-white text-black dark:text-blue-50
+                             rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 cursor-default`}
                         >
                           {topic.isActive ? "Active" : "Inactive"}
                         </button>
                         <button
-                          className={` bg-white text-black dark:text-blue-50 shadow-inner rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 cursor-default`}
+                          className={` bg-white text-black dark:text-blue-50
+                             rounded-full shadow-gray-400 dark:shadow-blue-800 dark:bg-blue-900/20 text-xs px-2 py-1 cursor-default`}
                         >
                           {topic.questionsCount} question
                           {topic.questionsCount !== 1 ? "s" : ""}

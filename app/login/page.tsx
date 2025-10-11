@@ -13,6 +13,7 @@ import { NavigationDrawer } from "@/components/NavigationDrawer";
 import { ArrowLeft, LogIn, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { Logo } from "@/components/Logo";
 
 interface LoginForm {
   username: string;
@@ -190,40 +191,7 @@ export default function Login() {
             isOpen={isDrawerOpen}
             onOpenChange={setIsDrawerOpen}
           />
-          <div
-            className="select-none cursor-default text-base font-bold tracking-wider uppercase"
-            style={{
-              background:
-                "linear-gradient(135deg, #3b82f6 0%, #9333ea 50%, #ec4899 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              textShadow: `0px 0px 0 rgb(59,130,246),
-             1px 1px 0 rgb(54,125,241),
-             2px 2px 0 rgb(49,120,236),
-             3px 3px 0 rgb(44,115,231),
-             4px 4px 0 rgb(39,110,226),
-             5px 5px 0 rgb(34,105,221)`,
-              fontWeight: 700,
-              letterSpacing: "0.15em",
-            }}
-          >
-            MESSAGE
-            <span
-              className="text-white"
-              style={{
-                color: "white",
-                textShadow: `0px 0px 0 rgb(252, 252, 252),
-               1px 1px 0 rgb(253, 253, 253),
-               2px 2px 0 rgb(252, 252, 253),
-               3px 3px 0 rgb(44,115,231),
-               4px 4px 0 rgb(39,110,226),
-               5px 5px 0 rgb(249, 249, 249)`,
-              }}
-            >
-              ABCS
-            </span>
-          </div>
+          <Logo />
         </div>
 
         {/* Main Content */}
@@ -266,7 +234,7 @@ export default function Login() {
                         handleInputChange("username", e.target.value)
                       }
                       placeholder="Enter your username..."
-                      className="game-input-inse shadow-inner rounded-full h-11 px-4 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className="bg-blue-50 dark:bg-blue-900/30  rounded-full h-11 px-4 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
                       required
                       autoComplete="username"
                     />
@@ -289,7 +257,7 @@ export default function Login() {
                           handleInputChange("password", e.target.value)
                         }
                         placeholder="Enter your password..."
-                        className="game-input-inse shadow-inner rounded-full h-11 px-4 pr-12 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className=" bg-blue-50 dark:bg-blue-900/30 border-none rounded-full h-11 px-4 pr-12 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
                         required
                         autoComplete="current-password"
                       />
