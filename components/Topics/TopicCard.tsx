@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { BiblicalTopicWithCount, BiblicalTopic } from "@/services/api";
 import { generateSlug } from "@/utils/slugs";
-import { BookOpen, BookUp, LibrarySquare, Users } from "lucide-react";
+import {
+  BookOpen,
+  BookUp,
+  ChevronsRightIcon,
+  LibrarySquare,
+  Users,
+} from "lucide-react";
 import { GAME_BUTTON_SMALL } from "@/constants/gameStyles";
 
 interface TopicCardProps {
@@ -76,7 +82,10 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
   return (
     <>
       {/* Mobile Card Layout */}
-      <div className="relative group cursor-pointer transition-all duration-300 md:hidden min-h-24 py-1 rounded-lg border bg-card/20 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm">
+      <div
+        className="relative group cursor-pointer transition-all duration-300 md:hidden min-h-24 py-1 rounded-lg border bg-card/20 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm"
+        onClick={handleReadMore}
+      >
         {/* Mobile - Avatar Image */}
         <div className="flex-shrink-0">
           <div className="w-20 h-20 rounded-br-3xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 border-2 border-primary/20">
@@ -122,10 +131,10 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
         <div className="flex flex-col gap-1">
           <button
             onClick={handleReadMore}
-            className="p-2 rounded-lg game-nav-button bg-blue-100/50 hover:bg-blue-200/50 dark:bg-blue-900/30 dark:hover:bg-blue-800/50 transition-colors"
+            className="p-2 rounded-lg game-nav-butto bg-transparent transition-colors"
             title="Read topic"
           >
-            <BookUp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            <ChevronsRightIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           </button>
         </div>
       </div>
@@ -135,9 +144,9 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
         className="hidden md:block cursor-pointer transition-all duration-300"
         onClick={handleCardClick}
       >
-        <div className="relative flex flex-col items-start gap-0 p-0 bg-blue-50/30 backdrop-blur-sm dark:bg-blue-900/10 rounded-lg border border-gray-200/50 dark:border-blue-900/40 shadow-sm  hover:shadow-md hover:border-blue-300 dark:hover:border-blue-800/80 hover:border-dashed hover:border-2 transition-all duration-200 h-60">
+        <div className="relative flex flex-col items-start gap-0 p-0 bg-blue-[#f0f5ff]/20 backdrop-blur-sm dark:bg-blue-900/10 rounded-lg border-2 border-blue-500/10 dark:border-blue-900/40 shadow-sm  hover:shadow-md hover:border-blue-300 dark:hover:border-blue-800/80 hover:border-dashed hover:border-2 transition-all duration-200 h-60">
           {/* Left: Square Image touching the left edge */}
-          <div className="flex-shrink-0 flex justify-between items-center w-full h-1/2 rounded-l-lg overflow-hidden">
+          <div className="flex-shrink-0 flex justify-between items-center w-full h-1/2 rounded-l-lg overflow-hidden ">
             {topic.image ? (
               <img
                 src={topic.image}
@@ -152,12 +161,12 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
 
             <div
               onClick={handleReadMore}
-              className={`absolute right-1 bg-white dark:bg-blue-900/80 roundedxl flex items-center justify-center hover:text-black text-blue-800 dark:text-white px-3 py-2 cursor-pointer transition-all duration-200 hover:scale-105 shadow-lg h-10 w-[40%] mr-2 game-na-button`}
+              className={`absolute right-1 font-thin bg-blue-50 rounded-br-3xl rounded-tl-3xl dark:bg-[#112242] backdrop-blur-md roundedxl flex items-center justify-center hover:text-black text-black italic dark:text-white px-3 py-2 cursor-pointer transition-all duration-200 hover:scale-105 shadow h-10 w-[40%] mr-2 game-nav-buton shadow-gray-200 dark:shadow-blue-900`}
               // style={{
               //   clipPath: "polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%)",
               // }}
             >
-              <span className="text-xs font-medium">Read</span>
+              <span className="text-base font-medium">Read</span>
             </div>
           </div>
 

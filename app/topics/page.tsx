@@ -222,7 +222,7 @@ export default function Topics() {
             </div>
 
             {/* Main Content Grid */}
-            <div className="flex-1 overflow-y-auto p-6 pt-4">
+            <div className="flex-1 overflow-y-auto no-scrollbar  p-6 pt-4">
               {/* Loading State */}
               {loading && <TopicGridSkeleton count={8} viewMode={viewMode} />}
 
@@ -260,7 +260,7 @@ export default function Topics() {
 
               {/* Success State - Topic Grid/List */}
               {!loading && !error && (
-                <div className="pb-40">
+                <div className="pb-40 overflow-y-auto no-scrollbar">
                   {paginatedTopics.length > 0 ? (
                     <div
                       className={`${
