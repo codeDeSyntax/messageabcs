@@ -55,7 +55,7 @@ export default function Topics() {
   }, []);
 
   return (
-    <div className="h-screen overflow-hidden relative ">
+    <div className="min-h-screen relative">
       <AnimatedBackground />
       {/* white blur over animation background  */}
       <div className="bg-blue-50/20 backdrop-blur-md dark:bg-[#07072d74] md:dark:bg-black/20 dark:backdrop-blur-[1px] inset-0 absolute" />
@@ -77,8 +77,8 @@ export default function Topics() {
       </div>
 
       {/* Main Content Panel - Split Layout */}
-      <div className="flex justify-center h-full m-2 md:m-0 p-3 sm:p-0 pt-2 md:pt-0 relative z-10">
-        <div className="w-full max-w-7xl h-full ">
+      <div className="flex justify-center m-2 md:m-0 p-3 sm:p-0 pt-2 md:pt-0 relative z-10 md:h-screen">
+        <div className="w-full max-w-7xl md:h-full">
           {/* Mobile: Single Panel Layout */}
           <div className="md:hidden w-full border-none bg-blue-50/20 backdrop-blur-0 dark:bg-transparent dark:backdrop-blur-sm dark:border-blue-500 border-blue-500 rounded-2xl flex flex-col h-[95%] overflow-hidden">
             {/* Fixed Search Bar and Pagination within panel */}
@@ -155,9 +155,9 @@ export default function Topics() {
           </div>
 
           {/* Desktop: Board-style Grid Layout */}
-          <div className="hidden md:block h-[100%] bg-blue-50/20 dark:bg-black/5 backdrop-blur-sm border border-blue-500/20  overflow-hidden shadow-2xl">
-            {/* Header Section */}
-            <div className="sticky top-0 z-10 bg-blue-50/80 dark:bg-black/10 backdrop-blur-md border-b border-gray-200/50 dark:border-blue-500/20 p-3 px-6">
+          <div className="hidden md:flex md:flex-col h-full bg-blue-50/20 dark:bg-black/5 backdrop-blur-sm border border-blue-500/20 shadow-2xl rounded-lg overflow-hidden">
+            {/* Header Section - Fixed */}
+            <div className="flex-shrink-0 sticky top-0 z-10 bg-blue-50/80 dark:bg-black/10 backdrop-blur-md border-b border-gray-200/50 dark:border-blue-500/20 p-3 px-6">
               {/* Second Row: Title and Search */}
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
@@ -221,8 +221,8 @@ export default function Topics() {
               </div>
             </div>
 
-            {/* Main Content Grid */}
-            <div className="flex-1 overflow-y-auto no-scrollbar  p-6 pt-4">
+            {/* Main Content Grid - Scrollable */}
+            <div className="flex-1 overflow-y-auto no-scrollbar overflow-x-hidden p-6 pt-4 min-h-0 max-h-full">
               {/* Loading State */}
               {loading && <TopicGridSkeleton count={8} viewMode={viewMode} />}
 
@@ -260,13 +260,13 @@ export default function Topics() {
 
               {/* Success State - Topic Grid/List */}
               {!loading && !error && (
-                <div className="pb-40 overflow-y-auto no-scrollbar">
+                <div className="pb-20">
                   {paginatedTopics.length > 0 ? (
                     <div
                       className={`${
                         viewMode === "grid"
-                          ? "w-[80%] m-auto grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 auto-rows-fr"
-                          : "space-y-3"
+                          ? "w-[80%] m-auto grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 auto-rows-fr"
+                          : "max-w-4xl mx-auto space-y-3"
                       }`}
                     >
                       {paginatedTopics.map((topic) => (

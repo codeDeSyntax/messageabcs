@@ -35,7 +35,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
   if (viewMode === "list") {
     return (
       <div
-        className="flex items-start gap-0 p-0 bg-white dark:bg-blue-900/20 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 cursor-pointer group h-20 w-3/4 m-auto "
+        className="flex items-start gap-0 p-0 bg-white dark:bg-blue-900/20 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 cursor-pointer group h-20 w-full m-auto "
         onClick={handleCardClick}
       >
         {/* Left: Square Image touching the left edge */}
