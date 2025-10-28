@@ -11,6 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import { GAME_BUTTON_SMALL } from "@/constants/gameStyles";
+import Image from "next/image";
 
 interface TopicCardProps {
   topic: BiblicalTopicWithCount | BiblicalTopic;
@@ -35,7 +36,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
   if (viewMode === "list") {
     return (
       <div
-        className="flex items-start gap-0 p-0 bg-white dark:bg-blue-900/20 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 cursor-pointer group h-20 w-full m-auto "
+        className="flex items-start gap-0 p-0 bg-white/60 dark:bg-blue-900/20 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md hover:shadow-blue-100 dark:hover:border-gray-600 transition-all duration-200 cursor-pointer group h-20 w-full m-auto "
         onClick={handleCardClick}
       >
         {/* Left: Square Image touching the left edge */}
@@ -83,7 +84,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
     <>
       {/* Mobile Card Layout */}
       <div
-        className="relative group cursor-pointer transition-all duration-300 md:hidden min-h-24 py-1 rounded-lg border bg-card/20 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm"
+        className="relative group cursor-pointer transition-all duration-300 md:hidden min-h-24 py-1 rounded-lg border bg-white/60 dark:bg-blue-900/20 flex items-center space-x-3 border-none hover:border-primary/30 shadow-sm"
         onClick={handleReadMore}
       >
         {/* Mobile - Avatar Image */}
@@ -106,7 +107,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
         {/* Mobile - Content */}
         <div className="flex-1 min-w-0">
           <h3 className="text-base font-bold text-foreground leading-tight text mb-1">
-            {topic.title}
+            {topic.title.slice(0, 45)}{topic.title.length > 45 ? "..." : ""}
           </h3>
           {topic.subtitle && (
             <p className="text-sm text-muted-foreground leading-tight line-clamp-2">

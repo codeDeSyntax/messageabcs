@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter, Crimson_Pro } from "next/font/google";
 import { ClientProviders } from "@/components/ClientProviders";
 import { WebsiteStructuredData } from "@/components/StructuredData";
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 
 // Import Google Fonts
 const inter = Inter({
@@ -106,6 +107,7 @@ export default function RootLayout({
       >
         <WebsiteStructuredData />
         <ClientProviders>{children}</ClientProviders>
+        <FloatingWhatsApp />
       </body>
     </html>
   );

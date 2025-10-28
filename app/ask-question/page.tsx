@@ -208,10 +208,10 @@ export default function AskQuestion() {
 
       {/* Scrollable Main Content */}
       <div className="pt-16 md:pt-24 pb-24 relative z-10">
-        <div className="flex justify-center p-3 md:p-6">
-          <div className="w-full max-w-4xl">
+        <div className="flex justify-center p-2 md:p-6">
+          <div className="w-full max-w-5xl">
             {/* Form Card */}
-            <Card className="bg-blue-50/50 dark:bg-black/20 backdrop-blur-xl border-blue-500/20 shadow-xl">
+            <Card className="bg-blue-50/50 p-0 dark:bg-black/20 backdrop-blur-xl border-blue-500/20 shadow-xl">
               <CardHeader className="border-b border-blue-500/10">
                 <p className="text-muted-foreground">
                   Ask any question about biblical topics and get answers from
@@ -219,7 +219,7 @@ export default function AskQuestion() {
                 </p>
               </CardHeader>
 
-              <CardContent className="p-6">
+              <CardContent className="p-3 md:p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Question Field */}
                   <div className="space-y-2">
@@ -279,25 +279,27 @@ export default function AskQuestion() {
                           }
                         />
                       </SelectTrigger>
-                      <SelectContent className="max-h-60 overflow-auto no-scrollbar max-w-[95%] ">
+                      <SelectContent className="max-h-60 overflow-auto no-scrollbar max-w-[80%] ">
                         {topics.map((topic) => (
                           <SelectItem
                             key={topic.id}
                             value={topic.id.toString()}
-                            className="focus:bg-blue-500 dark:focus:bg-blue-500 focus:text-white bg-stone-50 dark:bg-blue-900/40"
+                            className="focus:bg-blue-500 p-0 px-2 py-1 dark:focus:bg-blue-500 focus:text-white bg-stone-50 dark:bg-blue-900/40"
                           >
                             <div className="flex items-center gap-3 py-1">
-                              <img
+                              {/* <img
                                 src={topic.image}
                                 alt={topic.title}
                                 className="w-8 h-8 rounded-full object-cover border border-blue-500/20"
-                              />
+                              /> */}
                               <div className="flex flex-col">
                                 <span className="font-medium">
                                   {topic.title}
                                 </span>
                               </div>
                             </div>
+                            {/* horizontal line */}
+                            <div className="border-t w-full border-gray-200 dark:border-gray-700" />
                           </SelectItem>
                         ))}
                         {/* Other Option */}
@@ -319,10 +321,10 @@ export default function AskQuestion() {
 
                     {(selectedTopic || isOtherSelected) && (
                       <Card className="bg-blue-50/50 dark:bg-blue-900/20 border-blue-500/20 mt-3">
-                        <CardContent className="p-4">
+                        <CardContent className="px-4 py-2">
                           <div className="flex items-center gap-3">
                             {isOtherSelected ? (
-                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center border border-blue-500/20">
+                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center border border-blue-500/20">
                                 <HelpCircle className="h-4 w-4 text-white" />
                               </div>
                             ) : (
@@ -332,26 +334,18 @@ export default function AskQuestion() {
                                 className="w-10 h-10 rounded-full object-cover border border-blue-500/20"
                               />
                             )}
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <Badge
-                                  className={
-                                    isOtherSelected
-                                      ? "bg-gray-500 text-white"
-                                      : "bg-blue-500 text-white"
-                                  }
+                          
+                              <div className="flex items-center gap-2 mb-1 py-0">
+                                <p
+                                  className="text-blue-900 dark:text-blue-50 truncate"
                                 >
                                   {isOtherSelected
                                     ? "Other"
                                     : selectedTopic!.title}
-                                </Badge>
+                                </p>
                               </div>
-                              <p className="text-sm text-muted-foreground">
-                                {isOtherSelected
-                                  ? "General or uncategorized biblical question"
-                                  : selectedTopic!.subtitle}
-                              </p>
-                            </div>
+                              
+                            
                           </div>
                         </CardContent>
                       </Card>
@@ -450,11 +444,6 @@ export default function AskQuestion() {
             </Card>
           </div>
         </div>
-      </div>
-
-      {/* Bottom Navigation */}
-      <div className="relative z-10">
-        <BottomNavigation />
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ export function AnimatedBackground() {
           gradientFrom: "blue-900/10",
           gradientTo: "purple-900/10",
           circleColors: {
-            primary: "rgba(147, 51, 234, 0.8)",
+            primary: "rgba(85, 51, 234, 0.4)",
             secondary: "rgba(59, 130, 246, 0.6)",
           },
         };
@@ -154,7 +154,7 @@ export function AnimatedBackground() {
           gradientFrom: "blue-900/10",
           gradientTo: "purple-900/10",
           circleColors: {
-            primary: "rgba(147, 51, 234, 0.8)",
+            primary: "rgba(51, 69, 234, 0.8)",
             secondary: "rgba(59, 130, 246, 0.6)",
           },
         }
@@ -162,7 +162,7 @@ export function AnimatedBackground() {
           gradientFrom: "indigo-200/20",
           gradientTo: "violet-200/20",
           circleColors: {
-            primary: "rgba(139, 92, 246, 0.3)",
+            primary: "rgba(102, 92, 246, 0.3)",
             secondary: "rgba(99, 102, 241, 0.2)",
           },
         };
@@ -236,8 +236,8 @@ export function AnimatedBackground() {
               offset="50%"
               stopColor={
                 theme === "dark"
-                  ? "rgba(147, 51, 234, 0.4)"
-                  : "rgba(139, 92, 246, 0.4)"
+                  ? "rgba(63, 51, 234, 0.4)"
+                  : "rgba(107, 92, 246, 0.4)"
               }
             />
             <stop
@@ -269,8 +269,8 @@ export function AnimatedBackground() {
               offset="50%"
               stopColor={
                 theme === "dark"
-                  ? "rgba(147, 51, 234, 0.5)"
-                  : "rgba(139, 92, 246, 0.5)"
+                  ? "rgba(78, 51, 234, 0.5)"
+                  : "rgba(105, 92, 246, 0.5)"
               }
             />
             <stop

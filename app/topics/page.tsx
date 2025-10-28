@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { NavigationDrawer } from "@/components/NavigationDrawer";
-import { BottomNavigation } from "@/components/BottomNavigation";
+import { useAuth } from "@/hooks/useAuth";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { ProfileCard } from "@/components/ProfileCard";
 import { TopicActionButtons } from "@/components/TopicActionButtons";
@@ -18,8 +18,14 @@ import {
   LayoutGrid,
   List,
   MessageSquare,
+  Hash,
+  BookOpen,
+  MessageCircleQuestion,
+  MessageCircle,
+  LayoutDashboard,
+  Sun,
+  Moon,
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import { useTopics } from "@/hooks/useTopics";
 
 // Import modular components
@@ -32,10 +38,20 @@ import { Logo } from "@/components/Logo";
 export default function Topics() {
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
-  const { theme } = useTheme();
-  const { isAuthenticated } = useAuth();
+  const { theme, setTheme } = useTheme();
+  const { isAuthenticated, user } = useAuth();
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   // Use the custom hook for topics data management
   const {
@@ -53,6 +69,28 @@ export default function Topics() {
   useEffect(() => {
     document.title = "Biblical Topics - MessageABCs";
   }, []);
+
+  // Build nav items for top navigation (admin-only Dashboard)
+  const getNavItems = () => {
+    const baseItems = [
+      { icon: Hash, label: "Topics", path: "/topics" },
+      { icon: BookOpen, label: "Reading", path: "/reading" },
+      { icon: MessageCircleQuestion, label: "Q&A", path: "/qa" },
+      { icon: MessageCircle, label: "Ask", path: "/ask-question" },
+    ];
+
+    if (isAuthenticated && user?.role === "admin") {
+      baseItems.push({
+        icon: LayoutDashboard,
+        label: "Dashboard",
+        path: "/admin?direct=true",
+      });
+    }
+
+    return baseItems;
+  };
+
+  const navItems = getNavItems();
 
   return (
     <div className="min-h-screen relative">
@@ -161,14 +199,57 @@ export default function Topics() {
               {/* Second Row: Title and Search */}
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
-                    Biblical Topics
-                  </h1>
-                  <div className="flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                      {!loading ? paginatedTopics.length : 0} Topics
-                    </span>
-                  </div>
+                  <Logo className="h-6 " />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {navItems.map((item) => {
+                    const Icon = item.icon as any;
+                    const isActive = pathname === item.path;
+
+                    // Replace the 'Ask' nav item with a theme toggle button
+                    if (item.label === "Ask") {
+                      return (
+                        <button
+                          key={item.path}
+                          onClick={toggleTheme}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors duration-150 hover:bg-blue-100/60 dark:hover:bg-blue-900/30 ${"text-gray-700 dark:text-gray-200"}`}
+                        >
+                          {mounted ? (
+                            theme === "dark" ? (
+                              <Sun className="h-4 w-4" />
+                            ) : (
+                              <Moon className="h-4 w-4" />
+                            )
+                          ) : (
+                            <Moon className="h-4 w-4" />
+                          )}
+                          <span className="hidden lg:inline">
+                            {mounted
+                              ? theme === "dark"
+                                ? "Light"
+                                : "Dark"
+                              : "Dark"}
+                          </span>
+                        </button>
+                      );
+                    }
+
+                    return (
+                      <button
+                        key={item.path}
+                        onClick={() => router.push(item.path)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors duration-150 hover:bg-blue-100/60 dark:hover:bg-blue-900/30 ${
+                          isActive
+                            ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
+                            : "text-gray-700 dark:text-gray-200"
+                        }`}
+                      >
+                        <Icon className="h-4 w-4" />
+                        <span className="hidden lg:inline">{item.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div className="flex w- items-center gap-4">
@@ -265,7 +346,7 @@ export default function Topics() {
                     <div
                       className={`${
                         viewMode === "grid"
-                          ? "w-[80%] m-auto grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 auto-rows-fr"
+                          ? "w-[80%] sm:w-[90%] lg:w-[80%] m-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 auto-rows-fr"
                           : "max-w-4xl mx-auto space-y-3"
                       }`}
                     >
@@ -287,10 +368,7 @@ export default function Topics() {
         </div>
       </div>
 
-      {/* Desktop Navigation */}
-      <div className="relative z-10">
-        <BottomNavigation />
-      </div>
+      {/* Bottom navigation intentionally removed on topics page - desktop nav moved to top */}
 
       {/* Topic Action Buttons */}
       <TopicActionButtons />

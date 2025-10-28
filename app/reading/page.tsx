@@ -59,7 +59,7 @@ function ReadingContent() {
       </div>
 
       {/* Bottom Navigation for reading page */}
-      {!isFullscreen && <BottomNavigation />}
+      {/* {!isFullscreen && <BottomNavigation />} */}
     </div>
   );
 }

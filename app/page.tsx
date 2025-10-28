@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { TopNavigation } from "@/components/TopNavigation";
 import {
   Sheet,
   SheetContent,
@@ -16,12 +17,13 @@ import {
   BookOpen,
   MessageCircleQuestion,
   MessageCircle,
+  LayoutDashboard,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 import { NavigationDrawer } from "@/components/NavigationDrawer";
-import { BottomNavigation } from "@/components/BottomNavigation";
 import { ProfileCard } from "@/components/ProfileCard";
 import { Logo } from "@/components/Logo";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
@@ -101,10 +103,10 @@ const SpiralBackground = () => {
   const scatteredDots = generateScatteredDots();
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none ">
       <AnimatedBackground />
       {/* Blue gradient background - using our biblical theme */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-blue-50 to-blue-50 dark:from-black/20 dark:via-black/10 backdrop-blur-sm dark:to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-blue-50/5 to-transparent dark:from-black/5 dark:via-black/5 backdrop-blur-sm dark:to-transparent" />
 
       {/* Subtle blue accent in the ce backdrop-blur-smnter */}
       <div
@@ -117,7 +119,7 @@ const SpiralBackground = () => {
 
       {/* Static wave/spiral design in bottom right */}
       <svg
-        className="w-full h-full"
+        className="w-full h-full "
         viewBox="0 0 100 100"
         preserveAspectRatio="xMidYMid slice"
       >
@@ -277,6 +279,35 @@ export default function Home() {
   const [showFullscreenModal, setShowFullscreenModal] = useState(false);
   const { theme, setTheme } = useTheme();
   const router = useRouter();
+  const pathname = usePathname();
+  const { isAuthenticated, user } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Build nav items with same auth condition as BottomNavigation
+  const getNavItems = () => {
+    const baseItems = [
+      { icon: Hash, label: "Topics", path: "/topics" },
+      { icon: BookOpen, label: "Reading", path: "/reading" },
+      { icon: MessageCircleQuestion, label: "Q&A", path: "/qa" },
+      { icon: MessageCircle, label: "Ask", path: "/ask-question" },
+    ];
+
+    if (isAuthenticated && user?.role === "admin") {
+      baseItems.push({
+        icon: LayoutDashboard,
+        label: "Dashboard",
+        path: "/admin?direct=true",
+      });
+    }
+
+    return baseItems;
+  };
+
+  const navItems = getNavItems();
 
   // Check if user has seen the fullscreen modal before
   useEffect(() => {
@@ -304,14 +335,61 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen overflow-hidden relative bg-slate-50 dark:bg-slate-900 transition-all duration-500">
+    <div className="h-screen overflow-hidden relative bg-blue-50 dark:bg-slate-900 transition-all duration-500">
       {/* Spiral Background */}
       <SpiralBackground />
 
-      {/* Desktop Header */}
-      <div className="hidden absolute md:flex justify-end items-center p-6  z-10">
-        <Logo className="cursor-pointer" />
-        {/* <ProfileCard /> */}
+      {/* Desktop Header - Top Navigation (Logo left, links centered) */}
+      <div className="hidden absolute md:flex items-center p-6 z-40 w-full">
+        <div className="w-full max-w-7xl mx-auto flex items-center">
+          <div className="flex-shrink-0">
+            <Logo className="cursor-pointer" />
+          </div>
+
+          <div className="flex-1 flex justify-center">
+            <div className="flex items-center gap-2">
+              {navItems.map((item) => {
+                const Icon = item.icon as any;
+                const isActive = pathname === item.path;
+
+                return (
+                  <button
+                    key={item.path}
+                    onClick={() => router.push(item.path)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors duration-150 hover:bg-blue-100/60 dark:hover:bg-blue-900/30 ${
+                      isActive
+                        ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
+                        : "text-gray-700 dark:text-gray-200"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className="hidden lg:inline">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex-shrink-0">
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors duration-150 hover:bg-blue-100/60 dark:hover:bg-blue-900/30"
+            >
+              {mounted ? (
+                theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+              <span className="hidden lg:inline">
+                {mounted ? (theme === "dark" ? "Light" : "Dark") : "Dark"}
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Mobile Navigation Drawer */}
@@ -329,7 +407,7 @@ export default function Home() {
           {/* Main Heading - Compact and impactful */}
           <div className="space-y-3">
             <h1
-              className="text-3xl sm:text-3xl md:text-6xl  font-bold tracking-tight text-slate-800 dark:text-white uppercase leading-tight"
+              className="text-3xl sm:text-3xl md:text-6xl  font-bold tracking-tight text-blue-900 dark:text-blue-400 uppercase leading-tight"
               style={{
                 animation: "slideUpFade 1.2s ease-out forwards",
               }}
@@ -386,12 +464,12 @@ export default function Home() {
           {/* Call to Action Button - Smaller like in the image */}
           <div className="pt-6">
             <button
-              className="bg-white hover:bg-gray-50 text-blue-600 hover:text-blue-700 font-semibold py-2 px-6 rounded-md text-sm sm:text-base transition-all duration-300 hover:scale-105 shadow-lg"
+              className="bg-white hover:bg-gray-50 text-black hover:text-blue-700 font-semibold py-2 px-6 rounded-full text-sm sm:text-base transition-all duration-300 hover:scale-105 shadow-none"
               style={{
                 animation: "slideUpFade 1.2s ease-out 1.6s forwards",
                 transform: "translateY(100%)",
                 opacity: 0,
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                // boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow =
@@ -403,14 +481,11 @@ export default function Home() {
               }}
               onClick={() => router.push("/topics")}
             >
-              Let&apos;s Start
+              Let&apos;s Read
             </button>
           </div>
         </div>
       </div>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
 
       {/* Fullscreen Welcome Modal */}
       <FullscreenWelcomeModal

@@ -6,9 +6,15 @@ interface LogoProps {
 }
 
 export const Logo = ({ variant = "default", className = "" }: LogoProps) => {
+  // click logo function
+  const handleClick = () => {
+    // Navigate to home page
+    window.location.href = "/";
+  };
+
   if (variant === "compact") {
     return (
-      <div className={`flex items-center gap-1.5 ${className}`}>
+      <div className={`flex items-center gap-1.5 ${className}`} onClick={handleClick}>
         <Image
           src="/mabcs.png"
           alt="Message ABCs Logo"
@@ -30,7 +36,7 @@ export const Logo = ({ variant = "default", className = "" }: LogoProps) => {
   }
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex items-center gap-2 ${className}`} >
       <Image
         src="/mabcs.png"
         alt="Message ABCs Logo"
