@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -20,9 +21,9 @@ export const TopicsSidebar = ({
 }: TopicsSidebarProps) => {
   return (
     <div className="hidden lg:flex lg:w-1/3 xl:w-1/4 max-w-sm flex-col h-full">
-      <div className="bg-white/10 dark:bg-black/10 backdrop-blur-sm border border-blue-500/20 flex flex-col h-full">
+      <div className="bg-white/50 dark:bg-black/10  border border-blue-500/20 flex flex-col h-full">
         {/* Topics Header - Fixed */}
-        <div className="p-6 border-b border-blue-500/20 flex-shrink-0">
+        <div className="px-6 py-2 border-b border-blue-500/20 flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Tag className="h-5 w-5 text-blue-500" />
@@ -36,7 +37,7 @@ export const TopicsSidebar = ({
         </div>
 
         {/* Topics Content - SCROLLABLE */}
-        <div className="flex-1 overflow-y-auto no-scrollbar p-6">
+        <div className="flex-1 overflow-y-auto no-scrollbar p-3">
           {loading ? (
             <div className="space-y-3">
               {[...Array(8)].map((_, i) => (
@@ -66,7 +67,7 @@ export const TopicsSidebar = ({
                   onClick={() =>
                     onTopicSelect(selectedTopic === topic.id ? null : topic.id)
                   }
-                  className={`w-full text-left px-4 py-2 rounded-lg transition-all duration-200 text-sm hover:bg-white/10 dark:hover:bg-black/10 border ${
+                  className={`w-full text-left px-4  rounded-lg transition-all duration-200 text-sm hover:bg-white/10 dark:hover:bg-black/10 border ${
                     selectedTopic === topic.id
                       ? "bg-blue-500/20 border-blue-500/40 shadow-sm"
                       : "bg-white/5 dark:bg-black/5 border-transparent hover:border-blue-500/20"
@@ -99,11 +100,6 @@ export const TopicsSidebar = ({
                       <div className="font-medium text-foreground mb-1 line-clamp-2 leading-relaxed">
                         {topic.title}
                       </div>
-                      {topic.subtitle && (
-                        <div className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                          {topic.subtitle}
-                        </div>
-                      )}
                     </div>
                   </div>
                 </button>

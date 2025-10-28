@@ -195,7 +195,7 @@ export default function Login() {
         </div>
 
         {/* Main Content */}
-        <div className="flex justify-center items-start h-full p-3 pt-0 md:pt-6 relative z-10">
+        <div className="flex justify-center items-center h-full p-3 pt-0 md:pt-6 relative z-10">
           <div className="w-full max-w-md flex items-center">
             <Card className="w-full bg-white/20 dark:bg-black/10 backdrop-blur-sm border-blue-500/20">
               <CardHeader className="border-b border-blue-500/20 text-center">
@@ -302,9 +302,6 @@ export default function Login() {
             </Card>
           </div>
         </div>
-
-        {/* Bottom Navigation */}
-        <BottomNavigation />
       </div>
     </>
   );

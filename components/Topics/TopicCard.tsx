@@ -36,7 +36,7 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
   if (viewMode === "list") {
     return (
       <div
-        className="flex items-start gap-0 p-0 bg-white/60 dark:bg-blue-900/20 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md hover:shadow-blue-100 dark:hover:border-gray-600 transition-all duration-200 cursor-pointer group h-20 w-full m-auto "
+        className="flex items-start gap-0 p-0 bg-white/60 dark:bg-blue-900/20 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md hover:shadow-blue-100 dark:hover:shadow-blue-900/20 hover:border-blue-200 dark:hover:border-blue-950 transition-all duration-200 cursor-pointer group h-20 w-full m-auto "
         onClick={handleCardClick}
       >
         {/* Left: Square Image touching the left edge */}
@@ -107,7 +107,8 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
         {/* Mobile - Content */}
         <div className="flex-1 min-w-0">
           <h3 className="text-base font-bold text-foreground leading-tight text mb-1">
-            {topic.title.slice(0, 45)}{topic.title.length > 45 ? "..." : ""}
+            {topic.title.slice(0, 45)}
+            {topic.title.length > 45 ? "..." : ""}
           </h3>
           {topic.subtitle && (
             <p className="text-sm text-muted-foreground leading-tight line-clamp-2">

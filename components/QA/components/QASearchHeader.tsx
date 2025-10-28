@@ -18,7 +18,7 @@ export const QASearchHeader = ({
   onAskQuestion,
 }: QASearchHeaderProps) => {
   return (
-    <div className="px-6 pb-4 flex-shrink-0 border-b border-gray-200/10">
+    <div className="px-6 py-6 flex-shrink-0 border-b border-gray-200/10">
       {/* Search Bar with Ask Button */}
       <div className="flex gap-3">
         <div className="flex-1 relative">

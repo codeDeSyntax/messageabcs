@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { NavigationDrawer } from "@/components/NavigationDrawer";
-import { BottomNavigation } from "@/components/BottomNavigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { AskQuestionModal } from "@/components/AskQuestionModal";
 import { apiService, Question, BiblicalTopic } from "@/services/api";
@@ -22,6 +23,9 @@ export default function QA() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [isAskModalOpen, setIsAskModalOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     document.title = "Q & A - MessageABCs";
@@ -115,10 +119,10 @@ export default function QA() {
 
   return (
     <div className="h-screen relative overflow-hidden">
-      <AnimatedBackground />
+      {/* <AnimatedBackground /> */}
 
       {/* Backdrop blur overlay */}
-      <div className="absolute inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm z-10" />
+      <div className="absolute inset-0 bg-blue-50 dark:bg-black/10  z-10" />
 
       <div className="relative z-20 h-screen flex flex-col overflow-hidden">
         {/* Mobile Navigation Drawer */}
@@ -139,13 +143,53 @@ export default function QA() {
               {/* Left Side - Main Q&A Content (Takes most space) */}
               <div className="flex-1 lg:w-2/3 xl:w-3/4 flex flex-col h-full bg-white/5 dark:bg-black/5 rounded-lg overflow-hidden">
                 {/* Q&A Header - Fixed */}
-                <div className="hidden md:block p-6 pb-4 flex-shrink-0 border-b border-gray-200/10">
-                  <h1 className="text-2xl font-bold text-foreground font-heading mb-2">
-                    Q & A
-                  </h1>
-                  <p className="text-muted-foreground text-sm">
-                    Ask questions about biblical topics and get answers
-                  </p>
+                <div className="hidden md:flex items-center justify-between  py-2 px-2 flex-shrink-0 border-b border-gray-200/10 bg-white/50 dark:bg-black/10">
+                  <div>
+                    <h1 className="text-2xl font-bold text-foreground font-heading ">
+                      Q & A
+                    </h1>
+                  </div>
+
+                  {/* Centered top nav links (desktop) */}
+                  <div className="flex-1 flex justify-center">
+                    <div className="flex items-center gap-3">
+                      {(() => {
+                        const baseItems = [
+                          { label: "Home", path: "/" },
+                          { label: "Topics", path: "/topics" },
+                          { label: "Reading", path: "/reading" },
+                          { label: "Q&A", path: "/qa" },
+                        ];
+
+                        if (isAuthenticated && user?.role === "admin") {
+                          baseItems.push({
+                            label: "Dashboard",
+                            path: "/admin?direct=true",
+                          });
+                        }
+
+                        return baseItems.map((item) => {
+                          const isActive = pathname === item.path;
+                          return (
+                            <button
+                              key={item.path}
+                              onClick={() => router.push(item.path)}
+                              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
+                                isActive
+                                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
+                                  : "text-gray-700 dark:text-gray-200 hover:bg-blue-50/40 dark:hover:bg-blue-900/20"
+                              }`}
+                            >
+                              {item.label}
+                            </button>
+                          );
+                        });
+                      })()}
+                    </div>
+                  </div>
+
+                  {/* Right placeholder - keep spacing consistent on the right */}
+                  <div className="w-28" />
                 </div>
 
                 {/* Search and Controls Section - Fixed */}
@@ -205,7 +249,7 @@ export default function QA() {
               </div>
 
               {/* Vertical Divider */}
-              <div className="hidden lg:block w-px bg-gradient-to-b from-blue-500/20 via-blue-500/50 to-blue-500/20"></div>
+              {/* <div className="hidden lg:block w-px bg-gradient-to-b from-blue-500/20 via-blue-500/50 to-blue-500/20"></div> */}
 
               {/* Right Side - Topics Sidebar */}
               <TopicsSidebar
@@ -218,8 +262,7 @@ export default function QA() {
           </div>
         </div>
 
-        {/* Bottom Navigation */}
-        <BottomNavigation />
+        {/* Bottom Navigation removed: top nav links are rendered in the desktop header */}
       </div>
 
       {/* Ask Question Modal */}

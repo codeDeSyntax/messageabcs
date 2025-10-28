@@ -14,19 +14,18 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
   return (
     <div className="group hover:bg-white/5 dark:hover:bg-black/5 transition-all duration-200 cursor-pointer md:p-6 rounded-lg p-2">
       {/* Question Section */}
-      <div className="mb-4">
+      <div className="mb-4 ml-4">
         <div className="flex items-start gap-4">
-          {/* User Avatar */}
-          <Avatar className="h-8 w-8 flex-shrink-0">
-            <AvatarFallback className="bg-blue-500/20 text-blue-600 dark:text-blue-400">
-              {question.askedBy?.charAt(0).toUpperCase() || "A"}
-            </AvatarFallback>
-          </Avatar>
-
           {/* Question Content */}
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="font-semibold text-foreground">
+              {/* User Avatar */}
+              <Avatar className="h-4 w-4 flex items-center justify-center flex-shrink-0">
+                <AvatarFallback className=" text-[8px] bg-blue-500/20 text-blue-600 dark:text-blue-400">
+                  {question.askedBy?.charAt(0).toUpperCase() || "A"}
+                </AvatarFallback>
+              </Avatar>
+              <span className=" text-sm text-foreground">
                 {question.askedBy || "Anonymous"}
               </span>
               <span className="text-sm text-muted-foreground">
@@ -36,15 +35,15 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-xs px-2 py-0 ml-2 h-6"
+                  className="text-xs px-2 italic py-0 ml-2 h-6"
                 >
                   {question.topicTitle}
                 </Button>
               )}
             </div>
 
-            <h3 className="md:text-lg font-bold text-foreground mb-2 font-reading leading-relaxed underline decoration-blue-500/50 decoration-2">
-              {question.question}
+            <h3 className="md:text-base font-bold text-foreground mb-2 font-reading leading-relaxed underline-offset-8 decoration-blue-500/50 decoration-2 ml-8">
+              Qn:: {question.question}
             </h3>
           </div>
 
@@ -54,7 +53,7 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
 
       {/* Answers Section */}
       {question.answers && question.answers.length > 0 ? (
-        <div className="ml-12">
+        <div className="ml-4 md:ml-8">
           <div className="flex items-center gap-2 mb-3">
             <MessageCircle className="h-4 w-4 text-green-500" />
             <Button
@@ -80,7 +79,7 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
                 </span>
               </div>
             </div>
-            <p className="md:text-lg font-thin text-foreground font-reading leading-relaxed">
+            <p className="md:text-sm font-thin text-foreground font-reading leading-relaxed">
               {question.answers[0].answer}
             </p>
           </div>
@@ -96,9 +95,9 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
             >
               Pending Answer
             </Button>
-            <span className="text-sm text-muted-foreground ml-2">
+            {/* <span className="text-sm text-muted-foreground ml-2">
               Be the first to help!
-            </span>
+            </span> */}
           </div>
         </div>
       )}
