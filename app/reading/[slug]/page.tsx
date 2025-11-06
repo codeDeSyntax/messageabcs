@@ -59,44 +59,18 @@ export async function generateMetadata({
     topic.mainExtract?.substring(0, 160) ||
     "Discover biblical truth and wisdom.";
 
-  // Enhanced image handling with fallback
-  const image = topic.image || "/mabcs.png";
-  const imageUrl = image.startsWith("http")
-    ? image
-    : `https://messageabcs.vercel.app${image}`;
+  const imageUrl = topic.image?.startsWith("http") ? topic.image : `/mabcs.png`;
 
   return {
     title,
     description,
     openGraph: {
-      title,
-      description,
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: topic.title,
-        },
-      ],
       type: "article",
-      siteName: "MessageABCs",
-      url: `https://messageabcs.vercel.app/reading/${generateSlug(
-        topic.title
-      )}`,
-      locale: "en_US",
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description,
-      images: [
-        {
-          url: imageUrl,
-          alt: topic.title,
-        },
-      ],
-      creator: "@messageabcs",
+      images: [imageUrl],
     },
     alternates: {
       canonical: `https://messageabcs.vercel.app/reading/${generateSlug(

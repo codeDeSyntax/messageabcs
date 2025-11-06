@@ -20,66 +20,30 @@ const crimsonPro = Crimson_Pro({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://messageabcs.vercel.app"),
-  title: "Biblical subjects Blogs - Know the truth concerning bible subjects",
+  title: "MessageABCs - Biblical Truth & Wisdom",
   description:
-    "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians",
-  keywords: [
-    "bible",
-    "biblical",
-    "subjects",
-    "Christian",
-    "truth",
-    "faith",
-    "MessageABCs",
-  ],
-  authors: [{ name: "Biblical Blogs Team" }],
+    "Discover inspiring biblical content and deeper insights on Christian subjects. Ye shall know the truth and the truth shall make you free.",
+  keywords: ["bible", "biblical", "Christian", "truth", "faith", "MessageABCs"],
+  authors: [{ name: "MessageABCs Team" }],
   icons: {
-    icon: "./mabcs.png",
-    apple: "./mabcs.png",
+    icon: "https://messageabcs.vercel.app/mabcs.png",
+    apple: "https://messageabcs.vercel.app/mabcs.png",
   },
   openGraph: {
-    title:
-      "Biblical Blogs - Ye shall know the truth and the truth shall make you free",
-    description:
-      "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians.",
     type: "website",
-    url: "https://messageabcs.vercel.app",
     siteName: "MessageABCs",
-    locale: "en_US",
     images: [
       {
-        url: "./mabcs.png",
+        url: "https://messageabcs.vercel.app/mabcs.png",
         width: 1200,
         height: 630,
-        alt: "MessageABCs - Biblical Truth and Wisdom",
+        alt: "MessageABCs - Biblical Truth & Wisdom",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     site: "@messageabcs",
-    creator: "@messageabcs",
-    title:
-      "Biblical Blogs - Ye shall know the truth and the truth shall make you free",
-    description:
-      "Discover inspiring biblical truth content, get a deeper read on different bible subjects usually not taught right amongst Christians.",
-    images: [
-      {
-        url: "./mabcs.png",
-        alt: "MessageABCs - Biblical Truth and Wisdom",
-      },
-    ],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
 };
 
