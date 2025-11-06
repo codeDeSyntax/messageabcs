@@ -45,26 +45,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return;
       }
 
+      // Clean up old refreshToken from localStorage (migration cleanup)
+      const oldRefreshToken = localStorage.getItem("refreshToken");
+      if (oldRefreshToken) {
+        console.log("🧹 Cleaning up old refreshToken from localStorage");
+        localStorage.removeItem("refreshToken");
+      }
+
       const savedToken = localStorage.getItem("authToken");
-      const savedRefreshToken = localStorage.getItem("refreshToken");
       const savedUserData = localStorage.getItem("userData");
 
       if (savedToken && savedUserData) {
         try {
           await apiService.verifyToken();
           setToken(savedToken);
-          setRefreshToken(savedRefreshToken);
           setUser(JSON.parse(savedUserData));
           setIsAuthenticated(true);
         } catch (error) {
           console.log("Token verification failed:", error);
-          // Try to refresh if we have a refresh token
-          if (savedRefreshToken) {
-            const refreshSuccess = await refreshAccessToken();
-            if (!refreshSuccess) {
-              clearAuthData();
-            }
-          } else {
+          // Try to refresh using HttpOnly cookie (no need to check localStorage)
+          const refreshSuccess = await refreshAccessToken();
+          if (!refreshSuccess) {
             clearAuthData();
           }
         }
@@ -78,8 +79,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const clearAuthData = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("authToken");
-      localStorage.removeItem("refreshToken");
       localStorage.removeItem("userData");
+      // No need to remove refreshToken - it's in HttpOnly cookie
     }
     setToken(null);
     setRefreshToken(null);
@@ -95,16 +96,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await apiService.login(username, password);
       if (response.success && response.token && response.user) {
         const newToken = response.token;
-        const newRefreshToken = response.refreshToken;
 
+        // Store only access token and user data
+        // RefreshToken is now in HttpOnly cookie (more secure!)
         localStorage.setItem("authToken", newToken);
-        if (newRefreshToken) {
-          localStorage.setItem("refreshToken", newRefreshToken);
-        }
         localStorage.setItem("userData", JSON.stringify(response.user));
 
         setToken(newToken);
-        setRefreshToken(newRefreshToken || null);
+        setRefreshToken(null); // Not stored in frontend anymore
         setUser(response.user);
         setIsAuthenticated(true);
         return true;
@@ -118,18 +117,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const refreshAccessToken = async (): Promise<boolean> => {
     try {
-      const savedRefreshToken = localStorage.getItem("refreshToken");
-      if (!savedRefreshToken) {
-        return false;
-      }
-
-      const response = await apiService.refreshToken(savedRefreshToken);
-      if (response.success && response.token && response.refreshToken) {
+      // No need to pass refreshToken - it's sent automatically in HttpOnly cookie!
+      const response = await apiService.refreshToken();
+      if (response.success && response.token) {
         localStorage.setItem("authToken", response.token);
-        localStorage.setItem("refreshToken", response.refreshToken);
 
         setToken(response.token);
-        setRefreshToken(response.refreshToken);
         setIsAuthenticated(true);
         return true;
       }
@@ -142,10 +135,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = async () => {
     try {
-      const currentRefreshToken = localStorage.getItem("refreshToken");
-      if (currentRefreshToken) {
-        await apiService.logout(currentRefreshToken);
-      }
+      // No need to pass refreshToken - it's sent automatically in HttpOnly cookie!
+      await apiService.logout();
     } catch (error) {
       console.error("Logout error:", error);
     } finally {

@@ -164,53 +164,35 @@ class ApiService {
         !endpoint.includes("/auth/refresh") &&
         !endpoint.includes("/auth/login")
       ) {
-        const refreshToken = localStorage.getItem("refreshToken");
+        console.log("🔄 Access token expired, attempting refresh...");
 
-        if (refreshToken) {
-          console.log("🔄 Access token expired, attempting refresh...");
+        try {
+          // No need to check localStorage - refreshToken is in HttpOnly cookie!
+          const refreshResponse = await this.refreshToken();
 
-          try {
-            const refreshResponse = await this.refreshToken(refreshToken);
+          if (refreshResponse.success && refreshResponse.token) {
+            // Update stored access token only
+            localStorage.setItem("authToken", refreshResponse.token);
 
-            if (
-              refreshResponse.success &&
-              refreshResponse.token &&
-              refreshResponse.refreshToken
-            ) {
-              // Update stored tokens
-              localStorage.setItem("authToken", refreshResponse.token);
-              localStorage.setItem(
-                "refreshToken",
-                refreshResponse.refreshToken
-              );
-
-              // Retry original request with new token
-              headers = this.getAuthHeaders();
-              response = await makeRequest(headers);
-              console.log("✅ Token refreshed, request retried successfully");
-            } else {
-              // Refresh failed, clear tokens and throw error
-              localStorage.removeItem("authToken");
-              localStorage.removeItem("refreshToken");
-              localStorage.removeItem("userData");
-              throw new Error(
-                "Authentication session expired. Please login again."
-              );
-            }
-          } catch (refreshError) {
+            // Retry original request with new token
+            headers = this.getAuthHeaders();
+            response = await makeRequest(headers);
+            console.log("✅ Token refreshed, request retried successfully");
+          } else {
             // Refresh failed, clear tokens and throw error
             localStorage.removeItem("authToken");
-            localStorage.removeItem("refreshToken");
             localStorage.removeItem("userData");
             throw new Error(
               "Authentication session expired. Please login again."
             );
           }
-        } else {
-          // No refresh token available
+        } catch (refreshError) {
+          // Refresh failed, clear tokens and throw error
           localStorage.removeItem("authToken");
           localStorage.removeItem("userData");
-          throw new Error("Authentication required. Please login.");
+          throw new Error(
+            "Authentication session expired. Please login again."
+          );
         }
       }
 
@@ -249,6 +231,7 @@ class ApiService {
         headers: {
           ...headers,
         },
+        credentials: "include", // Important: Receive HttpOnly cookie!
         body: JSON.stringify({ username, password }),
       });
 
@@ -264,7 +247,7 @@ class ApiService {
     return this.request("/auth/verify");
   }
 
-  async refreshToken(refreshToken: string): Promise<{
+  async refreshToken(): Promise<{
     success: boolean;
     token?: string;
     refreshToken?: string;
@@ -280,7 +263,7 @@ class ApiService {
         headers: {
           ...headers,
         },
-        body: JSON.stringify({ refreshToken }),
+        credentials: "include", // Important: Send HttpOnly cookies!
       });
 
       const data = await response.json();
@@ -291,9 +274,7 @@ class ApiService {
     }
   }
 
-  async logout(
-    refreshToken?: string
-  ): Promise<ApiResponse<{ message: string }>> {
+  async logout(): Promise<ApiResponse<{ message: string }>> {
     const url = `${API_BASE_URL}/auth/logout`;
     const headers = this.getAuthHeaders();
 
@@ -303,7 +284,7 @@ class ApiService {
         headers: {
           ...headers,
         },
-        body: JSON.stringify({ refreshToken }),
+        credentials: "include", // Important: Send HttpOnly cookie!
       });
 
       const data = await response.json();
