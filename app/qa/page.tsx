@@ -8,7 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { AskQuestionModal } from "@/components/AskQuestionModal";
-import { apiService, Question, BiblicalTopic } from "@/services/api";
+import { useQuestions, useTopics } from "@/hooks/queries";
 
 // Import modular components
 import { QASearchHeader } from "@/components/QA/components/QASearchHeader";
@@ -17,9 +17,6 @@ import { TopicsSidebar } from "@/components/QA/components/TopicsSidebar";
 
 export default function QA() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [topics, setTopics] = useState<BiblicalTopic[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [isAskModalOpen, setIsAskModalOpen] = useState(false);
@@ -27,81 +24,39 @@ export default function QA() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
 
+  // Use TanStack Query for data fetching
+  const {
+    data: questionsData,
+    isLoading: questionsLoading,
+    refetch: refetchQuestions,
+  } = useQuestions({
+    page: 1,
+    limit: 20,
+    search: searchQuery || undefined,
+    topicId: selectedTopic || undefined,
+  });
+
+  const { data: topicsData, isLoading: topicsLoading } = useTopics({
+    page: 1,
+    limit: 50,
+  });
+
+  const questions = questionsData?.data || [];
+  const topics = topicsData?.data || [];
+  const loading = questionsLoading || topicsLoading;
+
   useEffect(() => {
     document.title = "Q & A - MessageABCs";
-    loadData();
   }, []);
 
-  useEffect(() => {
-    const loadFilteredQuestions = async () => {
-      try {
-        setLoading(true);
-        const response = await apiService.getQuestions({
-          search: searchQuery,
-          topicId: selectedTopic || undefined,
-        });
-
-        if (response.success && response.data) {
-          setQuestions(response.data);
-        }
-      } catch (error) {
-        console.error("Error loading filtered questions:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadFilteredQuestions();
-  }, [selectedTopic, searchQuery]);
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const [questionsResponse, topicsResponse] = await Promise.all([
-        apiService.getQuestions({ page: 1, limit: 20 }),
-        apiService.getTopics({ page: 1, limit: 50 }),
-      ]);
-
-      if (questionsResponse.success && questionsResponse.data) {
-        setQuestions(questionsResponse.data);
-      }
-
-      if (topicsResponse.success && topicsResponse.data) {
-        setTopics(topicsResponse.data);
-      }
-    } catch (error) {
-      console.error("Error loading Q&A data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      loadData();
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await apiService.getQuestions({
-        search: searchQuery,
-        topicId: selectedTopic || undefined,
-      });
-
-      if (response.success && response.data) {
-        setQuestions(response.data);
-      }
-    } catch (error) {
-      console.error("Error searching questions:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleSearch = () => {
+    // Query will automatically refetch when searchQuery changes
+    refetchQuestions();
   };
 
   const handleQuestionCreated = () => {
     // Refresh the questions list when a new question is created
-    loadData();
+    refetchQuestions();
   };
 
   const formatDate = (dateString: string) => {

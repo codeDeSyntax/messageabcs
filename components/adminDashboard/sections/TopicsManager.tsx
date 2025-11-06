@@ -51,9 +51,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { apiService, BiblicalTopicWithCount } from "@/services/api";
+import { BiblicalTopicWithCount } from "@/services/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GAME_BUTTON_SMALL } from "@/constants/gameStyles";
+import { useTopicsWithQuestionCounts, useDeleteTopic } from "@/hooks/queries";
 
 // Backend BiblicalTopic with admin-specific fields
 type AdminTopic = BiblicalTopicWithCount & {
@@ -71,52 +72,34 @@ interface TopicFormData {
 
 const TopicsManager: React.FC = () => {
   const router = useRouter();
-  const [topics, setTopics] = useState<AdminTopic[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<
     "all" | "active" | "inactive"
   >("all");
   const { toast } = useToast();
 
-  // Load topics from API
-  useEffect(() => {
-    fetchTopics();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Use TanStack Query for topics
+  const {
+    data: topicsData,
+    isLoading: loading,
+    refetch: fetchTopics,
+  } = useTopicsWithQuestionCounts({
+    page: 1,
+    limit: 50,
+  });
 
-  const fetchTopics = async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.getTopicsWithQuestionCounts({
-        page: 1,
-        limit: 50,
-      });
+  // Use TanStack Query mutation for deleting topic
+  const deleteTopicMutation = useDeleteTopic();
 
-      if (response.success && response.data) {
-        // Transform BiblicalTopicWithCount data to AdminTopic format
-        const adminTopics = response.data.map((t) => ({
-          ...t,
-          isActive: true, // Default to active since no status field in public endpoint
-        }));
-        setTopics(adminTopics);
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to load topics",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching topics:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load topics",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Memoize topics to prevent unnecessary recalculations
+  const topics = React.useMemo<AdminTopic[]>(
+    () =>
+      topicsData?.data?.map((t) => ({
+        ...t,
+        isActive: true, // Default to active since no status field in public endpoint
+      })) || [],
+    [topicsData]
+  );
 
   // Apply filters to topics
   const filteredTopics = React.useMemo(() => {
@@ -146,13 +129,11 @@ const TopicsManager: React.FC = () => {
 
   const handleDelete = async (topicId: string) => {
     try {
-      await apiService.deleteTopic(topicId);
+      await deleteTopicMutation.mutateAsync(topicId);
       toast({
         title: "Success",
         description: "Topic deleted successfully",
       });
-      // Refresh topics list
-      fetchTopics();
     } catch (error) {
       toast({
         title: "Error",

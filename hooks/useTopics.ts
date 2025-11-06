@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import { apiService, BiblicalTopicWithCount } from "@/services/api";
+import { BiblicalTopicWithCount } from "@/services/api";
+import { useTopicsWithQuestionCounts } from "@/hooks/queries";
 
 interface UseTopicsResult {
   topics: BiblicalTopicWithCount[];
@@ -10,7 +11,7 @@ interface UseTopicsResult {
   searchQuery: string;
   setCurrentPage: (page: number) => void;
   setSearchQuery: (query: string) => void;
-  refetch: () => Promise<void>;
+  refetch: () => void;
 }
 
 interface UseTopicsOptions {
@@ -22,13 +23,26 @@ interface UseTopicsOptions {
 export const useTopics = (options: UseTopicsOptions = {}): UseTopicsResult => {
   const { itemsPerPage = 8, initialPage = 1, initialSearch = "" } = options;
 
-  const [topics, setTopics] = useState<BiblicalTopicWithCount[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
 
-  // Filter topics based on search query (client-side filtering for now)
+  // Use TanStack Query for data fetching
+  const {
+    data,
+    isLoading: loading,
+    error: queryError,
+    refetch,
+  } = useTopicsWithQuestionCounts({
+    page: 1,
+    limit: 100, // Get more topics to support client-side filtering
+  });
+
+  const error = queryError ? (queryError as Error).message : null;
+
+  // Memoize topics to prevent unnecessary recalculations
+  const topics = useMemo(() => data?.data || [], [data]);
+
+  // Filter topics based on search query (client-side filtering)
   const filteredTopics = useMemo(() => {
     if (!searchQuery.trim()) return topics;
 
@@ -53,32 +67,6 @@ export const useTopics = (options: UseTopicsOptions = {}): UseTopicsResult => {
     return filteredTopics.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredTopics, currentPage, itemsPerPage]);
 
-  // Fetch topics from API
-  const fetchTopics = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await apiService.getTopicsWithQuestionCounts({
-        page: 1,
-        limit: 100, // Get more topics to support client-side filtering
-      });
-
-      if (response.success && response.data) {
-        setTopics(response.data);
-      } else {
-        throw new Error(response.error || "Failed to fetch topics");
-      }
-    } catch (err) {
-      console.error("Error fetching topics:", err);
-      setError(err instanceof Error ? err.message : "An error occurred");
-      // Fallback to empty array on error
-      setTopics([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Reset to first page when search changes
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
@@ -92,11 +80,6 @@ export const useTopics = (options: UseTopicsOptions = {}): UseTopicsResult => {
     }
   }, [currentPage, totalPages]);
 
-  // Initial fetch
-  useEffect(() => {
-    fetchTopics();
-  }, []);
-
   return {
     topics: paginatedTopics,
     loading,
@@ -106,6 +89,6 @@ export const useTopics = (options: UseTopicsOptions = {}): UseTopicsResult => {
     searchQuery,
     setCurrentPage,
     setSearchQuery: handleSearchChange,
-    refetch: fetchTopics,
+    refetch: () => refetch(),
   };
 };

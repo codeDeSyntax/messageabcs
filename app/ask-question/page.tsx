@@ -29,7 +29,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { apiService, BiblicalTopic } from "@/services/api";
+import { useTopics, useCreateQuestion } from "@/hooks/queries";
 
 interface QuestionFormData {
   question: string;
@@ -41,7 +41,6 @@ export default function AskQuestion() {
   const router = useRouter();
   const { toast } = useToast();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState<QuestionFormData>({
@@ -50,33 +49,21 @@ export default function AskQuestion() {
     askedBy: "",
   });
 
-  const [topics, setTopics] = useState<BiblicalTopic[]>([]);
-  const [loadingTopics, setLoadingTopics] = useState(false);
+  // Use TanStack Query for topics
+  const { data: topicsData, isLoading: loadingTopics } = useTopics({
+    page: 1,
+    limit: 100,
+  });
+  const topics = topicsData?.data || [];
 
-  // Load topics on mount
+  // Use TanStack Query mutation for creating question
+  const createQuestionMutation = useCreateQuestion();
+  const isSubmitting = createQuestionMutation.isPending;
+
+  // Set page title
   useEffect(() => {
     document.title = "Ask a Question - MessageABCs";
-    loadTopics();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const loadTopics = async () => {
-    try {
-      setLoadingTopics(true);
-      const response = await apiService.getTopics();
-      if (response.success && response.data) {
-        setTopics(response.data);
-      }
-    } catch (error) {
-      console.error("Error loading topics:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load topics",
-        variant: "destructive",
-      });
-    } finally {
-      setLoadingTopics(false);
-    }
-  };
+  }, []);
 
   const handleInputChange = (
     field: keyof QuestionFormData,
@@ -118,8 +105,6 @@ export default function AskQuestion() {
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
       const questionData = {
         question: formData.question.trim(),
@@ -127,19 +112,15 @@ export default function AskQuestion() {
         askedBy: formData.askedBy.trim() || undefined,
       };
 
-      const response = await apiService.createQuestion(questionData);
+      await createQuestionMutation.mutateAsync(questionData);
 
-      if (response.success) {
-        toast({
-          title: "Success!",
-          description: "Your question has been submitted successfully",
-        });
+      toast({
+        title: "Success!",
+        description: "Your question has been submitted successfully",
+      });
 
-        // Redirect to Q&A page to see the question
-        router.push("/qa");
-      } else {
-        throw new Error(response.error || "Failed to submit question");
-      }
+      // Redirect to Q&A page to see the question
+      router.push("/qa");
     } catch (error) {
       console.error("Error submitting question:", error);
       toast({
@@ -150,8 +131,6 @@ export default function AskQuestion() {
             : "Failed to submit question. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -334,18 +313,14 @@ export default function AskQuestion() {
                                 className="w-10 h-10 rounded-full object-cover border border-blue-500/20"
                               />
                             )}
-                          
-                              <div className="flex items-center gap-2 mb-1 py-0">
-                                <p
-                                  className="text-blue-900 dark:text-blue-50 truncate"
-                                >
-                                  {isOtherSelected
-                                    ? "Other"
-                                    : selectedTopic!.title}
-                                </p>
-                              </div>
-                              
-                            
+
+                            <div className="flex items-center gap-2 mb-1 py-0">
+                              <p className="text-blue-900 dark:text-blue-50 truncate">
+                                {isOtherSelected
+                                  ? "Other"
+                                  : selectedTopic!.title}
+                              </p>
+                            </div>
                           </div>
                         </CardContent>
                       </Card>

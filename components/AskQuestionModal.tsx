@@ -20,8 +20,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MessageCircle, User, Send, X, HelpCircle } from "lucide-react";
-import { apiService, BiblicalTopic } from "@/services/api";
+import { BiblicalTopic } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
+import { useTopics, useCreateQuestion } from "@/hooks/queries";
 
 interface AskQuestionModalProps {
   isOpen: boolean;
@@ -46,35 +47,16 @@ export function AskQuestionModal({
     topicId: null,
     askedBy: "",
   });
-  const [topics, setTopics] = useState<BiblicalTopic[]>([]);
-  const [loadingTopics, setLoadingTopics] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Load topics on mount
-  useEffect(() => {
-    const loadTopics = async () => {
-      try {
-        setLoadingTopics(true);
-        const response = await apiService.getTopics();
-        if (response.success && response.data) {
-          setTopics(response.data);
-        }
-      } catch (error) {
-        console.error("Error loading topics:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load topics",
-          variant: "destructive",
-        });
-      } finally {
-        setLoadingTopics(false);
-      }
-    };
+  // Use TanStack Query for topics
+  const { data: topicsData, isLoading: loadingTopics } = useTopics({
+    page: 1,
+    limit: 100,
+  });
+  const topics = topicsData?.data || [];
 
-    if (isOpen) {
-      loadTopics();
-    }
-  }, [isOpen, toast]);
+  // Use TanStack Query mutation for creating question
+  const createQuestionMutation = useCreateQuestion();
 
   // Reset form when modal opens/closes
   useEffect(() => {
@@ -84,7 +66,6 @@ export function AskQuestionModal({
         topicId: null,
         askedBy: "",
       });
-      setIsSubmitting(false);
     }
   }, [isOpen]);
 
@@ -128,8 +109,6 @@ export function AskQuestionModal({
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
       const questionData = {
         question: formData.question.trim(),
@@ -137,22 +116,18 @@ export function AskQuestionModal({
         askedBy: formData.askedBy.trim() || undefined,
       };
 
-      const response = await apiService.createQuestion(questionData);
+      await createQuestionMutation.mutateAsync(questionData);
 
-      if (response.success) {
-        toast({
-          title: "Success!",
-          description: "Your question has been submitted successfully",
-        });
+      toast({
+        title: "Success!",
+        description: "Your question has been submitted successfully",
+      });
 
-        if (onQuestionCreated) {
-          onQuestionCreated();
-        }
-
-        onClose();
-      } else {
-        throw new Error(response.error || "Failed to submit question");
+      if (onQuestionCreated) {
+        onQuestionCreated();
       }
+
+      onClose();
     } catch (error) {
       console.error("Error submitting question:", error);
       toast({
@@ -163,10 +138,10 @@ export function AskQuestionModal({
             : "Failed to submit question. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
+
+  const isSubmitting = createQuestionMutation.isPending;
 
   const selectedTopic = topics.find((topic) => topic.id === formData.topicId);
   const isOtherSelected = formData.topicId === "other";
