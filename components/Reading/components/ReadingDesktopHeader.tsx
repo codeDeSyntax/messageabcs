@@ -19,26 +19,26 @@ export const ReadingDesktopHeader = ({
   const router = useRouter();
 
   return (
-    <div className="hidden md:block relative bg-blue-50 dark:bg-[#07072d] z-10 border-b border-gray-200 dark:border-gray-800">
+    <div className="hidden md:block relative bg-background z-10 border-b border-border">
       <div className="relative w-full flex items-center justify-between px-6 py-4">
         {/* Back Button */}
         <Button
           onClick={() => router.push("/topics")}
           variant="ghost"
           size="sm"
-          className="p-2 hover:bg-white/20 rounded-full text-blue-900 dark:text-white/90 backdrop-blur-sm border border-white/20"
+          className="p-2 hover:bg-muted rounded-full text-foreground backdrop-blur-sm border border-border"
         >
-          <ArrowLeft className="h-5 w-5 text-white" />
+          <ArrowLeft className="h-5 w-5 text-primary-foreground" />
         </Button>
 
         {/* Title with Background Image */}
         {currentTopic && (
           <div className="flex-1 text-center px-8">
-            <h1 className="text-xl md:text-2xl font-bold text-black dark:text-white drop-shadow-lg">
+            <h1 className="text-xl md:text-2xl font-bold text-primary-foreground drop-shadow-lg">
               {currentTopic.title}
             </h1>
             {currentTopic.subtitle && (
-              <p className="text-sm md:text-base text-blue-900 dark:text-white/90 font-medium drop-shadow-md mt-1">
+              <p className="text-sm md:text-base text-foreground font-medium drop-shadow-md mt-1">
                 {currentTopic.subtitle}
               </p>
             )}
@@ -51,7 +51,7 @@ export const ReadingDesktopHeader = ({
           disabled={isGeneratingShareCard}
           variant="ghost"
           size="sm"
-          className="p-2 hover:bg-white/20 rounded-full backdrop-blur-sm border border-white/20 disabled:opacity-50"
+          className="p-2 hover:bg-primary-foreground/20 rounded-full backdrop-blur-sm border border-primary-foreground/20 disabled:opacity-50"
           title={
             isGeneratingShareCard
               ? "Generating share card..."
@@ -59,7 +59,7 @@ export const ReadingDesktopHeader = ({
           }
         >
           {isGeneratingShareCard ? (
-            <div className="w-5 h-5 border-2 border-white text-blue-900 dark:text-white/90 border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           ) : (
             <Share2 className="h-5 w-5" />
           )}

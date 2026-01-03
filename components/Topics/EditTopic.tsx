@@ -192,7 +192,7 @@ export function EditTopicContent() {
         <AnimatedBackground />
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
             <p className="mt-4 text-lg text-muted-foreground">
               Loading topic...
             </p>
@@ -232,7 +232,7 @@ export function EditTopicContent() {
         >
           MESSAGE
           <span
-            className="text-white"
+            className="text-primary-foreground"
             style={{
               color: "white",
               textShadow: `0px 0px 0 rgb(252, 252, 252),
@@ -251,8 +251,8 @@ export function EditTopicContent() {
       {/* Main Content */}
       <div className="flex justify-center h-full  sm:p-6 pt-0 md:pt-6 relative z-10 ">
         <div className="w-full max-w-4xl h-full ">
-          <Card className="h-full bg-white/20 dark:bg-black/10 backdrop-blur-sm border-blue-500/20 flex flex-col sm:pb-20">
-            <CardHeader className="border-b border-blue-500/20 flex-shrink-0">
+          <Card className="h-full bg-background/20 backdrop-blur-sm border-border flex flex-col sm:pb-20">
+            <CardHeader className="border-b border-border flex-shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Button
@@ -300,7 +300,7 @@ export function EditTopicContent() {
                         handleInputChange("title", e.target.value)
                       }
                       placeholder="Enter topic title..."
-                      className="bg-white/30 dark:bg-black/20 border-blue-500/30 focus:border-blue-500"
+                      className="bg-background/30 border-border focus:border-primary"
                       required
                     />
                   </div>
@@ -320,7 +320,7 @@ export function EditTopicContent() {
                         handleInputChange("subtitle", e.target.value)
                       }
                       placeholder="Enter topic subtitle..."
-                      className="bg-white/30 dark:bg-black/20 border-blue-500/30 focus:border-blue-500"
+                      className="bg-background/30 border-border focus:border-primary"
                     />
                   </div>
 
@@ -339,7 +339,7 @@ export function EditTopicContent() {
                         handleInputChange("image", e.target.value)
                       }
                       placeholder="Enter image URL..."
-                      className="bg-white/30 dark:bg-black/20 border-blue-500/30 focus:border-blue-500"
+                      className="bg-background/30 border-border focus:border-primary"
                       required
                     />
                     {formData.image && (
@@ -366,7 +366,7 @@ export function EditTopicContent() {
                         value={scriptureInput}
                         onChange={(e) => setScriptureInput(e.target.value)}
                         placeholder="e.g., John 3:16"
-                        className="bg-white/30 dark:bg-black/20 border-blue-500/30 focus:border-blue-500"
+                        className="bg-background/30 border-border focus:border-primary"
                         onKeyPress={(e) =>
                           e.key === "Enter" &&
                           (e.preventDefault(), handleAddScripture())
@@ -375,7 +375,7 @@ export function EditTopicContent() {
                       <Button
                         type="button"
                         onClick={handleAddScripture}
-                        className="flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 text-foreground border border-blue-500/30"
+                        className="flex items-center gap-2 bg-primary/20 hover:bg-primary/30 text-foreground border border-border"
                         variant="outline"
                       >
                         <Plus className="h-4 w-4" />
@@ -388,7 +388,7 @@ export function EditTopicContent() {
                           <Badge
                             key={index}
                             variant="secondary"
-                            className="px-3 py-1 cursor-pointer hover:bg-red-100 dark:hover:bg-red-900 bg-blue-500/20 text-foreground border border-blue-500/30 flex items-center gap-1"
+                            className="px-3 py-1 cursor-pointer hover:bg-red-100 bg-primary/20 text-foreground border border-border flex items-center gap-1"
                             onClick={() => handleRemoveScripture(scripture)}
                           >
                             {scripture}
@@ -404,7 +404,7 @@ export function EditTopicContent() {
                     <Label className="text-sm font-medium text-foreground">
                       Main Extract
                     </Label>
-                    <div className="min-h-[200px] rounded-md border border-blue-500/30 bg-white/30 dark:bg-black/20">
+                    <div className="min-h-[200px] rounded-md border border-border bg-background/30">
                       <TiptapEditor
                         content={formData.mainExtract}
                         onChange={(content) =>
@@ -425,12 +425,12 @@ export function EditTopicContent() {
                         value={quoteInput}
                         onChange={(e) => setQuoteInput(e.target.value)}
                         placeholder="Add an inspirational quote..."
-                        className="flex-1 min-h-[80px] rounded-md bg-white/30 dark:bg-black/20 border border-blue-500/30 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none resize-none"
+                        className="flex-1 min-h-[80px] rounded-md bg-background/30 border border-border px-3 py-2 text-sm focus:border-primary focus:outline-none resize-none"
                       />
                       <Button
                         type="button"
                         onClick={handleAddQuote}
-                        className="self-start bg-blue-500/20 hover:bg-blue-500/30 text-foreground border border-blue-500/30"
+                        className="self-start bg-primary/20 hover:bg-primary/30 text-foreground border border-border"
                         variant="outline"
                       >
                         <Plus className="h-4 w-4 mr-2" />
@@ -442,7 +442,7 @@ export function EditTopicContent() {
                         {formData.quotes.map((quote, index) => (
                           <div
                             key={index}
-                            className="flex items-start gap-2 p-3 bg-white/20 dark:bg-black/10 rounded border border-blue-500/20"
+                            className="flex items-start gap-2 p-3 bg-background/20 rounded border border-border"
                           >
                             <div className="flex-1 text-sm italic text-foreground">
                               {quote}
@@ -467,7 +467,7 @@ export function EditTopicContent() {
                     <Button
                       type="submit"
                       disabled={isSaving}
-                      className="bg-blue-500/20 hover:bg-blue-500/30 text-foreground border border-blue-500/30"
+                      className="bg-primary/20 hover:bg-primary/30 text-foreground border border-border"
                       variant="outline"
                     >
                       <Save className="h-4 w-4 mr-2" />
@@ -510,7 +510,7 @@ export function EditTopicContent() {
                           <Badge
                             key={index}
                             variant="secondary"
-                            className="bg-blue-500/20 text-foreground border border-blue-500/30"
+                            className="bg-primary/20 text-foreground border border-border"
                           >
                             {scripture}
                           </Badge>
@@ -542,7 +542,7 @@ export function EditTopicContent() {
                         {formData.quotes.map((quote, index) => (
                           <blockquote
                             key={index}
-                            className="border-l-4 border-blue-500/30 pl-4 italic text-foreground"
+                            className="border-l-4 border-primary/30 pl-4 italic text-foreground"
                           >
                             {quote}
                           </blockquote>

@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import NextImage from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -107,8 +108,8 @@ export default function Login() {
             inset 3px 3px 8px rgba(0, 0, 0, 0.15),
             inset -1px -1px 3px rgba(255, 255, 255, 0.2),
             0 1px 0 rgba(255, 255, 255, 0.3);
-          background: linear-gradient(145deg, hsl(210 40% 94%), hsl(210 40% 98%));
-          border: 2px solid hsl(214.3 31.8% 91.4%);
+          background: linear-gradient(145deg, hsl(39 84% 90%), hsl(39 84% 94%));
+          border: 2px solid hsl(32 47% 65%);
           position: relative;
         }
         
@@ -116,9 +117,9 @@ export default function Login() {
           box-shadow: 
             inset 4px 4px 10px rgba(0, 0, 0, 0.2),
             inset -2px -2px 5px rgba(255, 255, 255, 0.2),
-            0 0 0 3px hsl(214 100% 77% / 0.3);
-          background: linear-gradient(145deg, hsl(210 40% 92%), hsl(210 40% 96%));
-          border-color: hsl(214 100% 77%);
+            0 0 0 3px hsl(25 35% 44% / 0.3);
+          background: linear-gradient(145deg, hsl(39 84% 88%), hsl(39 84% 92%));
+          border-color: hsl(25 35% 44%);
         }
         
         .game-input-inset:hover {
@@ -126,26 +127,26 @@ export default function Login() {
             inset 3px 3px 8px rgba(0, 0, 0, 0.18),
             inset -1px -1px 3px rgba(255, 255, 255, 0.25),
             0 1px 0 rgba(255, 255, 255, 0.3);
-          background: linear-gradient(145deg, hsl(210 40% 93%), hsl(210 40% 97%));
+          background: linear-gradient(145deg, hsl(39 84% 89%), hsl(39 84% 93%));
         }
         
-        /* Dark mode styles - using your biblical navy theme */
+        /* Dark mode styles - using your cream & brown theme */
         .dark .game-input-inset {
           box-shadow: 
             inset 3px 3px 8px rgba(0, 0, 0, 0.5),
             inset -1px -1px 3px rgba(255, 255, 255, 0.03),
             0 1px 0 rgba(255, 255, 255, 0.05);
-          background: linear-gradient(145deg, hsl(210 32% 17%), hsl(210 32% 22%));
-          border-color: hsl(210 32% 22%);
+          background: linear-gradient(145deg, hsl(30 12% 20%), hsl(30 12% 25%));
+          border-color: hsl(30 12% 25%);
         }
         
         .dark .game-input-inset:focus {
           box-shadow: 
             inset 4px 4px 10px rgba(0, 0, 0, 0.6),
             inset -2px -2px 5px rgba(255, 255, 255, 0.04),
-            0 0 0 3px hsl(214 100% 77% / 0.4);
-          background: linear-gradient(145deg, hsl(210 32% 16%), hsl(210 32% 20%));
-          border-color: hsl(214 100% 77%);
+            0 0 0 3px hsl(25 35% 44% / 0.4);
+          background: linear-gradient(145deg, hsl(30 12% 18%), hsl(30 12% 23%));
+          border-color: hsl(25 35% 44%);
         }
         
         .dark .game-input-inset:hover {
@@ -153,12 +154,12 @@ export default function Login() {
             inset 3px 3px 8px rgba(0, 0, 0, 0.55),
             inset -1px -1px 3px rgba(255, 255, 255, 0.05),
             0 1px 0 rgba(255, 255, 255, 0.06);
-          background: linear-gradient(145deg, hsl(210 32% 18%), hsl(210 32% 23%));
+          background: linear-gradient(145deg, hsl(30 12% 21%), hsl(30 12% 26%));
         }
         
         /* Placeholder styling for game inputs */
         .game-input-inset::placeholder {
-          color: hsl(215.4 16.3% 46.9%);
+          color: hsl(30 12% 50%);
           text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.2);
         }
         
@@ -169,7 +170,7 @@ export default function Login() {
         
         /* Text color matching your theme */
         .game-input-inset {
-          color: hsl(222.2 84% 4.9%);
+          color: hsl(30 12% 12%);
         }
         
         .dark .game-input-inset {
@@ -184,7 +185,7 @@ export default function Login() {
 
       <div className="h-screen overflow-hidden relative">
         <AnimatedBackground />
-        <div className="inset-0 absolute bg-[#0000ff1e]/5 dark:bg-[#00000012]/5 backdrop-blur-sm" />
+        <div className="inset-0 absolute bg-primary/5 backdrop-blur-sm" />
         {/* Mobile Navigation Drawer */}
         <div className="md:hidden p-6 pb-2 relative z-10 flex justify-between items-center">
           <NavigationDrawer
@@ -197,14 +198,16 @@ export default function Login() {
         {/* Main Content */}
         <div className="flex justify-center items-center h-full p-3 pt-0 md:pt-6 relative z-10">
           <div className="w-full max-w-md flex items-center">
-            <Card className="w-full bg-white/20 dark:bg-black/10 backdrop-blur-sm border-blue-500/20">
-              <CardHeader className="border-b border-blue-500/20 text-center">
+            <Card className="w-full bg-background/20 backdrop-blur-sm border-border">
+              <CardHeader className="border-b border-border text-center">
                 <div className="flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                    <img
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center shadow-lg">
+                    <NextImage
                       alt="appicon"
                       src="/mabcs.png"
-                      className="text-white"
+                      width={64}
+                      height={64}
+                      className="text-primary-foreground"
                     />
                   </div>
                 </div>
@@ -230,11 +233,12 @@ export default function Login() {
                       id="username"
                       type="text"
                       value={formData.username}
-                      onChange={(e) =>
-                        handleInputChange("username", e.target.value)
-                      }
+                      onChange={(e) => {
+                        e.preventDefault();
+                        handleInputChange("username", e.target.value);
+                      }}
                       placeholder="Enter your username..."
-                      className="bg-blue-50 dark:bg-blue-900/30  rounded-full h-11 px-4 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className="bg-cream-200  rounded-full h-11 px-4 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:bg-cream-100 focus-visible:ring-offset-0"
                       required
                       autoComplete="username"
                     />
@@ -257,7 +261,7 @@ export default function Login() {
                           handleInputChange("password", e.target.value)
                         }
                         placeholder="Enter your password..."
-                        className=" bg-blue-50 dark:bg-blue-900/30 border-none rounded-full h-11 px-4 pr-12 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className=" bg-muted  border-none rounded-full h-11 px-4 pr-12 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:bg-cream-100"
                         required
                         autoComplete="current-password"
                       />
@@ -282,7 +286,7 @@ export default function Login() {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-[40%] bg-blue-600 hover:bg-blue-700 text-white py-3"
+                      className="w-[40%] bg-primary hover:bg-accent text-primary-foreground py-3"
                     >
                       <span>{isSubmitting ? "Signing in..." : "Sign In"}</span>
                     </Button>
@@ -291,7 +295,7 @@ export default function Login() {
                       type="button"
                       variant="ghost"
                       onClick={() => router.push("/topics")}
-                      className="w-[40%] hover:bg-blue-500 flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                      className="w-[40%] hover:bg-primary/20 flex items-center gap-2 text-muted-foreground hover:text-foreground"
                     >
                       <ArrowLeft className="h-4 w-4" />
                       Topics

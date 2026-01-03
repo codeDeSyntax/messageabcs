@@ -52,8 +52,8 @@ export function ThreadedMessageComponent({
 
   const getAuthorColor = (authorType: AuthorType) => {
     return authorType === "admin"
-      ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
-      : "bg-green-500/20 text-green-600 dark:text-green-400";
+      ? "bg-primary/20 text-primary"
+      : "bg-green-500/20 text-green-600";
   };
 
   const handleSubmitReply = async () => {
@@ -111,7 +111,7 @@ export function ThreadedMessageComponent({
     <div className="space-y-3">
       {/* Main Message */}
       <div
-        className="group hover:bg-white/5 dark:hover:bg-black/5 transition-all duration-200 cursor-pointer md:p-6 rounded-lg"
+        className="group hover:bg-background/5 transition-all duration-200 cursor-pointer md:p-6 rounded-lg"
         style={{ marginLeft: `${marginLeft}px` }}
       >
         {/* Message Section */}
@@ -153,7 +153,7 @@ export function ThreadedMessageComponent({
               <div
                 className={`text-lg font-semibold text-foreground mb-2 font-reading leading-relaxed ${
                   message.level === 0
-                    ? "underline decoration-blue-500/50 decoration-2 underline-offset-4"
+                    ? "underline decoration-primary/50 decoration-2 underline-offset-4"
                     : ""
                 }`}
               >
@@ -195,7 +195,7 @@ export function ThreadedMessageComponent({
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsReplying(!isReplying)}
-                  className="text-blue-500 hover:text-blue-600 h-7 px-2"
+                  className="text-primary hover:text-accent h-7 px-2"
                 >
                   <Reply className="h-3 w-3 mr-1" />
                   Reply
@@ -212,7 +212,7 @@ export function ThreadedMessageComponent({
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsReplying(!isReplying)}
-                  className="text-blue-500 hover:text-blue-600 h-7 px-2"
+                  className="text-primary hover:text-accent h-7 px-2"
                 >
                   <Reply className="h-3 w-3 mr-1" />
                   Be the first to reply!
@@ -224,20 +224,20 @@ export function ThreadedMessageComponent({
 
         {/* Reply Form */}
         {isReplying && (
-          <div className="ml-12 mt-4 p-4 bg-blue-50/30 dark:bg-blue-900/10 rounded-lg border-l-4 border-blue-500/50">
+          <div className="ml-12 mt-4 p-4 bg-background/30 rounded-lg border-l-4 border-primary/50">
             <div className="space-y-3">
               <input
                 type="text"
                 placeholder="Your name (optional)"
                 value={replyAuthor}
                 onChange={(e) => setReplyAuthor(e.target.value)}
-                className="w-full px-3 py-2 bg-white/20 dark:bg-black/20 border border-blue-500/20 rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:border-blue-500/50"
+                className="w-full px-3 py-2 bg-background/20 border border-border rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50"
               />
               <Textarea
                 placeholder="Write your reply..."
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
-                className="min-h-[80px] resize-none bg-white/20 dark:bg-black/20 border border-blue-500/20 focus:border-blue-500/50"
+                className="min-h-[80px] resize-none bg-background/20 border border-border focus:border-primary/50"
               />
               <div className="flex gap-2">
                 <Button
@@ -266,7 +266,7 @@ export function ThreadedMessageComponent({
         )}
 
         {/* Separator line between messages */}
-        <div className="mt-4 border-b border-gray-200/10 dark:border-gray-700/10"></div>
+        <div className="mt-4 border-b border-border"></div>
       </div>
 
       {/* Nested Replies */}
@@ -274,7 +274,7 @@ export function ThreadedMessageComponent({
         <div className="space-y-4">
           {message.replies?.map((reply) => (
             <div key={reply.id} className="ml-12">
-              <div className="bg-green-50/30 dark:bg-green-900/10 rounded-lg p-3 border-l-4 border-green-500/50">
+              <div className="bg-green-50/30 rounded-lg p-3 border-l-4 border-green-500/50">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar className="h-6 w-6">
                     <AvatarFallback
@@ -284,7 +284,7 @@ export function ThreadedMessageComponent({
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <span className="font-medium text-green-700 dark:text-green-300 text-sm">
+                    <span className="font-medium text-green-700 text-sm">
                       {reply.author || "Anonymous"}
                     </span>
                     <span className="text-xs text-muted-foreground ml-2">

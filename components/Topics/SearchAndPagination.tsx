@@ -36,7 +36,7 @@ export function SearchAndPagination({
             placeholder="Search topics..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className={`pl-10 w-full border-none border-blue-900 bg-white dark:bg-blue-900/20 rounded-full focus:shadow-none focus-visible:ring-blue-500 shadow-none ring-0  `}
+            className={`pl-10 w-full border-none bg-background rounded-full focus:shadow-none focus-visible:ring-primary shadow-none ring-0  `}
           />
         </div>
 

@@ -18,7 +18,7 @@ export function LoadingFailedIcon({
         cy="60"
         r="55"
         fill="currentColor"
-        className="text-gray-100 dark:text-gray-800"
+        className="text-muted-foreground"
         opacity="0.1"
       />
 
@@ -26,11 +26,11 @@ export function LoadingFailedIcon({
       <path
         d="M35 55C35 47.268 41.268 41 49 41C51.2 41 53.267 41.6 55 42.667C57.667 38.4 62.4 35.5 67.833 35.5C75.567 35.5 81.833 41.767 81.833 49.5C81.833 50.133 81.8 50.767 81.7 51.367C84.567 52.667 86.5 55.533 86.5 59C86.5 63.7 82.7 67.5 78 67.5H40C34.5 67.5 30 63 30 57.5C30 52.7 33.1 48.8 37.4 47.9C35.9 50.1 35 52.9 35 55Z"
         fill="currentColor"
-        className="text-gray-400 dark:text-gray-500"
+        className="text-muted-foreground"
       />
 
       {/* WiFi/Connection bars with X */}
-      <g className="text-gray-300 dark:text-gray-600">
+      <g className="text-muted-foreground">
         {/* WiFi bars */}
         <path
           d="M45 75C45 74.4 45.4 74 46 74H48C48.6 74 49 74.4 49 75V79C49 79.6 48.6 80 48 80H46C45.4 80 45 79.6 45 79V75Z"

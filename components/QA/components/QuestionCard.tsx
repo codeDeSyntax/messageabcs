@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, MessageCircle } from "lucide-react";
@@ -12,7 +13,7 @@ interface QuestionCardProps {
 
 export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
   return (
-    <div className="group hover:bg-white/5 dark:hover:bg-black/5 transition-all duration-200 cursor-pointer md:p-6 rounded-lg p-2">
+    <div className="group hover:bg-background/5 transition-all duration-200 cursor-pointer md:p-6 rounded-lg p-2">
       {/* Question Section */}
       <div className="mb-4 ml-4">
         <div className="flex items-start gap-4">
@@ -21,7 +22,7 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
             <div className="flex flex-wrap items-center gap-2 mb-2">
               {/* User Avatar */}
               <Avatar className="h-4 w-4 flex items-center justify-center flex-shrink-0">
-                <AvatarFallback className=" text-[8px] bg-blue-500/20 text-blue-600 dark:text-blue-400">
+                <AvatarFallback className=" text-[8px] bg-primary/20 text-primary">
                   {question.askedBy?.charAt(0).toUpperCase() || "A"}
                 </AvatarFallback>
               </Avatar>
@@ -42,7 +43,7 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
               )}
             </div>
 
-            <h3 className="md:text-base font-bold text-foreground mb-2 font-reading leading-relaxed underline-offset-8 decoration-blue-500/50 decoration-2 ml-8">
+            <h3 className="md:text-base font-bold text-foreground mb-2 font-reading leading-relaxed underline-offset-8 decoration-primary/50 decoration-2 ml-8">
               Qn:: {question.question}
             </h3>
           </div>
@@ -59,7 +60,7 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs px-3 py-1 h-6 bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400"
+              className="text-xs px-3 py-1 h-6 bg-green-500/10 border-green-500/20 text-green-600"
             >
               {question.answers.length} Answer
               {question.answers.length !== 1 ? "s" : ""}
@@ -67,11 +68,11 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
           </div>
 
           {/* Latest Answer */}
-          <div className="bg-green-50/30 dark:bg-green-900/10 rounded-lg p-3 ml-3 border-l-4 border-green-500/50">
+          <div className="bg-green-50/30 rounded-lg p-3 ml-3 border-l-4 border-green-500/50">
             <div className="flex items-center gap-2 mb-2">
-              <img src="/mabcs.png" alt="admin" className="h-6 w-6" />
+              <Image src="/mabcs.png" alt="admin" width={24} height={24} />
               <div>
-                <span className="font-medium text-green-700 dark:text-green-300 text-sm">
+                <span className="font-medium text-green-700 text-sm">
                   {question.answers[0].adminUser}
                 </span>
                 <span className="text-xs text-muted-foreground ml-2">
@@ -91,7 +92,7 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs px-3 py-1 h-6 bg-orange-500/10 border-orange-500/20 text-orange-600 dark:text-orange-400"
+              className="text-xs px-3 py-1 h-6 bg-orange-500/10 border-orange-500/20 text-orange-600"
             >
               Pending Answer
             </Button>
@@ -103,7 +104,7 @@ export const QuestionCard = ({ question, formatDate }: QuestionCardProps) => {
       )}
 
       {/* Separator line between questions */}
-      <div className="mt-4 border-b border-gray-200/10 dark:border-gray-700/10"></div>
+      <div className="mt-4 border-b border-border"></div>
     </div>
   );
 };

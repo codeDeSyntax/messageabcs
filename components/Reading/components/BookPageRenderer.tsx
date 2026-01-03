@@ -40,14 +40,14 @@ export const BookPageRenderer = ({
 const CoverPage = ({ page }: { page: BookPage }) => (
   <>
     {/* Mobile: Clean Modern Layout */}
-    <div className="md:hidden h-full bg-white dark:bg-gray-900">
+    <div className="md:hidden h-full bg-background">
       {/* Chapter/Topic Header */}
-      <div className="text-center py-4 px-6 border-b border-gray-100 dark:border-gray-800">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+      <div className="text-center py-4 px-6 border-b border-border">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           {page.content.title}
         </h1>
         {page.content.subtitle && (
-          <p className="text-lg text-gray-600 dark:text-gray-300 font-medium">
+          <p className="text-lg text-muted-foreground font-medium">
             {page.content.subtitle}
           </p>
         )}
@@ -61,7 +61,7 @@ const CoverPage = ({ page }: { page: BookPage }) => (
         {page.content.text ? (
           <div className="prose prose-lg max-w-none">
             <div
-              className="text-gray-800 dark:text-gray-200 leading-relaxed text-base font-normal"
+              className="text-foreground leading-relaxed text-base font-normal"
               style={{
                 fontFamily: "'Crimson Pro', Georgia, serif",
               }}
@@ -70,7 +70,7 @@ const CoverPage = ({ page }: { page: BookPage }) => (
           </div>
         ) : (
           <div className="flex items-center justify-center py-16">
-            <p className="text-gray-500 dark:text-gray-400 text-center">
+            <p className="text-muted-foreground text-center">
               No content available
             </p>
           </div>
@@ -79,7 +79,7 @@ const CoverPage = ({ page }: { page: BookPage }) => (
     </div>
 
     {/* Desktop: Mobile-inspired Layout */}
-    <div className="hidden md:block h-full bg-white dark:bg-gray-900">
+    <div className="hidden md:block h-full bg-background">
       {/* Topic Image Header - Shorter Height */}
       {page.content.image && (
         <div className="relative h-20 w-full overflow-hidden">
@@ -92,17 +92,17 @@ const CoverPage = ({ page }: { page: BookPage }) => (
             }}
           >
             {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-black/40"></div>
+            <div className="absolute inset-0 bg-primary/40"></div>
           </div>
 
           {/* Title Overlay */}
           <div className="absolute inset-0 flex items-center justify-center px-8">
             <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+              <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2 drop-shadow-lg">
                 {page.content.title}
               </h1>
               {page.content.subtitle && (
-                <p className="text-lg md:text-xl text-white/90 font-medium drop-shadow-md">
+                <p className="text-lg md:text-xl text-primary-foreground/90 font-medium drop-shadow-md">
                   {page.content.subtitle}
                 </p>
               )}
@@ -116,7 +116,7 @@ const CoverPage = ({ page }: { page: BookPage }) => (
         {page.content.text ? (
           <div className="prose prose-lg max-w-none">
             <div
-              className="text-gray-800 dark:text-gray-200 leading-relaxed text-lg font-normal"
+              className="text-foreground leading-relaxed text-lg font-normal"
               style={{
                 fontFamily: "'Crimson Pro', Georgia, serif",
                 lineHeight: "1.7",
@@ -126,7 +126,7 @@ const CoverPage = ({ page }: { page: BookPage }) => (
           </div>
         ) : (
           <div className="flex items-center justify-center py-16">
-            <p className="text-gray-500 dark:text-gray-400 text-center">
+            <p className="text-muted-foreground text-center">
               No content available
             </p>
           </div>
@@ -145,10 +145,10 @@ const ContentPage = ({
 }) => (
   <>
     {/* Mobile: Clean Modern Layout */}
-    <div className="md:hidden h-full bg-white dark:bg-gray-900">
+    <div className="md:hidden h-full bg-background">
       {/* Chapter/Topic Header */}
-      <div className="text-center py-8 px-6 border-b border-gray-100 dark:border-gray-800">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+      <div className="text-center py-8 px-6 border-b border-border">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           {page.content.title}
         </h1>
       </div>
@@ -160,7 +160,7 @@ const ContentPage = ({
       >
         <div className="prose prose-lg max-w-none">
           <div
-            className="text-gray-800 dark:text-gray-200 leading-relaxed text-base font-normal"
+            className="text-foreground leading-relaxed text-base font-normal"
             style={{
               fontFamily: "'Crimson Pro', Georgia, serif",
               lineHeight: "1.7",
@@ -173,8 +173,8 @@ const ContentPage = ({
     </div>
 
     {/* Desktop: Mobile-inspired Layout */}
-    <div className="hidden md:block h-full bg-white dark:bg-gray-900">
-      {/* Topic Image Header - Shorter Height */}
+    <div className="hidden md:block h-full bg-background">
+      {/* Quote Header with Image - Shorter Height */}
       {currentTopic?.image && (
         <div className="relative h-20 w-full overflow-hidden">
           <div
@@ -186,13 +186,13 @@ const ContentPage = ({
             }}
           >
             {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-black/40"></div>
+            <div className="absolute inset-0 bg-primary/50"></div>
           </div>
 
           {/* Title Overlay */}
           <div className="absolute inset-0 flex items-center justify-center px-8">
             <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+              <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2 drop-shadow-lg">
                 {page.content.title}
               </h1>
             </div>
@@ -204,7 +204,7 @@ const ContentPage = ({
       <div className="px-8 py-8 max-w-4xl mx-auto">
         <div className="prose prose-lg max-w-none">
           <div
-            className="text-gray-800 dark:text-gray-200 leading-relaxed text-lg font-normal"
+            className="text-foreground leading-relaxed text-lg font-normal"
             style={{
               fontFamily: "'Crimson Pro', Georgia, serif",
               lineHeight: "1.7",
@@ -226,11 +226,11 @@ const QuotePage = ({
 }) => (
   <>
     {/* Mobile: Clean Modern Layout */}
-    <div className="md:hidden h-full bg-white dark:bg-gray-900">
+    <div className="md:hidden h-full bg-background">
       {/* Quote Header */}
-      <div className="text-center py-8 px-6 border-b border-gray-100 dark:border-gray-800">
-        <Quote className="h-8 w-8 text-blue-500 mx-auto mb-3" />
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+      <div className="text-center py-8 px-6 border-b border-border">
+        <Quote className="h-8 w-8 text-primary mx-auto mb-3" />
+        <h1 className="text-2xl font-bold text-foreground">
           Inspiration
         </h1>
       </div>
@@ -239,7 +239,7 @@ const QuotePage = ({
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="text-center max-w-md">
           <blockquote
-            className="text-xl font-medium text-gray-800 dark:text-gray-200 italic leading-relaxed mb-6"
+            className="text-xl font-medium text-foreground italic leading-relaxed mb-6"
             style={{
               fontFamily: "'Crimson Pro', Georgia, serif",
               lineHeight: "1.6",
@@ -252,7 +252,7 @@ const QuotePage = ({
     </div>
 
     {/* Desktop: Mobile-inspired Layout */}
-    <div className="hidden md:block h-full bg-white dark:bg-gray-900">
+    <div className="hidden md:block h-full bg-background">
       {/* Quote Header with Image - Shorter Height */}
       {currentTopic?.image && (
         <div className="relative h-20 w-full overflow-hidden">
@@ -265,14 +265,14 @@ const QuotePage = ({
             }}
           >
             {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-black/50"></div>
+            <div className="absolute inset-0 bg-primary/50"></div>
           </div>
 
           {/* Quote Icon Overlay */}
           <div className="absolute inset-0 flex items-center justify-center px-8">
             <div className="text-center">
-              <Quote className="h-16 w-16 text-white mx-auto mb-4 drop-shadow-lg" />
-              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+              <Quote className="h-16 w-16 text-primary-foreground mx-auto mb-4 drop-shadow-lg" />
+              <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground drop-shadow-lg">
                 Inspiration
               </h1>
             </div>
@@ -285,7 +285,7 @@ const QuotePage = ({
         <div className="text-center">
           <Quote className="h-12 w-12 text-purple-500/50 mx-auto mb-6" />
           <blockquote
-            className="text-2xl md:text-3xl font-medium text-gray-800 dark:text-gray-200 italic leading-relaxed mb-6"
+            className="text-2xl md:text-3xl font-medium text-foreground italic leading-relaxed mb-6"
             style={{
               fontFamily: "'Crimson Pro', Georgia, serif",
               lineHeight: "1.6",

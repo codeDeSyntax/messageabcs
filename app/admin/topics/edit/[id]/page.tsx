@@ -67,8 +67,8 @@ function EditTopicPage() {
       {/* Main Content */}
       <div className="flex justify-center h-full sm:p-3 pt-0 md:pt-3 relative z-10">
         <div className="w-full max-w-4xl h-full">
-          <Card className="h-full p-2 bg-blue-100/30 dark:bg-black/30 backdrop-blur-sm border-none border-blue-500/20 flex flex-col">
-            <CardHeader className="border-b border-blue-500/20 flex-shrink-0 p-2">
+          <Card className="h-full p-2 bg-background/30 backdrop-blur-sm border-border flex flex-col">
+            <CardHeader className="border-b border-border flex-shrink-0 p-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Button

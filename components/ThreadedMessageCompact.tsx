@@ -58,8 +58,8 @@ export function ThreadedMessageCompact({
 
   const getAuthorColor = (authorType: AuthorType) => {
     return authorType === "admin"
-      ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
-      : "bg-green-500/20 text-green-600 dark:text-green-400";
+      ? "bg-primary/20 text-primary"
+      : "bg-green-500/20 text-green-600";
   };
 
   const handleSubmitReply = async () => {
@@ -116,7 +116,7 @@ export function ThreadedMessageCompact({
     <div className="space-y-2">
       {/* Main Message */}
       <div className="group">
-        <div className="flex gap-3 p-3 hover:bg-white/5 dark:hover:bg-black/5 transition-all duration-200 rounded-lg">
+        <div className="flex gap-3 p-3 hover:bg-background/5 transition-all duration-200 rounded-lg">
           {/* Thread Indicator */}
           {currentDepth > 0 && (
             <div className="flex items-start pt-2">
@@ -178,7 +178,7 @@ export function ThreadedMessageCompact({
               {canReply && (
                 <button
                   onClick={() => setIsReplying(!isReplying)}
-                  className="flex items-center gap-1 text-blue-500 hover:text-blue-600 transition-colors"
+                  className="flex items-center gap-1 text-primary hover:text-accent transition-colors"
                 >
                   <Reply className="h-3 w-3" />
                   Reply
@@ -196,7 +196,7 @@ export function ThreadedMessageCompact({
 
         {/* Reply Form */}
         {isReplying && (
-          <div className="ml-14 mt-2 p-3 bg-blue-50/30 dark:bg-blue-900/10 rounded-lg border-l-2 border-blue-500/50">
+          <div className="ml-14 mt-2 p-3 bg-background/30 rounded-lg border-l-2 border-primary/50">
             <div className="space-y-2">
               <input
                 type="text"
@@ -205,14 +205,14 @@ export function ThreadedMessageCompact({
                 }
                 value={replyAuthor}
                 onChange={(e) => setReplyAuthor(e.target.value)}
-                className="w-full px-2 py-1 text-sm bg-white/20 dark:bg-black/20 border border-blue-500/20 rounded text-foreground placeholder-muted-foreground focus:outline-none focus:border-blue-500/50"
+                className="w-full px-2 py-1 text-sm bg-background/20 border border-border rounded text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50"
                 readOnly={isAdmin && adminUser?.username ? true : false}
               />
               <Textarea
                 placeholder="Write your reply..."
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
-                className="min-h-[60px] text-sm resize-none bg-white/20 dark:bg-black/20 border border-blue-500/20 focus:border-blue-500/50"
+                className="min-h-[60px] text-sm resize-none bg-background/20 border border-border focus:border-primary/50"
               />
               <div className="flex gap-2">
                 <Button

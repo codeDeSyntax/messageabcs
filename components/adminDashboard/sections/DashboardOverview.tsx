@@ -42,47 +42,42 @@ const MetricCard: React.FC<MetricCardProps> = ({
     switch (title) {
       case "Total Topics":
         return {
-          background:
-            "relative bg-white/10 dark:bg-black/10 backdrop-blur-sm border border-white/20 dark:border-gray-800/50",
+          background: "relative bg-background/10 backdrop-blur-sm border-none",
           gradientOverlay: (
             <>
-              {/* Primary blue gradient spot - top right */}
-              <div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-500/30 dark:bg-blue-400/20 rounded-full blur-2xl"></div>
-              {/* Secondary blue spot - bottom left */}
-              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-blue-600/25 dark:bg-blue-500/15 rounded-full blur-xl"></div>
+              {/* Primary gradient spot - top right */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/30 rounded-full blur-2xl"></div>
+              {/* Secondary spot - bottom left */}
+              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-accent/25 rounded-full blur-xl"></div>
               {/* Accent spot - center */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-blue-400/20 dark:bg-blue-300/10 rounded-full blur-xl"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-primary/20 rounded-full blur-xl"></div>
             </>
           ),
-          iconBg:
-            "bg-gradient-to-br from-blue-100/80 to-blue-200/60 dark:from-blue-900/40 dark:to-blue-800/30",
-          iconColor: "text-blue-600 dark:text-blue-400",
+          iconBg: "bg-gradient-to-br from-primary/80 to-accent/60",
+          iconColor: "text-primary-foreground",
         };
       case "Pending Questions":
         return {
-          background:
-            "relative bg-white/10 dark:bg-black/10 backdrop-blur-sm border border-white/20 dark:border-gray-800/50",
+          background: "relative bg-background backdrop-blur-sm border-none",
           gradientOverlay: (
             <>
-              {/* Primary blue gradient spot - top left */}
-              <div className="absolute -top-10 -left-10 w-28 h-28 bg-blue-600/25 dark:bg-blue-500/15 rounded-full blur-2xl"></div>
-              {/* Secondary cyan spot - bottom right */}
-              <div className="absolute -bottom-6 -right-6 w-20 h-20 bg-cyan-500/30 dark:bg-cyan-400/18 rounded-full blur-xl"></div>
+              {/* Primary gradient spot - top left */}
+              <div className="absolute -top-10 -left-10 w-28 h-28 bg-primary/25 rounded-full blur-2xl"></div>
+              {/* Secondary spot - bottom right */}
+              <div className="absolute -bottom-6 -right-6 w-20 h-20 bg-secondary/30 rounded-full blur-xl"></div>
               {/* Accent spot - center right */}
-              <div className="absolute top-1/3 right-4 w-16 h-16 bg-blue-300/25 dark:bg-blue-200/12 rounded-full blur-lg"></div>
+              <div className="absolute top-1/3 right-4 w-16 h-16 bg-primary/25 rounded-full blur-lg"></div>
             </>
           ),
-          iconBg:
-            "bg-gradient-to-br from-cyan-100/80 to-blue-200/60 dark:from-cyan-900/40 dark:to-blue-800/30",
-          iconColor: "text-cyan-600 dark:text-cyan-400",
+          iconBg: "bg-gradient-to-br from-secondary/80 to-accent/60",
+          iconColor: "text-cyan-600",
         };
       default:
         return {
-          background:
-            "bg-white/15 dark:bg-black/15 backdrop-blur-sm border border-blue-500/10",
+          background: "bg-primary/10 backdrop-blur-sm",
           gradientOverlay: null,
-          iconBg: "bg-blue-50/60 dark:bg-blue-900/15",
-          iconColor: "text-blue-500",
+          iconBg: "bg-muted",
+          iconColor: "text-primary",
         };
     }
   };
@@ -91,7 +86,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
 
   return (
     <Card
-      className={`${cardStyles.background} hover:border-white/30 dark:hover:border-gray-700/60 transition-all duration-500  hover:shadow-xl overflow-hidden group`}
+      className={`${cardStyles.background} transition-all duration-500  hover:shadow-xl overflow-hidden group`}
     >
       {/* Abstract gradient overlay */}
       {cardStyles.gradientOverlay}
@@ -104,12 +99,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
       <CardContent className="p-6 relative z-10">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-              {title}
-            </p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              {value}
-            </p>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold text-foreground">{value}</p>
             {change && (
               <div className="flex items-center gap-1 mt-1">
                 <TrendingUp
@@ -118,7 +109,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
                       ? "text-green-500"
                       : trend === "down"
                       ? "text-red-500"
-                      : "text-gray-500"
+                      : "text-muted-foreground"
                   }`}
                 />
                 <span
@@ -127,7 +118,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
                       ? "text-green-600"
                       : trend === "down"
                       ? "text-red-600"
-                      : "text-gray-600"
+                      : "text-muted-foreground"
                   }`}
                 >
                   {change}
@@ -136,7 +127,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
             )}
           </div>
           <div
-            className={`w-12 h-12 ${cardStyles.iconBg} rounded-xl flex items-center justify-center shadow-sm backdrop-blur-sm border border-white/20 dark:border-gray-700/30`}
+            className={`w-12 h-12 ${cardStyles.iconBg} rounded-xl flex items-center justify-center shadow-sm backdrop-blur-sm border border-border`}
           >
             <Icon className={`h-6 w-6 ${cardStyles.iconColor}`} />
           </div>
@@ -367,7 +358,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         return (
           <Badge
             variant="outline"
-            className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400"
+            className="bg-yellow-50 text-yellow-700 border-yellow-200"
           >
             Pending
           </Badge>
@@ -376,7 +367,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         return (
           <Badge
             variant="outline"
-            className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400"
+            className="bg-green-50 text-green-700 border-green-200"
           >
             Answered
           </Badge>
@@ -385,7 +376,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         return (
           <Badge
             variant="outline"
-            className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400"
+            className="bg-primary/10 text-primary border-primary/20"
           >
             Published
           </Badge>
@@ -398,13 +389,13 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const getActivityIcon = (type: string) => {
     switch (type) {
       case "question":
-        return <MessageCircle className="h-4 w-4 text-blue-500" />;
+        return <MessageCircle className="h-4 w-4 text-primary" />;
       case "answer":
-        return <MessageSquare className="h-4 w-4 text-green-500" />;
+        return <MessageSquare className="h-4 w-4 text-accent" />;
       case "topic":
-        return <BookOpen className="h-4 w-4 text-blue-500" />;
+        return <BookOpen className="h-4 w-4 text-primary" />;
       default:
-        return <AlertCircle className="h-4 w-4 text-gray-500" />;
+        return <AlertCircle className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
@@ -415,7 +406,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {[1, 2, 3, 4].map((i) => (
             <Card
               key={i}
-              className="bg-white/15 dark:bg-biblical-navy/25 backdrop-blur-sm border-biblical-blue/20"
+              className="bg-primary/20 backdrop-blur-sm"
             >
               <CardContent className="p-6">
                 <div className="animate-pulse">
@@ -449,10 +440,10 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
-        <Card className="bg-white/15 dark:bg-black/5 backdrop-blur-sm border-blue-500/10 shadow-sm">
+        <Card className="bg-background backdrop-blur-sm border-none shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground">
-              <Clock className="h-5 w-5 text-blue-500" />
+              <Clock className="h-5 w-5 text-primary" />
               Recent Activity
             </CardTitle>
           </CardHeader>
@@ -461,7 +452,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               {recentActivity.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-blue-50/30 dark:bg-blue-900/20 border border-blue-500/5"
+                  className="flex items-start gap-3 p-3 rounded-lg bg-primary/10"
                 >
                   <div className="mt-0.5">{getActivityIcon(activity.type)}</div>
                   <div className="flex-1 min-w-0">
@@ -495,7 +486,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="px-6 pb-6">
               <Button
                 variant="outline"
-                className="w-full border-blue-500/10 hover:bg-blue-50/50 dark:hover:bg-blue-900/15 hover:border-blue-500/20 transition-all duration-300"
+                className="w-full bg-primary/10 hover:bg-primary/15 transition-all duration-300"
               >
                 View All Activity
               </Button>
@@ -504,17 +495,17 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </Card>
 
         {/* Quick Actions */}
-        <Card className="bg-white/15 dark:bg-black/5 backdrop-blur-sm border-blue-500/10 shadow-sm">
+        <Card className="bg-background backdrop-blur-sm border-none shadow-sm">
           <CardHeader>
             <CardTitle className="flex  items-center gap-2 text-foreground">
-              <CheckCircle className="h-5 w-5 text-blue-500" />
+              <CheckCircle className="h-5 w-5 text-primary" />
               Quick Actions
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <Button
               onClick={handleCreateTopic}
-              className="w-full justify-start gap-3 bg-blue-500 hover:bg-blue-600 text-white transition-all duration-200 hover:scale-[1.02] shadow-sm hover:shadow-md"
+              className="w-full justify-start gap-3 bg-primary hover:bg-accent text-primary-foreground transition-all duration-200 hover:scale-[1.02] shadow-sm hover:shadow-md"
             >
               <BookOpen className="h-4 w-4" />
               Create New Topic
@@ -522,7 +513,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <Button
               onClick={handleManageTopics}
               variant="outline"
-              className="w-full justify-start gap-3 border-blue-500/20 hover:bg-blue-50/50 dark:hover:bg-blue-900/15 hover:border-blue-500/40 transition-all duration-200 hover:scale-[1.02]"
+              className="w-full justify-start gap-3 bg-primary/10 hover:bg-primary/15 transition-all duration-200 hover:scale-[1.02]"
             >
               <Settings className="h-4 w-4" />
               Manage Topics
@@ -530,7 +521,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <Button
               onClick={handleReviewQuestions}
               variant="outline"
-              className="w-full justify-start gap-3 border-blue-500/20 hover:bg-blue-50/50 dark:hover:bg-blue-900/15 hover:border-blue-500/40 transition-all duration-200 hover:scale-[1.02]"
+              className="w-full justify-start gap-3 bg-primary/10 hover:bg-primary/15 transition-all duration-200 hover:scale-[1.02]"
             >
               <MessageCircle className="h-4 w-4" />
               Review Pending Questions
@@ -538,7 +529,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <Button
               onClick={handleManageAnswers}
               variant="outline"
-              className="w-full justify-start gap-3 border-blue-500/20 hover:bg-blue-50/50 dark:hover:bg-blue-900/15 hover:border-blue-500/40 transition-all duration-200 hover:scale-[1.02]"
+              className="w-full justify-start gap-3 bg-primary/10 hover:bg-primary/15 transition-all duration-200 hover:scale-[1.02]"
             >
               <MessageSquare className="h-4 w-4" />
               Manage Answers
@@ -546,7 +537,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <Button
               onClick={handleUserManagement}
               variant="outline"
-              className="w-full justify-start gap-3 border-blue-500/20 hover:bg-blue-50/50 dark:hover:bg-blue-900/15 hover:border-blue-500/40 transition-all duration-200 hover:scale-[1.02] opacity-75"
+              className="w-full justify-start gap-3 bg-primary/10 hover:bg-primary/15 transition-all duration-200 hover:scale-[1.02] opacity-75"
             >
               <Users className="h-4 w-4" />
               User Management

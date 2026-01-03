@@ -19,7 +19,7 @@ export const ReadingMobileHeader = ({
   const router = useRouter();
 
   return (
-    <div className="md:hidden relative z-10 border-b border-gray-200 dark:border-gray-800">
+    <div className="md:hidden relative z-10 border-b border-border">
       {/* Background Image Container */}
       {currentTopic && (
         <div
@@ -29,7 +29,7 @@ export const ReadingMobileHeader = ({
           }}
         >
           {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-primary/40"></div>
         </div>
       )}
 
@@ -39,15 +39,15 @@ export const ReadingMobileHeader = ({
           onClick={() => router.push("/topics")}
           variant="ghost"
           size="sm"
-          className="p-2 hover:bg-white/20 rounded-full backdrop-blur-sm border border-white/20"
+          className="p-2 hover:bg-primary-foreground/20 rounded-full backdrop-blur-sm border border-primary-foreground/20"
         >
-          <ArrowLeft className="h-5 w-5 text-white" />
+          <ArrowLeft className="h-5 w-5 text-primary-foreground" />
         </Button>
 
         {/* Title with Background Image */}
         {currentTopic && (
           <div className="fle w-[80%] text-center px-4">
-            <span className="text-sm line-clamp-1 truncate font-medium text-white drop-shadow-lg">
+            <span className="text-sm line-clamp-1 truncate font-medium text-primary-foreground drop-shadow-lg">
               {currentTopic.title}
             </span>
           </div>
@@ -59,7 +59,7 @@ export const ReadingMobileHeader = ({
           disabled={isGeneratingShareCard}
           variant="ghost"
           size="sm"
-          className="p-2 hover:bg-white/20 rounded-full backdrop-blur-sm border border-white/20 disabled:opacity-50"
+          className="p-2 hover:bg-primary-foreground/20 rounded-full backdrop-blur-sm border border-primary-foreground/20 disabled:opacity-50"
           title={
             isGeneratingShareCard
               ? "Generating share card..."
@@ -67,9 +67,9 @@ export const ReadingMobileHeader = ({
           }
         >
           {isGeneratingShareCard ? (
-            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
           ) : (
-            <Share2 className="h-5 w-5 text-white" />
+            <Share2 className="h-5 w-5 text-primary-foreground" />
           )}
         </Button>
       </div>

@@ -53,14 +53,14 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
           <button
             className={`
               w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-left group
-              text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-blue-900/20 hover:text-gray-900 dark:hover:text-gray-200
+              text-muted-foreground hover:bg-muted hover:text-foreground
               ${className}
             `}
           >
             {getThemeIcon()}
             <span className="flex-1 font-normal">Theme: {getThemeLabel()}</span>
             <svg
-              className="h-3 w-3 text-gray-300 dark:text-gray-600 group-hover:text-gray-400 dark:group-hover:text-gray-500"
+              className="h-3 w-3 text-muted-foreground group-hover:text-foreground"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

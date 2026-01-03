@@ -59,7 +59,7 @@ function NewTopicPage() {
       {/* Main Content */}
       <div className="flex justify-center h-full sm:p-6 pt-0 md:pt-6 relative z-10">
         <div className="w-full max-w-4xl h-full ">
-          <Card className="h-full bg-white/20 dark:bg-black/10 backdrop-blur-sm border-blue-500/20 flex flex-col">
+          <Card className="h-full bg-background/20 backdrop-blur-sm border-border flex flex-col">
             <CardContent className="p-2  md:p-4 overflow-y-auto no-scrollbar flex-1 min-h-0">
               <NewTopicForm onSuccess={handleSuccess} onCancel={handleCancel} />
             </CardContent>
@@ -67,10 +67,7 @@ function NewTopicPage() {
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="relative z-10">
-        <BottomNavigation />
-      </div>
+     
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, LogIn, LogOut, User } from "lucide-react";
-import { useTheme } from "next-themes";
+import { LogIn, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -16,13 +15,8 @@ interface ProfileCardProps {
 }
 
 export function ProfileCard({ className = "" }: ProfileCardProps) {
-  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const { isAuthenticated, user, logout } = useAuth();
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
 
   const handleLogin = () => {
     router.push("/login");
@@ -42,21 +36,6 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
           <h3 className="text-sm font-medium text-foreground">
             {isAuthenticated ? "Admin Panel" : "Quick Access"}
           </h3>
-
-          {/* Theme Toggle */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleTheme}
-            className="h-8 w-8 p-0 hover:bg-white/10"
-            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-          >
-            {theme === "dark" ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
-          </Button>
         </div>
 
         {/* Authentication Section */}
@@ -74,7 +53,7 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => router.push("/topics")}
-                className="flex-1 h-8 text-xs hover:bg-white/10"
+                className="flex-1 h-8 text-xs hover:bg-primary-foreground/10"
               >
                 Manage Topics
               </Button>

@@ -148,10 +148,10 @@ export function AskQuestionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] bg-white/95 dark:bg-black/95 backdrop-blur-xl border-blue-500/20">
+      <DialogContent className="max-w-3xl max-h-[90vh] bg-background/95 backdrop-blur-xl border-border">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-foreground font-heading">
-            <MessageCircle className="h-5 w-5 text-blue-500" />
+          <DialogTitle className="flex items-center gap-2 text-foreground ">
+            <MessageCircle className="h-5 w-5 text-primary" />
             Ask a Question
           </DialogTitle>
         </DialogHeader>
@@ -161,7 +161,7 @@ export function AskQuestionModal({
             {/* Question Field */}
             <div className="space-y-2">
               <Label htmlFor="question" className="flex items-center gap-2">
-                <MessageCircle className="h-4 w-4 text-blue-500" />
+                <MessageCircle className="h-4 w-4 text-primary" />
                 Your Question *
               </Label>
               <Textarea
@@ -169,7 +169,7 @@ export function AskQuestionModal({
                 value={formData.question}
                 onChange={(e) => handleInputChange("question", e.target.value)}
                 placeholder="What would you like to know about biblical topics? Be specific and clear..."
-                className="bg-background/50 border-blue-500/20  dark:focus:ring-blue-500  min-h-[120px] font-reading focus-visible:ring-blue-500/30 focus:outline-blue-500 m-1"
+                className="bg-background/50 border-border min-h-[120px] font-reading focus-visible:ring-primary/30 focus:outline-primary m-1"
                 required
               />
               <div className="flex justify-between text-xs text-muted-foreground">
@@ -183,7 +183,7 @@ export function AskQuestionModal({
               <Label htmlFor="topic" className="flex items-center gap-2">
                 <Badge
                   variant="outline"
-                  className="h-4 w-4 rounded-full p-0 border-blue-500/50"
+                  className="h-4 w-4 rounded-full p-0 border-primary/50"
                 >
                   <span className="text-xs">T</span>
                 </Badge>
@@ -194,7 +194,7 @@ export function AskQuestionModal({
                 onValueChange={(value) => handleInputChange("topicId", value)}
                 disabled={loadingTopics}
               >
-                <SelectTrigger className="bg-background/50 border-blue-500/20 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500">
+                <SelectTrigger className="bg-background/50 border-border focus:ring-2 focus:ring-primary/30 focus:border-primary">
                   <SelectValue
                     placeholder={
                       loadingTopics
@@ -210,7 +210,7 @@ export function AskQuestionModal({
                         <img
                           src={topic.image}
                           alt={topic.title}
-                          className="w-8 h-8 rounded-full object-cover border border-blue-500/20"
+                          className="w-8 h-8 rounded-full object-cover border border-border"
                         />
                         <div className="flex flex-col">
                           <span className="font-medium">{topic.title}</span>
@@ -226,8 +226,8 @@ export function AskQuestionModal({
                   {/* Other Option */}
                   <SelectItem value="other">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center border border-blue-500/20">
-                        <HelpCircle className="h-4 w-4 text-white" />
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-muted to-muted flex items-center justify-center border border-border">
+                        <HelpCircle className="h-4 w-4 text-primary-foreground" />
                       </div>
                       <div className="flex flex-col">
                         <span className="font-medium">Other</span>
@@ -240,26 +240,26 @@ export function AskQuestionModal({
                 </SelectContent>
               </Select>
               {(selectedTopic || isOtherSelected) && (
-                <Card className="bg-blue-50/50 dark:bg-blue-900/20 border-blue-500/20">
+                <Card className="bg-background/50 border-border">
                   <CardContent className="p-3">
                     <div className="flex items-center gap-3">
                       {isOtherSelected ? (
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center border border-blue-500/20">
-                          <HelpCircle className="h-3 w-3 text-white" />
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-muted to-muted flex items-center justify-center border border-border">
+                          <HelpCircle className="h-3 w-3 text-primary-foreground" />
                         </div>
                       ) : (
                         <img
                           src={selectedTopic!.image}
                           alt={selectedTopic!.title}
-                          className="w-6 h-6 rounded-full object-cover border border-blue-500/20"
+                          className="w-6 h-6 rounded-full object-cover border border-border"
                         />
                       )}
                       <div className="flex items-center gap-2">
                         <Badge
                           className={
                             isOtherSelected
-                              ? "bg-gray-500 text-white text-xs"
-                              : "bg-blue-500 text-white text-xs"
+                              ? "bg-accent text-primary-foreground text-xs"
+                              : "bg-primary text-primary-foreground text-xs"
                           }
                         >
                           {isOtherSelected ? "Other" : selectedTopic!.title}
@@ -279,7 +279,7 @@ export function AskQuestionModal({
             {/* Name Field (Optional) */}
             <div className="space-y-2">
               <Label htmlFor="askedBy" className="flex items-center gap-2">
-                <User className="h-4 w-4 text-blue-500" />
+                <User className="h-4 w-4 text-primary" />
                 Your Name (Optional)
               </Label>
               <Input
@@ -287,7 +287,7 @@ export function AskQuestionModal({
                 value={formData.askedBy}
                 onChange={(e) => handleInputChange("askedBy", e.target.value)}
                 placeholder="Enter your name or leave blank for Anonymous"
-                className="bg-background/50 border-blue-500/20 focus:ring-2 focus-visible:ring-blue-500/30 focus:border-blue-500 m-1"
+                className="bg-background/50 border-border focus:ring-2 focus-visible:ring-primary/30 focus:border-primary m-1"
               />
               <p className="text-xs text-muted-foreground">
                 Leave blank to ask anonymously. Your question will be public
@@ -296,7 +296,7 @@ export function AskQuestionModal({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-blue-500/20">
+            <div className="flex justify-end gap-3 pt-4 border-t border-border">
               <Button
                 type="button"
                 variant="outline"
@@ -312,11 +312,11 @@ export function AskQuestionModal({
                 disabled={
                   isSubmitting || !formData.question.trim() || !formData.topicId
                 }
-                className="bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2"
+                className="bg-primary hover:bg-accent text-primary-foreground flex items-center gap-2"
               >
                 {isSubmitting ? (
                   <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
                     Submitting...
                   </>
                 ) : (

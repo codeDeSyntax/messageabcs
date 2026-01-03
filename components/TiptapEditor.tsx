@@ -218,7 +218,7 @@ export function TiptapEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: "text-blue-500 underline hover:text-blue-700",
+          class: "text-primary underline hover:text-accent",
         },
       }),
     ],
@@ -243,7 +243,7 @@ export function TiptapEditor({
       {/* Global styles for proper content spacing */}
 
       <div
-        className={`border rounded-lg w-full max-w-full tiptp-editor ${className}`}
+        className={`border border-none rounded-lg w-full max-w-full tiptp-editor ${className}`}
       >
         {/* Toolbar */}
         <div className="border-b p-3 flex flex-wrap gap-1 bg-muted/50 w-full">
@@ -253,7 +253,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().toggleBold().run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("bold") ? "bg-primary/20" : ""
             }`}
           >
@@ -265,7 +265,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("italic") ? "bg-primary/20" : ""
             }`}
           >
@@ -277,7 +277,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().toggleUnderline().run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("underline") ? "bg-primary/20" : ""
             }`}
           >
@@ -290,7 +290,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().toggleHighlight().run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("highlight") ? "bg-primary/20" : ""
             }`}
           >
@@ -305,7 +305,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={openLinkModal}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("link") ? "bg-primary/20" : ""
             }`}
           >
@@ -318,7 +318,7 @@ export function TiptapEditor({
               variant="ghost"
               size="sm"
               onClick={unsetLink}
-              className="h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black"
+              className="h-8 w-8 p-0 shadow shadow-black/20"
             >
               <ExternalLink className="h-4 w-4" />
             </Button>
@@ -332,7 +332,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("blockquote") ? "bg-primary/20" : ""
             }`}
           >
@@ -349,7 +349,7 @@ export function TiptapEditor({
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 1 }).run()
             }
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("heading", { level: 1 }) ? "bg-primary/20" : ""
             }`}
           >
@@ -363,7 +363,7 @@ export function TiptapEditor({
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 2 }).run()
             }
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("heading", { level: 2 }) ? "bg-primary/20" : ""
             }`}
           >
@@ -377,7 +377,7 @@ export function TiptapEditor({
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 3 }).run()
             }
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("heading", { level: 3 }) ? "bg-primary/20" : ""
             }`}
           >
@@ -389,7 +389,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setParagraph().run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("paragraph") ? "bg-primary/20" : ""
             }`}
           >
@@ -449,7 +449,7 @@ export function TiptapEditor({
                   Reset Size
                 </button>
               </div>
-            )} 
+            )}
           </div>
 
           {/* Color Picker */}
@@ -459,7 +459,7 @@ export function TiptapEditor({
               variant="ghost"
               size="sm"
               onClick={() => setShowColorPicker(!showColorPicker)}
-              className="h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black"
+              className="h-8 w-8 p-0 shadow shadow-black/20"
             >
               <Palette className="h-4 w-4" />
             </Button>
@@ -488,7 +488,7 @@ export function TiptapEditor({
                   <button
                     key={color}
                     type="button"
-                    className="w-6 h-6 rounded border-2 border-gray-300 hover:border-gray-500"
+                    className="w-6 h-6 rounded border-2 border-border hover:border-primary"
                     style={{ backgroundColor: color }}
                     onClick={() => {
                       editor.chain().focus().setColor(color).run();
@@ -499,7 +499,7 @@ export function TiptapEditor({
                 {/* Remove color option */}
                 <button
                   type="button"
-                  className="w-6 h-6 rounded border-2 border-gray-300 hover:border-gray-500 bg-white relative"
+                  className="w-6 h-6 rounded border-2 border-border hover:border-primary bg-background relative"
                   onClick={() => {
                     editor.chain().focus().unsetColor().run();
                     setShowColorPicker(false);
@@ -521,7 +521,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("bulletList") ? "bg-primary/20" : ""
             }`}
           >
@@ -533,7 +533,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive("orderedList") ? "bg-primary/20" : ""
             }`}
           >
@@ -548,7 +548,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setTextAlign("left").run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive({ textAlign: "left" }) ? "bg-primary/20" : ""
             }`}
           >
@@ -560,7 +560,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setTextAlign("center").run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive({ textAlign: "center" }) ? "bg-primary/20" : ""
             }`}
           >
@@ -572,7 +572,7 @@ export function TiptapEditor({
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setTextAlign("right").run()}
-            className={`h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black ${
+            className={`h-8 w-8 p-0 shadow shadow-black/20 ${
               editor.isActive({ textAlign: "right" }) ? "bg-primary/20" : ""
             }`}
           >
@@ -588,7 +588,7 @@ export function TiptapEditor({
             size="sm"
             onClick={() => editor.chain().focus().undo().run()}
             disabled={!editor.can().undo()}
-            className="h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black"
+            className="h-8 w-8 p-0 shadow shadow-black/20"
           >
             <Undo className="h-4 w-4" />
           </Button>
@@ -599,7 +599,7 @@ export function TiptapEditor({
             size="sm"
             onClick={() => editor.chain().focus().redo().run()}
             disabled={!editor.can().redo()}
-            className="h-8 w-8 p-0 shadow shadow-black/20 dark:shadow-black"
+            className="h-8 w-8 p-0 shadow shadow-black/20"
           >
             <Redo className="h-4 w-4" />
           </Button>
@@ -617,7 +617,7 @@ export function TiptapEditor({
 
         {/* Link Modal */}
         {showLinkModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-primary/50 flex items-center justify-center z-50">
             <div className="bg-background border rounded-lg p-4 w-96 max-w-[90vw]">
               <h3 className="text-lg font-semibold mb-3">Add Link</h3>
               <div className="space-y-3">
@@ -628,7 +628,7 @@ export function TiptapEditor({
                     placeholder="https://example.com"
                     value={linkUrl}
                     onChange={(e) => setLinkUrl(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         setLink();

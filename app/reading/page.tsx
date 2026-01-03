@@ -31,9 +31,9 @@ function ReadingContent() {
 
       {/* Mobile Navigation Header */}
       {!isFullscreen && (
-        <div className="md:hidden relative z-10 border-b border-gray-200 dark:border-gray-800">
+        <div className="md:hidden relative z-10 border-b border-border">
           <div className="relative w-full flex items-center justify-center px-4 py-3">
-            <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+            <h1 className="text-lg font-bold text-foreground">
               Reading
             </h1>
           </div>
@@ -42,9 +42,9 @@ function ReadingContent() {
 
       {/* Desktop Navigation Header */}
       {!isFullscreen && (
-        <div className="hidden md:block relative bg-blue-50 dark:bg-transparent z-10 border-b border-gray-200 dark:border-gray-800">
+        <div className="hidden md:block relative bg-background z-10 border-b border-border">
           <div className="relative w-full flex items-center justify-center px-6 py-4">
-            <h1 className="text-2xl font-bold text-black dark:text-white">
+            <h1 className="text-2xl font-bold text-foreground">
               Reading
             </h1>
           </div>

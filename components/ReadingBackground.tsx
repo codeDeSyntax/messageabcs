@@ -7,7 +7,7 @@ export function ReadingBackground() {
   const getThemeColors = () => {
     if (theme === "dark") {
       return {
-        gradientFrom: "blue-900/10",
+        gradientFrom: "primary/10",
         gradientTo: "purple-900/10",
         meshFrom: "rgba(59, 130, 246, 0.15)",
         meshTo: "rgba(147, 51, 234, 0.15)",

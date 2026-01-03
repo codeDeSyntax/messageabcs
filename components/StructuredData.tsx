@@ -63,6 +63,7 @@ export function StructuredData({ topic }: StructuredDataProps) {
       dangerouslySetInnerHTML={{
         __html: JSON.stringify(structuredData),
       }}
+      suppressHydrationWarning
     />
   );
 }
@@ -103,6 +104,7 @@ export function WebsiteStructuredData() {
       dangerouslySetInnerHTML={{
         __html: JSON.stringify(websiteData),
       }}
+      suppressHydrationWarning
     />
   );
 }

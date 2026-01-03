@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Tag } from "lucide-react";
 import { BiblicalTopic } from "@/services/api";
@@ -20,33 +21,33 @@ export const TopicsSidebar = ({
   onTopicSelect,
 }: TopicsSidebarProps) => {
   return (
-    <div className="hidden lg:flex lg:w-1/3 xl:w-1/4 max-w-sm flex-col h-full">
-      <div className="bg-white/50 dark:bg-black/10  border border-blue-500/20 flex flex-col h-full">
+    <div className="flex-none w-full md:w-auto md:flex-1 lg:w-1/3 xl:w-1/4 max-w-full md:max-w-sm flex-col h-full flex snap-start">
+      <div className="bg-background flex flex-col h-full md:border-l border-border">
         {/* Topics Header - Fixed */}
-        <div className="px-6 py-2 border-b border-blue-500/20 flex-shrink-0">
-          <div className="flex items-center justify-between mb-4">
+        <div className="px-4 py-4 border-b border-border flex-shrink-0 bg-background">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Tag className="h-5 w-5 text-blue-500" />
+              <Tag className="h-5 w-5 text-primary" />
               <h3 className="text-lg font-semibold text-foreground">Topics</h3>
             </div>
             <ProfileCard />
           </div>
-          <p className="text-sm text-muted-foreground">
-            Browse and filter by biblical topics
+          <p className="text-xs text-muted-foreground">
+            Filter questions by topic
           </p>
         </div>
 
         {/* Topics Content - SCROLLABLE */}
-        <div className="flex-1 overflow-y-auto no-scrollbar p-3">
+        <div className="flex-1 overflow-y-auto no-scrollbar p-3 ">
           {loading ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="animate-pulse">
-                  <div className="flex items-center gap-3 p-4">
-                    <div className="w-8 h-8 bg-gray-300/30 rounded-full flex-shrink-0"></div>
+                  <div className="flex items-center gap-3 p-3 bg-cream-200 rounded-lg">
+                    <div className="w-10 h-10 bg-stone-300 rounded-full flex-shrink-0"></div>
                     <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-gray-300/30 rounded w-3/4"></div>
-                      <div className="h-3 bg-gray-300/30 rounded w-1/2"></div>
+                      <div className="h-3 bg-stone-300 rounded w-3/4"></div>
+                      <div className="h-2 bg-stone-300 rounded w-1/2"></div>
                     </div>
                   </div>
                 </div>
@@ -54,50 +55,48 @@ export const TopicsSidebar = ({
             </div>
           ) : topics.length === 0 ? (
             <div className="text-center py-12">
-              <Tag className="h-12 w-12 mx-auto text-blue-500/50 mb-4" />
+              <Tag className="h-12 w-12 mx-auto text-primary/50 mb-4" />
               <p className="text-sm text-muted-foreground">
                 No topics available
               </p>
             </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-2">
               {topics.map((topic) => (
                 <button
                   key={topic.id}
                   onClick={() =>
                     onTopicSelect(selectedTopic === topic.id ? null : topic.id)
                   }
-                  className={`w-full text-left px-4  rounded-lg transition-all duration-200 text-sm hover:bg-white/10 dark:hover:bg-black/10 border ${
+                  className={`w-full text-left p-3 rounded-lg transition-all duration-200 border ${
                     selectedTopic === topic.id
-                      ? "bg-blue-500/20 border-blue-500/40 shadow-sm"
-                      : "bg-white/5 dark:bg-black/5 border-transparent hover:border-blue-500/20"
+                      ? "bg-primary/10 border-primary/30 shadow-sm scale-[1.02]"
+                      : "bg-cream-200 border-cream-200 hover:border-primary/20 hover:shadow-sm"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     {/* Topic Image */}
-                    <div className="flex-shrink-0">
-                      <img
+                    <div className="flex-shrink-0 relative w-10 h-10">
+                      <Image
                         src={topic.image}
                         alt={topic.title}
-                        className="w-8 h-8 rounded-full object-cover bg-blue-500/10"
+                        fill
+                        className="rounded-full object-cover ring-2 ring-background"
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
-                          const nextEl = e.currentTarget
-                            .nextElementSibling as HTMLElement;
-                          if (nextEl) nextEl.style.display = "flex";
                         }}
                       />
                       <div
-                        className="w-8 h-8 rounded-full bg-blue-500/20 items-center justify-center"
+                        className="w-10 h-10 rounded-full bg-primary/20 items-center justify-center"
                         style={{ display: "none" }}
                       >
-                        <Tag className="h-4 w-4 text-blue-500" />
+                        <Tag className="h-4 w-4 text-primary" />
                       </div>
                     </div>
 
                     {/* Topic Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-foreground mb-1 line-clamp-2 leading-relaxed">
+                      <div className="font-medium text-foreground text-sm line-clamp-2 leading-snug">
                         {topic.title}
                       </div>
                     </div>
@@ -109,11 +108,11 @@ export const TopicsSidebar = ({
         </div>
 
         {/* Topics Footer - Fixed */}
-        <div className="p-6 border-t border-blue-500/20 flex-shrink-0">
+        <div className="p-4 border-t border-border flex-shrink-0 bg-background">
           <Button
             variant="outline"
             size="sm"
-            className="w-full bg-white/5 dark:bg-black/5 hover:bg-white/10 dark:hover:bg-black/10 border-blue-500/20 text-sm py-3"
+            className="w-full hover:bg-muted border-border text-sm py-2.5"
             onClick={() => window.open("/topics", "_blank")}
           >
             <Tag className="h-4 w-4 mr-2" />

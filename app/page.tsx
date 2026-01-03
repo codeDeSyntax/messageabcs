@@ -40,234 +40,6 @@ interface SpiralPoint {
   delay: number;
 }
 
-// Static spiral design component for bottom right corner
-const SpiralBackground = () => {
-  const { theme } = useTheme();
-
-  // Generate flowing wave paths for the spiral effect (like in the image)
-  const generateWavePath = (
-    offsetY: number,
-    amplitude: number,
-    frequency: number
-  ) => {
-    const points: string[] = [];
-    const numPoints = 150; // More points for smoother curves
-    const startX = 60; // Start from middle-right
-    const startY = 55 + offsetY; // Moved up from 70 to 55 for better visibility
-
-    for (let i = 0; i <= numPoints; i++) {
-      const t = i / numPoints;
-      const x = startX + t * 38; // Flow towards right edge
-      const y = startY + Math.sin(t * Math.PI * frequency) * amplitude; // Create wave
-
-      if (i === 0) {
-        points.push(`M ${x} ${y}`);
-      } else {
-        points.push(`L ${x} ${y}`);
-      }
-    }
-
-    return points.join(" ");
-  };
-
-  // Generate dots scattered around the waves (more dots, smaller size)
-  const generateScatteredDots = () => {
-    const dots: Array<{ x: number; y: number; size: number }> = [];
-    const numDots = 60; // More dots like in the image
-
-    // Create dots in the bottom-right area (moved up)
-    for (let i = 0; i < numDots; i++) {
-      const baseX = 65 + Math.random() * 33; // Spread across right area
-      const baseY = 50 + Math.random() * 40; // Moved up from 65 to 50, expanded range
-
-      // Add some clustering around the wave paths
-      const waveInfluence = Math.sin(((baseX - 65) / 33) * Math.PI * 5) * 2;
-
-      dots.push({
-        x: baseX,
-        y: baseY + waveInfluence,
-        size: Math.random() * 1.2 + 0.3, // Smaller dots
-      });
-    }
-
-    return dots;
-  };
-
-  // Generate multiple thin wave paths (6 waves for layered effect)
-  const wave1Path = generateWavePath(0, 2, 5);
-  const wave2Path = generateWavePath(3, 2.5, 4.5);
-  const wave3Path = generateWavePath(6, 2, 5.5);
-  const wave4Path = generateWavePath(9, 2.2, 5);
-  const wave5Path = generateWavePath(12, 2.3, 4.8);
-  const wave6Path = generateWavePath(15, 2, 5.2);
-  const scatteredDots = generateScatteredDots();
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none ">
-      <AnimatedBackground />
-      {/* Blue gradient background - using our biblical theme */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-blue-50/5 to-transparent dark:from-black/5 dark:via-black/5 backdrop-blur-sm dark:to-transparent" />
-
-      {/* Subtle blue accent in the ce backdrop-blur-smnter */}
-      <div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-5 dark:opacity-10 blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(10, 25, 226, 0.742) 20%, rgba(37, 99, 235, 0.2) 50%, transparent 100%)",
-        }}
-      />
-
-      {/* Static wave/spiral design in bottom right */}
-      <svg
-        className="w-full h-full "
-        viewBox="0 0 100 100"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <defs>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="0.5" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* Multiple thin wave lines for layered spiral effect */}
-        <path
-          d={wave1Path}
-          stroke={
-            theme === "dark"
-              ? "rgba(59, 130, 246, 0.7)"
-              : "rgba(37, 99, 235, 0.6)"
-          }
-          strokeWidth="0.15"
-          fill="none"
-          strokeLinecap="round"
-          filter="url(#glow)"
-        />
-
-        <path
-          d={wave2Path}
-          stroke={
-            theme === "dark"
-              ? "rgba(37, 99, 235, 0.65)"
-              : "rgba(59, 130, 246, 0.55)"
-          }
-          strokeWidth="0.15"
-          fill="none"
-          strokeLinecap="round"
-          filter="url(#glow)"
-        />
-
-        <path
-          d={wave3Path}
-          stroke={
-            theme === "dark"
-              ? "rgba(59, 130, 246, 0.6)"
-              : "rgba(37, 99, 235, 0.5)"
-          }
-          strokeWidth="0.15"
-          fill="none"
-          strokeLinecap="round"
-          filter="url(#glow)"
-        />
-
-        <path
-          d={wave4Path}
-          stroke={
-            theme === "dark"
-              ? "rgba(37, 99, 235, 0.55)"
-              : "rgba(59, 130, 246, 0.45)"
-          }
-          strokeWidth="0.15"
-          fill="none"
-          strokeLinecap="round"
-          filter="url(#glow)"
-        />
-
-        <path
-          d={wave5Path}
-          stroke={
-            theme === "dark"
-              ? "rgba(59, 130, 246, 0.5)"
-              : "rgba(37, 99, 235, 0.4)"
-          }
-          strokeWidth="0.15"
-          fill="none"
-          strokeLinecap="round"
-          filter="url(#glow)"
-        />
-
-        <path
-          d={wave6Path}
-          stroke={
-            theme === "dark"
-              ? "rgba(37, 99, 235, 0.45)"
-              : "rgba(59, 130, 246, 0.35)"
-          }
-          strokeWidth="0.15"
-          fill="none"
-          strokeLinecap="round"
-          filter="url(#glow)"
-        />
-
-        {/* Smaller scattered dots around the waves */}
-        {scatteredDots.map((dot, index) => (
-          <circle
-            key={`dot-${index}`}
-            cx={dot.x}
-            cy={dot.y}
-            r={dot.size * 0.1}
-            fill={
-              theme === "dark"
-                ? index % 2 === 0
-                  ? "rgba(59, 130, 246, 0.9)"
-                  : "rgba(37, 99, 235, 0.95)"
-                : index % 2 === 0
-                ? "rgba(37, 99, 235, 0.8)"
-                : "rgba(59, 130, 246, 0.85)"
-            }
-            filter="url(#glow)"
-          />
-        ))}
-      </svg>
-
-      {/* CSS Animations */}
-      <style>{`
-        @keyframes slideUpFade {
-          0% {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-          100% {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        @keyframes typewriter {
-          0% {
-            width: 0;
-          }
-          100% {
-            width: 100%;
-          }
-        }
-
-        @keyframes blink {
-          0%, 50% {
-            border-color: currentColor;
-          }
-          51%, 100% {
-            border-color: transparent;
-          }
-        }
-      `}</style>
-    </div>
-  );
-};
-
 const navigationItems = [
   { icon: Hash, label: "Topics", path: "/topics" },
   { icon: BookOpen, label: "Reading", path: "/reading" },
@@ -276,6 +48,7 @@ const navigationItems = [
 
 export default function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showFullscreenModal, setShowFullscreenModal] = useState(false);
   const { theme, setTheme } = useTheme();
   const router = useRouter();
@@ -330,163 +103,239 @@ export default function Home() {
     localStorage.setItem("hasSeenFullscreenModal", "true");
   };
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
   return (
-    <div className="h-screen overflow-hidden relative bg-blue-50 dark:bg-slate-900 transition-all duration-500">
-      {/* Spiral Background */}
-      <SpiralBackground />
+    <div className="h-screen overflow-hidden relative bg-stone-800">
+      {/* CSS Animations */}
+      <style>{`
+        @keyframes slideUpFade {
+          0% {
+            transform: translateY(100%);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
 
-      {/* Desktop Header - Top Navigation (Logo left, links centered) */}
-      <div className="hidden absolute md:flex items-center p-6 z-40 w-full">
-        <div className="w-full max-w-7xl mx-auto flex items-center">
-          <div className="flex-shrink-0">
-            <Logo className="cursor-pointer" />
-          </div>
+      {/* Main Content Container with curved top */}
+      <div className="absolute inset-0 flex flex-col">
+        {/* Brown header section - takes 20% of height */}
+        <div className="h-[2%] md:h-[2%] relative z-10"></div>
 
-          <div className="flex-1 flex justify-center">
-            <div className="flex items-center gap-2">
-              {navItems.map((item) => {
-                const Icon = item.icon as any;
-                const isActive = pathname === item.path;
+        {/* White/Cream content section with rounded top corners */}
+        <div className="flex-1 bg-background rounded-t-[60px] md:rounded-t-[80px] relative z-20 shadow-2xl overflow-hidden">
+          {/* Decorative geometric background pattern */}
+          <svg
+            aria-hidden="true"
+            className="absolute inset-x-0 -top-14 -z-10 h-[1000px] w-full fill-background stroke-primary/10 [mask-image:linear-gradient(to_bottom_left,white_50%,transparent_60%)]"
+          >
+            <rect
+              width="100%"
+              height="100%"
+              fill="url(#geometric-pattern)"
+              strokeWidth="0"
+            />
+            <svg x="50%" y="-96" strokeWidth="0" className="overflow-visible">
+              <path
+                transform="translate(64 160)"
+                d="M45.119 4.5a11.5 11.5 0 0 0-11.277 9.245l-25.6 128C6.82 148.861 12.262 155.5 19.52 155.5h63.366a11.5 11.5 0 0 0 11.277-9.245l25.6-128c1.423-7.116-4.02-13.755-11.277-13.755H45.119Z"
+              />
+              <path
+                transform="translate(128 320)"
+                d="M45.119 4.5a11.5 11.5 0 0 0-11.277 9.245l-25.6 128C6.82 148.861 12.262 155.5 19.52 155.5h63.366a11.5 11.5 0 0 0 11.277-9.245l25.6-128c1.423-7.116-4.02-13.755-11.277-13.755H45.119Z"
+              />
+              <path
+                transform="translate(288 480)"
+                d="M45.119 4.5a11.5 11.5 0 0 0-11.277 9.245l-25.6 128C6.82 148.861 12.262 155.5 19.52 155.5h63.366a11.5 11.5 0 0 0 11.277-9.245l25.6-128c1.423-7.116-4.02-13.755-11.277-13.755H45.119Z"
+              />
+              <path
+                transform="translate(512 320)"
+                d="M45.119 4.5a11.5 11.5 0 0 0-11.277 9.245l-25.6 128C6.82 148.861 12.262 155.5 19.52 155.5h63.366a11.5 11.5 0 0 0 11.277-9.245l25.6-128c1.423-7.116-4.02-13.755-11.277-13.755H45.119Z"
+              />
+              <path
+                transform="translate(544 640)"
+                d="M45.119 4.5a11.5 11.5 0 0 0-11.277 9.245l-25.6 128C6.82 148.861 12.262 155.5 19.52 155.5h63.366a11.5 11.5 0 0 0 11.277-9.245l25.6-128c1.423-7.116-4.02-13.755-11.277-13.755H45.119Z"
+              />
+              <path
+                transform="translate(320 800)"
+                d="M45.119 4.5a11.5 11.5 0 0 0-11.277 9.245l-25.6 128C6.82 148.861 12.262 155.5 19.52 155.5h63.366a11.5 11.5 0 0  0 11.277-9.245l25.6-128c1.423-7.116-4.02-13.755-11.277-13.755H45.119Z"
+              />
+            </svg>
+            <defs>
+              <pattern
+                id="geometric-pattern"
+                width="96"
+                height="480"
+                x="50%"
+                patternUnits="userSpaceOnUse"
+                patternTransform="translate(0 -96)"
+                fill="none"
+              >
+                <path
+                  d="M128 0 98.572 147.138A16 16 0 0 1 82.883 160H13.117a16 16 0 0 0-15.69 12.862l-26.855 134.276A16 16 0 0 1-45.117 320H-116M64-160 34.572-12.862A16 16 0 0 1 18.883 0h-69.766a16 16 0 0 0-15.69 12.862l-26.855 134.276A16 16 0 0 1-109.117 160H-180M192 160l-29.428 147.138A15.999 15.999 0 0 1 146.883 320H77.117a16 16 0 0 0-15.69 12.862L34.573 467.138A16 16 0 0 1 18.883 480H-52M-136 480h58.883a16 16 0 0 0 15.69-12.862l26.855-134.276A16 16 0 0 1-18.883 320h69.766a16 16 0 0 0 15.69-12.862l26.855-134.276A16 16 0 0 1 109.117 160H192M-72 640h58.883a16 16 0 0 0 15.69-12.862l26.855-134.276A16 16 0 0 1 45.117 480h69.766a15.999 15.999 0 0 0 15.689-12.862l26.856-134.276A15.999 15.999 0 0 1 173.117 320H256M-200 320h58.883a15.999 15.999 0 0 0 15.689-12.862l26.856-134.276A16 16 0 0 1-82.883 160h69.766a16 16 0 0 0 15.69-12.862L29.427 12.862A16 16 0 0 1 45.117 0H128"
+                  strokeWidth="1"
+                />
+              </pattern>
+            </defs>
+          </svg>
 
-                return (
-                  <button
-                    key={item.path}
-                    onClick={() => router.push(item.path)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors duration-150 hover:bg-blue-100/60 dark:hover:bg-blue-900/30 ${
-                      isActive
-                        ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
-                        : "text-gray-700 dark:text-gray-200"
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="hidden lg:inline">{item.label}</span>
-                  </button>
-                );
-              })}
+          {/* Header - Top Navigation INSIDE the curved section */}
+          <div className="flex items-center px-6 md:px-8 pt-6 md:pt-8 pb-4 relative z-10">
+            <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex-shrink-0">
+                <Logo className="cursor-pointer" />
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-full text-sm transition-all duration-150 bg-transparent border border-foreground/20 hover:border-foreground/40 font-medium"
+                >
+                  <Menu className="h-4 w-4" />
+                  <span className="hidden sm:inline">Menu</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="flex-shrink-0">
-            <button
-              onClick={toggleTheme}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors duration-150 hover:bg-blue-100/60 dark:hover:bg-blue-900/30"
-            >
-              {mounted ? (
-                theme === "dark" ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-              <span className="hidden lg:inline">
-                {mounted ? (theme === "dark" ? "Light" : "Dark") : "Dark"}
-              </span>
-            </button>
+          {/* Expandable Navigation Menu */}
+          <div
+            className={`absolute left-1/2 -translate-x-1/2 z-50 w-[90%] md:w-[80%] max-w-4xl overflow-hidden transition-all duration-500 ease-in-out ${
+              isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="w-full px-4 md:px-6 pb-6 md:pb-8 pt-4 md:pt-6 bg-cream-200 border-none border-border rounded-2xl">
+              <nav className="flex flex-col gap-2">
+                {navItems.map((item, index) => {
+                  const Icon = item.icon as any;
+                  const isActive = pathname === item.path;
+
+                  return (
+                    <button
+                      key={item.path}
+                      onClick={() => {
+                        router.push(item.path);
+                        setIsMenuOpen(false);
+                      }}
+                      className={`group flex items-center gap-4 px-6 py-3.5 rounded-xl transition-all duration-300 text-left ${
+                        isActive
+                          ? "bg-primary/10 text-primary border-l-4 border-primary shadow-sm"
+                          : "hover:bg-muted bg-white/20 hover:translate-x-1 border-l-4 border-transparent"
+                      }`}
+                      style={{
+                        animation: `slideUpFade 0.4s ease-out ${
+                          index * 0.1
+                        }s forwards`,
+                        opacity: 0,
+                        transform: "translateY(20px)",
+                      }}
+                    >
+                      <Icon
+                        className={`h-5 w-5 transition-all duration-300 ${
+                          isActive
+                            ? "text-primary"
+                            : "text-muted-foreground group-hover:text-foreground group-hover:scale-110"
+                        }`}
+                      />
+                      <span className="text-base font-medium flex-1">
+                        {item.label}
+                      </span>
+                      <svg
+                        className={`h-4 w-4 transition-all duration-300 ${
+                          isActive
+                            ? "text-primary opacity-100"
+                            : "text-muted-foreground group-hover:text-foreground group-hover:translate-x-1"
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+          </div>
+
+          {/* Main Content - Left Aligned */}
+          <div
+            className={`flex flex-col justify-center h-full px-6 sm:px-12 md:px-16 lg:px-24 pb-24 md:pb-12 pt-12 md:pt-8 relative z-10 transition-all duration-500 ease-in-out ${
+              isMenuOpen ? "md:mt-0" : ""
+            }`}
+          >
+            <div className="text-left space-y-6 max-w-5xl">
+              {/* Main Heading */}
+              <div className="space-y-3">
+                <h1
+                  className="text-4xl sm:text-5xl md:text-6xl [text-wrap:balance] font-medium tracking-tight text-foreground leading-tight"
+                  style={{
+                    animation: "slideUpFade 1.2s ease-out forwards",
+                  }}
+                >
+                  KNOWING JESUS <br /> CHRIST
+                </h1>
+
+                <p
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-primary leading-tight"
+                  style={{
+                    animation: "slideUpFade 1.2s ease-out 0.2s forwards",
+                    transform: "translateY(100%)",
+                    opacity: 0,
+                  }}
+                >
+                  EQUALS KNOWING THE TRUTH.
+                </p>
+              </div>
+
+              {/* Combined Description with Scripture */}
+              <div className="pt-6">
+                <p
+                  className="text-sm sm:text-base md:text-lg text-muted-foreground font-normal leading-relaxed max-w-2xl"
+                  style={{
+                    animation: "slideUpFade 1.2s ease-out 0.8s forwards",
+                    transform: "translateY(100%)",
+                    opacity: 0,
+                  }}
+                >
+                  Discover a platform to help enlighten readers on Bible truths
+                  hidden from Christians.{" "}
+                  <span className="italic text-primary/80">
+                    &quot;And ye shall know the truth, and the truth shall make
+                    you free.&quot;
+                  </span>{" "}
+                  <span className="text-xs sm:text-sm font-medium not-italic">
+                    - John 8:32
+                  </span>
+                </p>
+              </div>
+
+              {/* Call to Action Button */}
+              <div className="pt-2">
+                <button
+                  className="bg-primary hover:bg-primary-hover text-muted font-semibold py-3 px-8 rounded-full text-sm sm:text-base transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  style={{
+                    animation: "slideUpFade 1.2s ease-out 1.6s forwards",
+                    transform: "translateY(100%)",
+                    opacity: 0,
+                  }}
+                  onClick={() => router.push("/topics")}
+                >
+                  Let&apos;s Read
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Mobile Navigation Drawer */}
-      <div className="md:hidden relative z-10 p-6">
-        <NavigationDrawer
-          isOpen={isDrawerOpen}
-          onOpenChange={setIsDrawerOpen}
-          isHomePage={true}
-        />
-      </div>
-
-      {/* Main Content - Centered with compact layout like in the image */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-12 pb-24 md:pb-12">
-        <div className="text-center space-y-4 max-w-2xl mx-auto">
-          {/* Main Heading - Compact and impactful */}
-          <div className="space-y-3">
-            <h1
-              className="text-3xl sm:text-3xl md:text-6xl  font-bold tracking-tight text-blue-900 dark:text-blue-400 uppercase leading-tight"
-              style={{
-                animation: "slideUpFade 1.2s ease-out forwards",
-              }}
-            >
-              KNOWING CHRIST JESUS
-            </h1>
-
-            <span
-              className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-800 dark:text-white uppercase leading-tight"
-              style={{
-                animation: "slideUpFade 1.2s ease-out 0.2s forwards",
-                transform: "translateY(100%)",
-                opacity: 0,
-              }}
-            >
-              EQUALS KNOWING THE TRUTH.
-            </span>
-          </div>
-
-          {/* Scripture Quote */}
-          <div className="pt-2">
-            <span
-              className="text-lg sm:text-base md:text-lg text-slate-600 dark:text-slate-300 font-normal leading-relaxed italic"
-              style={{
-                animation: "slideUpFade 1.2s ease-out 0.8s forwards",
-                transform: "translateY(100%)",
-                opacity: 0,
-              }}
-            >
-              &quot;And ye shall know the truth, and the truth shall make you
-              free.&quot;
-              <br />
-              <span className="text-xl sm:text-sm font-medium not-italic">
-                - John 8:32
-              </span>
-            </span>
-          </div>
-
-          {/* Platform Description */}
-          <div className="pt-2">
-            <mark
-              className="text-sm bg-white px-2 sm:text-sm md:text-base text-slate-600 game-nav-button dark:text-white font-normal leading-relaxed max-w-xl mx-auto"
-              style={{
-                animation: "slideUpFade 1.2s ease-out 1.2s forwards",
-                transform: "translateY(100%)",
-                opacity: 0,
-              }}
-            >
-              Discover a platform to help enlighten readers on Bible truths
-              hidden from Christians.
-            </mark>
-          </div>
-
-          {/* Call to Action Button - Smaller like in the image */}
-          <div className="pt-6">
-            <button
-              className="bg-white hover:bg-gray-50 text-black hover:text-blue-700 font-semibold py-2 px-6 rounded-full text-sm sm:text-base transition-all duration-300 hover:scale-105 shadow-none"
-              style={{
-                animation: "slideUpFade 1.2s ease-out 1.6s forwards",
-                transform: "translateY(100%)",
-                opacity: 0,
-                // boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 6px 16px rgba(0, 0, 0, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 4px 12px rgba(0, 0, 0, 0.15)";
-              }}
-              onClick={() => router.push("/topics")}
-            >
-              Let&apos;s Read
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Fullscreen Welcome Modal */}
       <FullscreenWelcomeModal
         isOpen={showFullscreenModal}

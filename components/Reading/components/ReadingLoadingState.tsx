@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 export const ReadingLoadingState = () => (
-  <Card className="h-full bg-white/20 dark:bg-black/10 backdrop-blur-sm border-blue-500/20">
+  <Card className="h-full bg-background/20 backdrop-blur-sm border-border">
     <CardContent className="p-6 h-full">
       <div className="space-y-6 h-full">
         {/* Header Skeleton */}

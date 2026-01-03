@@ -4,99 +4,79 @@
 
 /* Biblical Blogs App Design System - All colors MUST be HSL */
 body {
-  font-family: "Crimson Pro", serif;
+  font-family: "Mona Sans", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  font-variation-settings: "wdth" 125;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select {
+  font-family: "Mona Sans", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  font-variation-settings: "wdth" 125;
+}
+
+* {
+  font-variation-settings: "wdth" 125;
 }
 
 @layer base {
   :root {
-    /* Light mode colors - HSL Biblical Theme */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Cream & Brown Theme */
+    --background: 39 84% 90%; /* #faeed1 */
+    --foreground: 30 12% 12%; /* #1c1917 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 39 84% 90%;
+    --card-foreground: 30 12% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 39 84% 90%;
+    --popover-foreground: 30 12% 12%;
 
-    --primary: 25 95% 53%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 25 35% 44%; /* #9a674a */
+    --primary-foreground: 39 93% 97%; /* #fefaf5 */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 32 47% 65%; /* #d4a574 */
+    --secondary-foreground: 30 12% 12%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 38 72% 85%; /* #f5e3bb */
+    --muted-foreground: 25 29% 27%; /* #5c3d2a */
 
-    --accent: 25 95% 53%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 25 29% 34%; /* #7d5439 */
+    --accent-foreground: 39 93% 97%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 39 93% 97%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 25 95% 53%;
-
-    /* Custom biblical app colors */
-    --biblical-navy: 220 26% 14%;
-    --biblical-navy-light: 220 26% 18%;
-    --biblical-purple: 262 83% 58%;
-    --biblical-purple-light: 262 83% 68%;
-    --biblical-blue: 213 94% 68%;
-    --biblical-blue-light: 213 94% 78%;
-    --biblical-text-light: 0 0% 85%;
-    --biblical-card: 220 26% 16%;
+    --border: 32 47% 65%; /* #d4a574 */
+    --input: 38 72% 85%; /* #f5e3bb */
+    --ring: 25 35% 44%; /* #9a674a */
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    /* Dark mode - Exact Biblical Navy Theme from Images */
-    --background: 215 44% 7%;
-    --foreground: 0 0% 95%;
-
-    --card: 210 32% 19%;
-    --card-foreground: 0 0% 95%;
-
-    --popover: 210 32% 19%;
-    --popover-foreground: 0 0% 95%;
-
-    --primary: 214 100% 77%;
-    --primary-foreground: 210 32% 17%;
-
-    --secondary: 210 32% 22%;
-    --secondary-foreground: 0 0% 85%;
-
-    --muted: 210 32% 22%;
-    --muted-foreground: 0 0% 65%;
-
-    --accent: 214 100% 77%;
-    --accent-foreground: 210 32% 17%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 210 32% 22%;
-    --input: 210 32% 22%;
-    --ring: 214 100% 77%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 39 84% 90%;
+    --sidebar-foreground: 30 12% 12%;
+    --sidebar-primary: 25 35% 44%;
+    --sidebar-primary-foreground: 39 93% 97%;
+    --sidebar-accent: 38 72% 85%;
+    --sidebar-accent-foreground: 25 35% 44%;
+    --sidebar-border: 32 47% 65%;
+    --sidebar-ring: 25 35% 44%;
   }
 }
 
@@ -166,7 +146,7 @@ body {
   letter-spacing: 0.005em;
 }
 
-.font-heading {
+. {
   font-family: "Crimson Pro", serif;
   font-weight: 600;
   line-height: 1.3;

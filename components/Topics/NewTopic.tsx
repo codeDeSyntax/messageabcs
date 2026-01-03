@@ -167,7 +167,7 @@ export default function NewTopic() {
         >
           MESSAGE
           <span
-            className="text-white"
+            className="text-primary-foreground"
             style={{
               color: "white",
               textShadow: `0px 0px 0 rgb(252, 252, 252),
@@ -186,8 +186,8 @@ export default function NewTopic() {
       {/* Main Content */}
       <div className="flex justify-center h-full p-1 sm:p-6 pt-0 md:pt-6 relative z-10">
         <div className="w-full max-w-4xl h-full">
-          <Card className="h-full p-0 bg-white/20 dark:bg-black/10 backdrop-blur-sm border-blue-500/20 flex flex-col">
-            <CardHeader className="border-b border-blue-500/20 flex-shrink-0">
+          <Card className="h-full p-0 bg-background/20 backdrop-blur-sm border-border flex flex-col">
+            <CardHeader className="border-b border-border flex-shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Button

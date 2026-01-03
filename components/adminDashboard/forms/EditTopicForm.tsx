@@ -203,23 +203,29 @@ export function EditTopicForm({
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-foreground">
           {showPreview ? "Preview" : "Edit"}
         </h2>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={() => setShowPreview(!showPreview)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 rounded-xl shadow-sm hover:shadow-md transition-all"
           >
             <Eye className="h-4 w-4" />
             {showPreview ? "Edit" : "Preview"}
           </Button>
           {onCancel && (
-            <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={onCancel}
+              className="rounded-xl"
+            >
               Cancel
             </Button>
           )}
@@ -227,26 +233,30 @@ export function EditTopicForm({
       </div>
 
       <div className="flex-1 overflow-y-auto pb-40">
-        <Card className="bg-background/50 backdrop-blur-sm border-none border-primary/20">
-          <CardContent className="p-3">
+        <Card className="bg-background/50 backdrop-blur-sm border-none shadow-sm rounded-2xl">
+          <CardContent className="p-6">
             {!showPreview ? (
-              <form onSubmit={handleSave} className="space-y-6">
+              <form onSubmit={handleSave} className="space-y-8">
                 {/* Title */}
-                <div className="space-y-2">
-                  <Label htmlFor="title">Title *</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="title" className="text-sm font-medium">
+                    Title *
+                  </Label>
                   <Input
                     id="title"
                     value={formData.title}
                     onChange={(e) => handleInputChange("title", e.target.value)}
                     placeholder="Enter topic title..."
-                    className="bg-background/50"
+                    className="bg-cream-200 rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-primary/30 transition-all"
                     required
                   />
                 </div>
 
                 {/* Subtitle */}
-                <div className="space-y-2">
-                  <Label htmlFor="subtitle">Subtitle</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="subtitle" className="text-sm font-medium">
+                    Subtitle
+                  </Label>
                   <Input
                     id="subtitle"
                     value={formData.subtitle}
@@ -254,27 +264,29 @@ export function EditTopicForm({
                       handleInputChange("subtitle", e.target.value)
                     }
                     placeholder="Enter topic subtitle (optional)..."
-                    className="bg-background/50"
+                    className="bg-cream-200 rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-primary/30 transition-all"
                   />
                 </div>
 
                 {/* Image URL */}
-                <div className="space-y-2">
-                  <Label htmlFor="image">Cover Image URL *</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="image" className="text-sm font-medium">
+                    Cover Image URL *
+                  </Label>
                   <Input
                     id="image"
                     value={formData.image}
                     onChange={(e) => handleInputChange("image", e.target.value)}
                     placeholder="Enter image URL..."
-                    className="bg-background/50"
+                    className="bg-cream-200 rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-primary/30 transition-all"
                     required
                   />
                   {formData.image && (
-                    <div className="mt-2">
+                    <div className="mt-3">
                       <img
                         src={formData.image}
                         alt="Preview"
-                        className="w-32 h-20 object-cover rounded border"
+                        className="w-40 h-24 object-cover rounded-2xl border-2 border-border shadow-md"
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
                         }}
@@ -284,14 +296,14 @@ export function EditTopicForm({
                 </div>
 
                 {/* Scriptures */}
-                <div className="space-y-4">
-                  <Label>Scriptures</Label>
-                  <div className="flex gap-2">
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Scriptures</Label>
+                  <div className="flex gap-3">
                     <Input
                       value={scriptureInput}
                       onChange={(e) => setScriptureInput(e.target.value)}
                       placeholder="Add a scripture reference (e.g., John 3:16)..."
-                      className="bg-background/50"
+                      className="bg-cream-200 rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-primary/30 transition-all"
                       onKeyPress={(e) =>
                         e.key === "Enter" &&
                         (e.preventDefault(), handleAddScripture())
@@ -300,18 +312,18 @@ export function EditTopicForm({
                     <button
                       type="button"
                       onClick={handleAddScripture}
-                      className={`${GAME_BUTTON_SMALL.primary} px-3 py-2`}
+                      className="bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-xl transition-all shadow-sm hover:shadow-md"
                     >
                       <Plus className="h-4 w-4" />
                     </button>
                   </div>
                   {formData.scriptures.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-2 mt-3">
                       {formData.scriptures.map((scripture, index) => (
                         <Badge
                           key={index}
                           variant="secondary"
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-full shadow-sm"
                         >
                           {scripture}
                           <Button
@@ -319,7 +331,7 @@ export function EditTopicForm({
                             variant="ghost"
                             size="sm"
                             onClick={() => handleRemoveScripture(scripture)}
-                            className="h-4 w-4 p-0 bg-blue-700 text-white  hover:text-black hover:bg-destructive"
+                            className="h-5 w-5 p-0 rounded-full bg-destructive/10 text-destructive hover:bg-destructive hover:text-white transition-all"
                           >
                             <X className="h-3 w-3" />
                           </Button>
@@ -330,46 +342,46 @@ export function EditTopicForm({
                 </div>
 
                 {/* Main Extract - Tiptap Editor */}
-                <div className="space-y-2 w-full max-w-full">
-                  <Label>Main Extract</Label>
-                  <div className="w-full max-w-full overflow-hidden">
+                <div className="space-y-3 w-full max-w-full">
+                  <Label className="text-sm font-medium">Main Extract</Label>
+                  <div className="w-full max-w-full overflow-hidden rounded-2xl shadow-sm">
                     <TiptapEditor
                       content={formData.mainExtract}
                       onChange={(content) =>
                         handleInputChange("mainExtract", content)
                       }
                       placeholder="Write the main content for this topic..."
-                      className="bg-background/50 w-full max-w-full"
+                      className="bg-cream-200 w-full max-w-full"
                     />
                   </div>
                 </div>
 
                 {/* Quotes */}
-                <div className="space-y-2">
-                  <Label>Quotes</Label>
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Quotes</Label>
                   <div className="flex-col gap-2">
                     <Textarea
                       value={quoteInput}
                       onChange={(e) => setQuoteInput(e.target.value)}
                       placeholder="Add an inspirational quote..."
-                      className="bg-background/50 min-h-[80px]"
+                      className="bg-cream-200 min-h-[80px] rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-primary/30 transition-all"
                     />
                     <button
                       type="button"
                       onClick={handleAddQuote}
-                      className={`${GAME_BUTTON_SMALL.primary} px-3 py-2 self-start mt-3`}
+                      className="bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-xl self-start mt-3 transition-all shadow-sm hover:shadow-md"
                     >
                       <Plus className="h-4 w-4" />
                     </button>
                   </div>
                   {formData.quotes.length > 0 && (
-                    <div className="space-y-2 mt-2">
+                    <div className="space-y-3 mt-3">
                       {formData.quotes.map((quote, index) => (
                         <div
                           key={index}
-                          className="flex items-start gap-2 p-3 bg-background/30 rounded border"
+                          className="flex items-start gap-3 p-4 bg-cream-200 rounded-2xl border border-border/50 shadow-sm"
                         >
-                          <div className="flex-1 text-sm italic">
+                          <div className="flex-1 text-sm italic text-foreground/90">
                             &ldquo;{quote}&rdquo;
                           </div>
                           <Button
@@ -377,7 +389,7 @@ export function EditTopicForm({
                             variant="ghost"
                             size="sm"
                             onClick={() => handleRemoveQuote(index)}
-                            className="h-6 w-6 p-0 hover:bg-destructive flex-shrink-0"
+                            className="h-7 w-7 p-0 rounded-full hover:bg-destructive/10 hover:text-destructive flex-shrink-0 transition-all"
                           >
                             <X className="h-3 w-3" />
                           </Button>
@@ -388,13 +400,13 @@ export function EditTopicForm({
                 </div>
 
                 {/* Save Button */}
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-end pt-6">
                   <Button
                     type="submit"
                     disabled={isSaving}
-                    className="flex items-center gap-2 bg-blue-700 text-white hover:bg-transparent hover:text-black"
+                    className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-accent rounded-xl px-6 py-2.5 shadow-md hover:shadow-lg transition-all"
                   >
-                    <Save className="h-4 w-4  " />
+                    <Save className="h-4 w-4" />
                     {isSaving ? "Saving..." : "Save Changes"}
                   </Button>
                 </div>

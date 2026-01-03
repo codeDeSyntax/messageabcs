@@ -43,24 +43,24 @@ export function AnimatedBackground() {
     const getThemeColors = () => {
       if (theme === "dark") {
         return {
-          primary: "59, 130, 246", // Blue
-          secondary: "147, 51, 234", // Purple
-          gradientFrom: "blue-900/10",
-          gradientTo: "purple-900/10",
+          primary: "154, 103, 74", // Brown primary
+          secondary: "250, 238, 209", // Cream secondary
+          gradientFrom: "primary/10",
+          gradientTo: "accent/10",
           circleColors: {
-            primary: "rgba(85, 51, 234, 0.4)",
-            secondary: "rgba(59, 130, 246, 0.6)",
+            primary: "rgba(154, 103, 74, 0.4)",
+            secondary: "rgba(250, 238, 209, 0.6)",
           },
         };
       } else {
         return {
-          primary: "59, 130, 246", // Blue
-          secondary: "96, 165, 250", // Blue-400
-          gradientFrom: "blue-50/30",
-          gradientTo: "blue-100/20",
+          primary: "154, 103, 74", // Brown primary
+          secondary: "250, 238, 209", // Cream secondary
+          gradientFrom: "background/30",
+          gradientTo: "muted/20",
           circleColors: {
-            primary: "rgba(96, 165, 250, 0.3)",
-            secondary: "rgba(59, 130, 246, 0.2)",
+            primary: "rgba(154, 103, 74, 0.3)",
+            secondary: "rgba(250, 238, 209, 0.2)",
           },
         };
       }
@@ -151,19 +151,19 @@ export function AnimatedBackground() {
   const colors =
     theme === "dark"
       ? {
-          gradientFrom: "blue-900/10",
-          gradientTo: "purple-900/10",
+          gradientFrom: "primary/10",
+          gradientTo: "accent/10",
           circleColors: {
-            primary: "rgba(51, 69, 234, 0.8)",
-            secondary: "rgba(59, 130, 246, 0.6)",
+            primary: "rgba(154, 103, 74, 0.8)",
+            secondary: "rgba(250, 238, 209, 0.6)",
           },
         }
       : {
-          gradientFrom: "indigo-200/20",
-          gradientTo: "violet-200/20",
+          gradientFrom: "background/20",
+          gradientTo: "muted/20",
           circleColors: {
-            primary: "rgba(102, 92, 246, 0.3)",
-            secondary: "rgba(99, 102, 241, 0.2)",
+            primary: "rgba(154, 103, 74, 0.3)",
+            secondary: "rgba(250, 238, 209, 0.2)",
           },
         };
 
@@ -171,7 +171,7 @@ export function AnimatedBackground() {
   if (!mounted) {
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-transparent to-purple-900/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-accent/10" />
       </div>
     );
   }
@@ -179,7 +179,7 @@ export function AnimatedBackground() {
   return (
     <div
       className={`absolute inset-0 overflow-hidden pointer-events-none ${
-        theme === "light" ? "bg-blue-50" : ""
+        theme === "light" ? "bg-background/50" : ""
       }`}
     >
       {/* Theme-aware gradient overlay */}
@@ -228,24 +228,24 @@ export function AnimatedBackground() {
               offset="0%"
               stopColor={
                 theme === "dark"
-                  ? "rgba(59, 130, 246, 0.6)"
-                  : "rgba(99, 102, 241, 0.6)"
+                  ? "rgba(154, 103, 74, 0.6)"
+                  : "rgba(154, 103, 74, 0.6)"
               }
             />
             <stop
               offset="50%"
               stopColor={
                 theme === "dark"
-                  ? "rgba(63, 51, 234, 0.4)"
-                  : "rgba(107, 92, 246, 0.4)"
+                  ? "rgba(154, 103, 74, 0.4)"
+                  : "rgba(154, 103, 74, 0.4)"
               }
             />
             <stop
               offset="100%"
               stopColor={
                 theme === "dark"
-                  ? "rgba(59, 130, 246, 0.2)"
-                  : "rgba(99, 102, 241, 0.2)"
+                  ? "rgba(154, 103, 74, 0.2)"
+                  : "rgba(154, 103, 74, 0.2)"
               }
             />
           </linearGradient>
@@ -261,24 +261,24 @@ export function AnimatedBackground() {
               offset="0%"
               stopColor={
                 theme === "dark"
-                  ? "rgba(59, 130, 246, 0.2)"
-                  : "rgba(99, 102, 241, 0.2)"
+                  ? "rgba(154, 103, 74, 0.2)"
+                  : "rgba(154, 103, 74, 0.2)"
               }
             />
             <stop
               offset="50%"
               stopColor={
                 theme === "dark"
-                  ? "rgba(78, 51, 234, 0.5)"
-                  : "rgba(105, 92, 246, 0.5)"
+                  ? "rgba(154, 103, 74, 0.5)"
+                  : "rgba(154, 103, 74, 0.5)"
               }
             />
             <stop
               offset="100%"
               stopColor={
                 theme === "dark"
-                  ? "rgba(59, 130, 246, 0.1)"
-                  : "rgba(99, 102, 241, 0.1)"
+                  ? "rgba(154, 103, 74, 0.1)"
+                  : "rgba(154, 103, 74, 0.1)"
               }
             />
           </linearGradient>

@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import NextImage from "next/image";
 import { Button } from "@/components/ui/button";
 import { LogIn, LogOut, User, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -63,10 +64,12 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
             className={`${GAME_BUTTON_VARIANTS.primary}  h-10 w-10 p-0 rounded-full`}
           >
             <div className={`${GAME_SHINE_OVERLAY} rounded-full`}></div>
-            <img
+            <NextImage
               className={` ${GAME_Z_INDEX.overlay} `}
-              src="./mabcs.png"
+              src="/mabcs.png"
               alt="Profile"
+              width={40}
+              height={40}
             />
           </Button>
         </div>
@@ -75,7 +78,7 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
           variant="ghost"
           size="sm"
           onClick={handleLogin}
-          className={`${GAME_BUTTON_VARIANTS.primary} bg-blue-600 hover:bg-blue-500 h-10 w-10 p-0 rounded-full`}
+          className={`${GAME_BUTTON_VARIANTS.primary} bg-primary hover:bg-accent h-10 w-10 p-0 rounded-full`}
           title="Admin Login"
         >
           <div className={`${GAME_SHINE_OVERLAY} rounded-full`}></div>
@@ -95,7 +98,7 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
             />
             {/* Dropdown Menu - Glass Card Design */}
             <div
-              className="fixed bg-white/95 dark:bg-black/95 backdrop-blur-xl border border-blue-500/20 rounded-xl p-4 shadow-2xl min-w-[200px]"
+              className="fixed bg-background/95 backdrop-blur-xl border border-border rounded-xl p-4 shadow-2xl min-w-[200px]"
               style={{
                 zIndex: 999999,
                 position: "fixed",
@@ -106,11 +109,13 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
             >
               <div>
                 {/* Header */}
-                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-blue-500/20">
-                  <img
-                    src="./mabcs.png"
+                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-border">
+                  <NextImage
+                    src="/mabcs.png"
                     alt="admin"
-                    className="h-4 w-4 text-blue-500"
+                    width={16}
+                    height={16}
+                    className="text-primary"
                   />
                   <span className="text-sm font-medium text-foreground">
                     {user?.username || "Admin"}
@@ -125,7 +130,7 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
                       router.push("/admin?direct=true");
                       setIsOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 text-sm text-foreground/90 hover:bg-blue-500/10 hover:text-foreground rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-blue-500/20"
+                    className="w-full text-left px-3 py-2 text-sm text-foreground/90 hover:bg-primary/10 hover:text-foreground rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-primary/20"
                   >
                     Dashboard
                   </button>
