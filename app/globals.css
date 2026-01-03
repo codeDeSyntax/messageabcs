@@ -10,21 +10,7 @@ body {
     "Noto Color Emoji";
   font-variation-settings: "wdth" 125;
 }
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-li,
-span,
-div,
-a,
-button,
-input,
-textarea,
-select {
+p,h1,h2,h3,h4,h5,h6,li,span,div,a,button,input,textarea,select   {
   font-family: "Mona Sans", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
@@ -146,12 +132,7 @@ select {
   letter-spacing: 0.005em;
 }
 
-. {
-  font-family: "Crimson Pro", serif;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
+
 
 .font-ui {
   font-family: "Inter", sans-serif;
