@@ -406,7 +406,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {[1, 2, 3, 4].map((i) => (
             <Card
               key={i}
-              className="bg-primary/20 backdrop-blur-sm"
+              className="bg-primary/5 backdrop-blur-sm border-none"
             >
               <CardContent className="p-6">
                 <div className="animate-pulse">

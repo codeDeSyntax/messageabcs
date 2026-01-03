@@ -13,7 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { apiService } from "@/services/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import AnswerListItem from "./AnswerListItem";
-import AnswerDetailsSidebar from "./AnswerDetailsSidebar";
+import AnswerDetailsSidebar from './AnswerDetailsSidebar';
+
 
 // Backend Answer model from admin endpoint
 interface AdminAnswer {

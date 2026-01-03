@@ -190,11 +190,11 @@ export default function AskQuestion() {
         <div className="flex justify-center p-2 md:p-6">
           <div className="w-full max-w-5xl">
             {/* Form Card */}
-            <Card className="bg-background/50 p-0 backdrop-blur-xl border-border shadow-xl">
+            <Card className="bg-background p-0 backdrop-blur-xl border-border shadow-xl">
               <CardHeader className="border-b border-border">
-                <p className="text-muted-foreground">
-                  Ask any question about biblical topics and get answers from
-                  the MessageABCS.
+                <p className="text-muted-foreground font-bold">
+                  Ask any question that you have about the subjects you read
+                  about
                 </p>
               </CardHeader>
 
@@ -249,7 +249,7 @@ export default function AskQuestion() {
                       }
                       disabled={loadingTopics}
                     >
-                      <SelectTrigger className="bg-background/50 border-border focus:ring-2 focus:ring-primary/30 focus:border-primary h-12">
+                      <SelectTrigger className="bg-primary/10 border-border focus:ring-2 focus:ring-primary/30 focus:border-primary h-12">
                         <SelectValue
                           placeholder={
                             loadingTopics
@@ -258,31 +258,9 @@ export default function AskQuestion() {
                           }
                         />
                       </SelectTrigger>
-                      <SelectContent className="max-h-60 overflow-auto no-scrollbar max-w-[80%] ">
-                        {topics.map((topic) => (
-                          <SelectItem
-                            key={topic.id}
-                            value={topic.id.toString()}
-                            className="focus:bg-primary p-0 px-2 py-1 focus:text-primary-foreground bg-background"
-                          >
-                            <div className="flex items-center gap-3 py-1">
-                              {/* <img
-                                src={topic.image}
-                                alt={topic.title}
-                                className="w-8 h-8 rounded-full object-cover border border-border"
-                              /> */}
-                              <div className="flex flex-col">
-                                <span className="font-medium">
-                                  {topic.title}
-                                </span>
-                              </div>
-                            </div>
-                            {/* horizontal line */}
-                            <div className="border-t w-full border-border" />
-                          </SelectItem>
-                        ))}
-                        {/* Other Option */}
-                        <SelectItem value="other">
+                      <SelectContent className="max-h-60 overflow-auto no-scrollbar max-w-[70%] w-1/2 bg-primary/20 backdrop-blur p-2">
+                       {/* Other Option */}
+                        <SelectItem value="other" className="cursor-pointer">
                           <div className="flex items-center gap-3 py-1">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-muted to-muted flex items-center justify-center border border-border">
                               <HelpCircle className="h-4 w-4 text-primary-foreground" />
@@ -295,6 +273,35 @@ export default function AskQuestion() {
                             </div>
                           </div>
                         </SelectItem>
+                        {topics.map((topic, index) => (
+                          <SelectItem
+                            key={topic.id}
+                            value={topic.id.toString()}
+                            className="focus:bg-muted focus:text-muted p-0 px-2 py-1 focus:text-primary-foreground bg-cream-200 mt-1"
+                          >
+                            <div className="flex items-center gap-3 py-1">
+                              {/* <img
+                                src={topic.image}
+                                alt={topic.title}
+                                className="w-8 h-8 rounded-full object-cover border border-border"
+                              /> */}
+                              <div className="flex items-center gap-2">
+                                {/* numbering */}
+                                <div>
+                                  <Badge className="bg-primary/20 text-primary px-2 py-1 rounded-full text-xs font-medium">
+                                    {index + 1}
+                                  </Badge>
+                                </div>
+                                <span className="font-medium">
+                                  {topic.title.slice(0, 30)}
+                                </span>
+                              </div>
+                            </div>
+                            {/* horizontal line */}
+                            <div className="border-t w-full border-border" />
+                          </SelectItem>
+                        ))}
+                       
                       </SelectContent>
                     </Select>
 

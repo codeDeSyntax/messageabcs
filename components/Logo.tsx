@@ -39,7 +39,7 @@ export const Logo = ({ variant = "default", className = "" }: LogoProps) => {
   }
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex items-center gap-2 cursor-pointer ${className}`}  onClick={handleClick}>
       <Image
         src="/mabcs.png"
         alt="Message ABCs Logo"

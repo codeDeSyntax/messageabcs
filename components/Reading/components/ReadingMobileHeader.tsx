@@ -47,7 +47,7 @@ export const ReadingMobileHeader = ({
         {/* Title with Background Image */}
         {currentTopic && (
           <div className="fle w-[80%] text-center px-4">
-            <span className="text-sm line-clamp-1 truncate font-medium text-primary-foreground drop-shadow-lg">
+            <span className="text-sm line-clamp-1 truncate font-medium text-muted drop-shadow-lg">
               {currentTopic.title}
             </span>
           </div>

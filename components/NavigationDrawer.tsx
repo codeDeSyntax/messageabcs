@@ -108,15 +108,15 @@ export function NavigationDrawer({
         </Button>
       </SheetTrigger>
       <SheetContent
-        side="left"
-        className="w-80 bg-background border-0 shadow-2xl p-0 flex flex-col"
+        side="top"
+        className="w-80 bg-background border-0 p-0 flex flex-col rounded-r-2xl h-full"
       >
         {/* Header with Logo and Brand */}
         <div className="flex items-center gap-3 p-6 pb-4 border-b border-border bg-muted/30">
           <Logo variant="compact" />
           <div className="ml-2">
             <p className="text-xs text-muted-foreground font-medium">
-              Biblical Learning Platform
+              The Apostolic Truth
             </p>
           </div>
         </div>

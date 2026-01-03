@@ -129,46 +129,54 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full h-screen md:w-[500px] bg-stone-700 backdrop-blur-xl flex items-center justify-center border-l border-white/20 shadow-2xl overflow-hidden rounded-l-2xl">
-      <div className="p-6 space-y-6 h-[95%] overflow-y-scroll no-scrollbar ">
+    <div className="fixed inset-y-0 right-0 z-50 w-full h-screen md:w-[500px] bg-background rounded-l-2xl border-none border-border shadow-2xl overflow-hidden flex flex-col">
+      <div className="h-full flex flex-col">
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-white/20">
-          <h2 className="text-xl font-semibold text-stone-50">
+        <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
+          <h2 className="text-xl font-bold text-foreground">
             Answer Details
           </h2>
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="hover:bg-white/10 text-stone-100"
+            className="hover:bg-muted rounded-lg p-2 transition-colors"
           >
-            <XCircle className="h-5 w-5" />
+            <XCircle className="h-5 w-5 text-foreground" />
           </Button>
         </div>
 
-        {/* Question Context */}
-        <div className="space-y-3">
-          <div className="bg-stone-800/50 p-4 rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <MessageSquare className="h-4 w-4 text-stone-200" />
-              <span className="text-sm font-medium text-stone-300">
-                Question
-              </span>
+        {/* Content Area */}
+        <div
+          className="flex-1 overflow-y-auto p-4"
+          style={{
+            scrollbarGutter: "stable",
+            scrollbarColor: "hsl(var(--primary)) hsl(var(--muted))",
+            scrollbarWidth: "thin",
+          }}
+        >
+          <div className="space-y-6">
+            {/* Question Context */}
+            <div className="bg-cream-200 p-4 rounded-xl shadow-sm border border-border">
+              <div className="flex items-center gap-2 mb-2">
+                <MessageSquare className="h-4 w-4" />
+                <span className="text-sm font-medium text-muted-foreground">
+                  Question
+                </span>
+              </div>
+              <p className="text-base text-foreground font-medium">
+                {answer.questionTitle}
+              </p>
             </div>
-            <p className="text-base text-stone-100 font-medium">
-              {answer.questionTitle}
-            </p>
-          </div>
-        </div>
 
-        {/* Answer Content */}
-        <div className="space-y-4">
-          <div className="bg-stone-800/50 p-4 rounded-lg">
+            {/* Answer Content */}
+            <div className="space-y-4">
+          <div className="bg-cream-200 p-4 rounded-xl shadow-sm border border-border">
             <div className="flex items-center gap-2 mb-3">
               {getStatusIcon(answer.status)}
               {getStatusBadge(answer.status)}
             </div>
-            <div className="flex flex-wrap gap-3 text-sm text-stone-300 mb-3">
+            <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-3">
               <div className="flex items-center gap-1">
                 <User className="h-4 w-4" />
                 <span>{answer.answeredBy}</span>
@@ -179,7 +187,7 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
               </div>
               <Badge
                 variant="outline"
-                className="border-stone-600 text-stone-200"
+                className="border-border bg-background"
               >
                 {answer.topicTitle}
               </Badge>
@@ -193,13 +201,13 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
 
           {/* Edit Form */}
           <div className="space-y-4 pt-4">
-            <h4 className="font-semibold text-stone-50 flex items-center gap-2">
-              <MessageSquare className="h-4 w-4 text-stone-200" />
+            <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm">
+              <MessageSquare className="h-4 w-4" />
               Edit Answer
             </h4>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="sidebar-answer" className="text-stone-200">
+                <Label htmlFor="sidebar-answer" className="text-sm font-medium">
                   Answer Content *
                 </Label>
                 <Textarea
@@ -207,7 +215,7 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
                   value={answerContent}
                   onChange={(e) => setAnswerContent(e.target.value)}
                   placeholder="Provide a thoughtful, biblical answer..."
-                  className="bg-stone-800/50 border-stone-600 text-stone-100 placeholder:text-stone-400 focus:ring-2 focus:ring-primary/30 min-h-[200px]"
+                  className="bg-cream-200 rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-primary/30 transition-all min-h-[200px]"
                   required
                 />
               </div>
@@ -218,11 +226,11 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
                   id="sidebar-isOfficial"
                   checked={isOfficial}
                   onChange={(e) => setIsOfficial(e.target.checked)}
-                  className="rounded border-stone-600 bg-stone-800/50 text-primary focus:ring-primary/30"
+                  className="rounded border-border bg-background text-primary focus:ring-primary/30"
                 />
                 <Label
                   htmlFor="sidebar-isOfficial"
-                  className="text-sm text-stone-200"
+                  className="text-sm text-foreground"
                 >
                   Mark as official answer
                 </Label>
@@ -233,14 +241,14 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
                   type="button"
                   variant="outline"
                   onClick={onClose}
-                  className="flex-1 border-stone-600 text-stone-100 hover:bg-stone-800 hover:text-stone-50"
+                  className="flex-1 rounded-xl"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 bg-primary hover:bg-accent text-primary-foreground"
+                  className="flex-1 bg-primary hover:bg-accent text-primary-foreground rounded-xl shadow-md hover:shadow-lg transition-all"
                 >
                   {isSubmitting ? "Saving..." : "Save Changes"}
                 </Button>
@@ -249,14 +257,14 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
           </div>
 
           {/* Status Actions */}
-          <div className="space-y-2 pt-4 border-t border-white/20">
-            <h4 className="font-semibold text-stone-50 text-sm mb-3">
+          <div className="space-y-2 pt-4 border-t border-border">
+            <h4 className="font-semibold text-foreground text-sm mb-3">
               Status Actions
             </h4>
             {answer.status !== "published" && (
               <Button
                 variant="outline"
-                className="w-full justify-start gap-2 bg-stone-800/50 border-stone-600 text-stone-100 hover:bg-stone-800 hover:text-stone-50"
+                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
                 onClick={() => onUpdateStatus(answer.id, "published")}
               >
                 <CheckCircle className="h-4 w-4" />
@@ -266,7 +274,7 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
             {answer.status !== "draft" && (
               <Button
                 variant="outline"
-                className="w-full justify-start gap-2 bg-stone-800/50 border-stone-600 text-stone-100 hover:bg-stone-800 hover:text-stone-50"
+                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
                 onClick={() => onUpdateStatus(answer.id, "draft")}
               >
                 <AlertCircle className="h-4 w-4" />
@@ -276,7 +284,7 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
             {answer.status !== "archived" && (
               <Button
                 variant="outline"
-                className="w-full justify-start gap-2 bg-stone-800/50 border-stone-600 text-stone-100 hover:bg-stone-800 hover:text-stone-50"
+                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
                 onClick={() => onUpdateStatus(answer.id, "archived")}
               >
                 <AlertCircle className="h-4 w-4" />
@@ -286,34 +294,34 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
           </div>
 
           {/* Delete Action */}
-          <div className="pt-4 border-t border-white/20">
+          <div className="pt-4 border-t border-border">
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full justify-start gap-2 bg-red-900/20 border-red-900/50 text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                  className="w-full justify-start gap-2 bg-red-50 border-red-200 text-red-600 hover:bg-red-100 rounded-xl transition-all"
                 >
                   <Trash2 className="h-4 w-4" />
                   Delete Answer
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="bg-stone-800 border-stone-600">
+              <AlertDialogContent className="bg-background border-border rounded-2xl max-w-[90vw] sm:max-w-md">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-stone-50">
+                  <AlertDialogTitle className="text-foreground">
                     Delete Answer
                   </AlertDialogTitle>
-                  <AlertDialogDescription className="text-stone-300">
+                  <AlertDialogDescription className="text-muted-foreground">
                     Are you sure you want to delete this answer? This action
                     cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="border-stone-600 text-stone-100 hover:bg-stone-700">
+                <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                  <AlertDialogCancel className="rounded-xl">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDelete}
-                    className="bg-red-600 hover:bg-red-700 text-white"
+                    className="bg-red-600 hover:bg-red-700 text-white rounded-xl"
                   >
                     Delete
                   </AlertDialogAction>
@@ -324,7 +332,12 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
         </div>
       </div>
     </div>
+  </div>
+  </div>
   );
 };
 
 export default AnswerDetailsSidebar;
+
+
+ 

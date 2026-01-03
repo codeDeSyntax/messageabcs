@@ -37,35 +37,33 @@ export function TopicCard({ topic, viewMode }: TopicCardProps) {
   if (viewMode === "list") {
     return (
       <div
-        className="flex items-start gap-0 p-0 bg-cream-200 rounded-lg border-none border-border hover:shadow-md hover:shadow-primary/10 hover:border-primary/30 transition-all duration-200 cursor-pointer group h-24  w-full m-auto "
+        className="flex items-start gap-0 p-0 bg-primary/10 rounded-xl border-none hover:shadow-md hover:shadow-primary/10 transition-all duration-200 cursor-pointer group  w-full relative"
         onClick={handleCardClick}
       >
         {/* Left: Square Image touching the left edge */}
-        <div className="flex-shrink-0 w-28 h-full rounded-l-lg overflow-hidden bg-muted">
+        <div className="flex-shrink-0 w-20 sm:w-24 md:w-32 h-full rounded-l-xl overflow-hidden bg-muted">
           {topic.image ? (
-            <Image
+            <img
               src={topic.image}
               alt={topic.title}
-              width={128}
-              height={128}
-              className="w-[90%] h-full object-cover"
+              className="w-full h-full object-fit"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <LibrarySquare className="h-6 w-6 text-primary-foreground" />
+              <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
             </div>
           )}
         </div>
 
         {/* Center: Title and Subtitle */}
-        <div className="flex-1 min-w-0 p-1 ">
-          <h3 className="text-[.9rem] text-base font-semibold text-foreground line-clamp-3 mb-1 tracking-tighter leading-tight">
+        <div className="flex-1 min-w-0 p-2 sm:p-3 md:p-4">
+          <h3 className="text-sm sm:text-base font-semibold text-foreground line-clamp-3 mb-1 sm:mb-2">
             {topic.title}
           </h3>
           {topic.subtitle && (
-            <span className="text-sm text-muted-foreground line-clamp-1">
+            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 sm:line-clamp-2">
               {topic.subtitle}
-            </span>
+            </p>
           )}
         </div>
 
