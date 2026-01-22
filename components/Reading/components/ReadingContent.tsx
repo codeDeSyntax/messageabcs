@@ -33,9 +33,9 @@ export const ReadingContent = ({
                 <div className="relative flex-shrink-0 border-b border-border">
                   {/* Mobile Header */}
                   <div className="md:hidden relative h-32 w-full overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center px-6">
+                    <div className="absolute inset-0 flex items-center justify-center px-3 ">
                       <div className="text-center">
-                        <h1 className="text-2xl font-bold text-foreground mb-2 drop-shadow-lg">
+                        <h1 className="text-[1.3rem] line-clamp-3 font-bold text-foreground mb-2 drop-shadow-lg leading-6">
                           {currentTopic.title}
                         </h1>
                         {currentTopic.subtitle && (

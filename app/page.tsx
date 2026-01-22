@@ -85,7 +85,7 @@ export default function Home() {
   // Check if user has seen the fullscreen modal before
   useEffect(() => {
     const hasSeenFullscreenModal = localStorage.getItem(
-      "hasSeenFullscreenModal"
+      "hasSeenFullscreenModal",
     );
     if (!hasSeenFullscreenModal) {
       // Show modal after a short delay for better UX
@@ -337,10 +337,10 @@ export default function Home() {
         </div>
       </div>
       {/* Fullscreen Welcome Modal */}
-      <FullscreenWelcomeModal
+      {/* <FullscreenWelcomeModal
         isOpen={showFullscreenModal}
         onClose={handleCloseFullscreenModal}
-      />
+      /> */}
     </div>
   );
 }

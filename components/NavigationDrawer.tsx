@@ -54,13 +54,13 @@ export function NavigationDrawer({
     const message =
       "Hi! I'm interested in learning more about MessageABCS. I found you through your app.";
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
+      message,
     )}`;
 
     // Check if user is on mobile or desktop for better experience
     const isMobile =
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
+        navigator.userAgent,
       );
 
     if (isMobile) {
@@ -108,16 +108,16 @@ export function NavigationDrawer({
         </Button>
       </SheetTrigger>
       <SheetContent
-        side="top"
-        className="w-80 bg-background border-0 p-0 flex flex-col rounded-r-2xl h-full"
+        side="left"
+        className="w-80 bg-background backdrop-blur-md border-r border-primary/20 p-0 flex flex-col h-full rounded-r-2xl"
       >
         {/* Header with Logo and Brand */}
-        <div className="flex items-center gap-3 p-6 pb-4 border-b border-border bg-muted/30">
+        <div className="flex items-center gap-3 p-6 border-b border-primary/20">
           <Logo variant="compact" />
-          <div className="ml-2">
-            <p className="text-xs text-muted-foreground font-medium">
+          <div className="flex-1">
+            <h2 className="text-xs text-muted-foreground ml-2">
               The Apostolic Truth
-            </p>
+            </h2>
           </div>
         </div>
 
@@ -137,28 +137,28 @@ export function NavigationDrawer({
                   onOpenChange(false);
                 }}
                 className={`
-                  w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 text-left group
+                  w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-left group
                   ${
                     isActive
-                      ? "bg-primary/10 text-primary border-l-4 border-primary shadow-sm"
-                      : "text-foreground hover:bg-muted hover:translate-x-1"
+                      ? "bg-primary/20 text-foreground"
+                      : "text-muted-foreground hover:bg-primary/10 hover:text-foreground"
                   }
                 `}
               >
                 <Icon
-                  className={`h-5 w-5 transition-colors ${
+                  className={`h-4 w-4 transition-colors ${
                     isActive
                       ? "text-primary"
-                      : "text-muted-foreground group-hover:text-foreground"
+                      : "text-muted-foreground group-hover:text-primary"
                   }`}
                 />
-                <span className="flex-1 font-medium">{item.label}</span>
+                <span className="flex-1 font-normal">{item.label}</span>
                 {hasSubmenu && (
                   <svg
-                    className={`h-3.5 w-3.5 transition-colors ${
+                    className={`h-3 w-3 transition-colors ${
                       isActive
                         ? "text-primary"
-                        : "text-muted-foreground/50 group-hover:text-muted-foreground"
+                        : "text-muted-foreground/50 group-hover:text-primary"
                     }`}
                     fill="none"
                     stroke="currentColor"
@@ -173,7 +173,7 @@ export function NavigationDrawer({
                   </svg>
                 )}
                 {item.label === "Reading" && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-green-500 text-white font-medium">
+                  <span className="text-xs px-1.5 py-0.5 rounded-full bg-primary text-white font-medium">
                     New
                   </span>
                 )}
@@ -183,39 +183,33 @@ export function NavigationDrawer({
         </nav>
 
         {/* Bottom Section */}
-        <div className="mt-auto border-t border-border bg-muted/20">
+        <div className="mt-auto border-t border-primary/20">
           {/* Contact via WhatsApp */}
-          <div className="px-3 py-3">
+          <div className="px-4 py-2">
             <button
               onClick={openWhatsApp}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 bg-green-50 hover:bg-green-100 text-foreground text-left group border border-green-200"
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-muted-foreground hover:bg-primary/10 hover:text-foreground text-left group"
             >
-              <WhatsAppIcon className="h-5 w-5 text-green-600" />
-              <span className="font-medium text-green-700">
-                Contact Us on WhatsApp
-              </span>
+              <WhatsAppIcon className="h-4 w-4 text-green-600" />
+              <span className="font-normal">Contact on WhatsApp</span>
             </button>
+          </div>
+          <div className="px-4 py-2">
+            <Separator className="bg-primary/20" />
           </div>
 
           {/* Authentication Section */}
-          <div className="border-t border-border">
+          <div>
             {isAuthenticated ? (
-              <div className="p-3 space-y-2">
+              <div className="p-4 space-y-3">
                 {/* User Profile - Minimal */}
-                <div className="flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-lg">
-                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center ring-2 ring-background">
-                    <Image
-                      src="/mabcs.png"
-                      alt="admin"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
+                <div className="flex items-center gap-3">
+                  <Logo />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">
+                    <p className="text-sm font-normal text-foreground truncate">
                       {user?.username || "Admin User"}
                     </p>
-                    <p className="text-xs text-muted-foreground capitalize">
+                    <p className="text-xs text-muted-foreground">
                       {user?.role || "administrator"}
                     </p>
                   </div>
@@ -228,23 +222,23 @@ export function NavigationDrawer({
                     router.push("/topics");
                     onOpenChange(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 text-red-600 hover:bg-red-50 border border-red-200 text-left group"
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-muted-foreground hover:bg-muted hover:text-foreground text-left group"
                 >
-                  <LogOut className="h-5 w-5" />
-                  <span className="font-medium">Log Out</span>
+                  <LogOut className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-normal">Sign Out</span>
                 </button>
               </div>
             ) : (
-              <div className="p-3">
+              <div className="p-4">
                 <button
                   onClick={() => {
                     router.push("/login");
                     onOpenChange(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 text-left group"
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-muted-foreground hover:bg-primary/10 hover:text-foreground text-left group"
                 >
-                  <LogIn className="h-5 w-5" />
-                  <span className="font-medium">Admin Login</span>
+                  <LogIn className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-normal">Admin Login</span>
                 </button>
               </div>
             )}
