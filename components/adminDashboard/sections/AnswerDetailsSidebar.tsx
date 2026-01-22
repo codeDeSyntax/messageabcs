@@ -45,11 +45,11 @@ interface AnswerDetailsSidebarProps {
   onUpdate: (
     answerId: string,
     content: string,
-    isOfficial: boolean
+    isOfficial: boolean,
   ) => Promise<void>;
   onUpdateStatus: (
     answerId: string,
-    status: "published" | "draft" | "archived"
+    status: "published" | "draft" | "archived",
   ) => Promise<void>;
   onDelete: (answerId: string) => Promise<void>;
 }
@@ -129,215 +129,247 @@ const AnswerDetailsSidebar: React.FC<AnswerDetailsSidebarProps> = ({
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full h-screen md:w-[500px] bg-background rounded-l-2xl border-none border-border shadow-2xl overflow-hidden flex flex-col">
-      <div className="h-full flex flex-col">
-        {/* Sidebar Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
-          <h2 className="text-xl font-bold text-foreground">
-            Answer Details
-          </h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="hover:bg-muted rounded-lg p-2 transition-colors"
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] transition-opacity duration-300"
+        onClick={onClose}
+      />
+
+      {/* Sidebar */}
+      <div className="fixed inset-y-0 right-0 z-[101] w-full bg-background shadow-2xl overflow-hidden flex flex-col max-w-5xl">
+        <div className="h-full  md:w-[80%]  m-auto flex flex-col ">
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 py-4 bg-background shadow-sm">
+            <h2 className="text-lg font-semibold text-foreground">
+              Answer Details
+            </h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="hover:bg-muted/50 rounded-md p-2 transition-colors"
+            >
+              <XCircle className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+            </Button>
+          </div>
+
+          {/* Content Area */}
+          <div
+            className="flex-1 overflow-y-auto bg-muted/20"
+            style={{
+              scrollbarGutter: "stable",
+              scrollbarColor: "hsl(var(--primary)) hsl(var(--muted))",
+              scrollbarWidth: "thin",
+            }}
           >
-            <XCircle className="h-5 w-5 text-foreground" />
-          </Button>
-        </div>
+            {/* Receipt-style Details */}
+            <div className="bg-background px-6 py-6 font-mono">
+              <div className="max-w-md space-y-3 text-sm">
+                {/* Question */}
+                <div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                    Question
+                  </div>
+                  <div className="text-foreground font-medium">
+                    {answer.questionTitle}
+                  </div>
+                </div>
 
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-y-auto p-4"
-          style={{
-            scrollbarGutter: "stable",
-            scrollbarColor: "hsl(var(--primary)) hsl(var(--muted))",
-            scrollbarWidth: "thin",
-          }}
-        >
-          <div className="space-y-6">
-            {/* Question Context */}
-            <div className="bg-cream-200 p-4 rounded-xl shadow-sm border border-border">
-              <div className="flex items-center gap-2 mb-2">
-                <MessageSquare className="h-4 w-4" />
-                <span className="text-sm font-medium text-muted-foreground">
-                  Question
-                </span>
+                <div className="border-t border-dashed border-border/40 my-3"></div>
+
+                {/* Status & Official */}
+                <div className="flex gap-4">
+                  <div className="text-foreground font-semibold uppercase text-xs">
+                    {answer.status}
+                  </div>
+                  {answer.isOfficial && (
+                    <div className="text-foreground font-semibold uppercase text-xs">
+                      Official
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-t border-dashed border-border/40 my-3"></div>
+
+                {/* User */}
+                <div className="flex justify-between items-center">
+                  <div className="text-muted-foreground text-xs uppercase">
+                    User
+                  </div>
+                  <div className="text-foreground">{answer.answeredBy}</div>
+                </div>
+
+                {/* Date */}
+                <div className="flex justify-between items-center">
+                  <div className="text-muted-foreground text-xs uppercase">
+                    Date
+                  </div>
+                  <div className="text-foreground">
+                    {new Date(answer.answeredAt).toLocaleDateString()}
+                  </div>
+                </div>
+
+                {/* Topic */}
+                <div className="flex justify-between items-center">
+                  <div className="text-muted-foreground text-xs uppercase">
+                    Topic
+                  </div>
+                  <div className="text-foreground text-right max-w-[60%]">
+                    {answer.topicTitle}
+                  </div>
+                </div>
+
+                <div className="border-t border-dashed border-border/40 my-3"></div>
               </div>
-              <p className="text-base text-foreground font-medium">
-                {answer.questionTitle}
-              </p>
             </div>
 
-            {/* Answer Content */}
-            <div className="space-y-4">
-          <div className="bg-cream-200 p-4 rounded-xl shadow-sm border border-border">
-            <div className="flex items-center gap-2 mb-3">
-              {getStatusIcon(answer.status)}
-              {getStatusBadge(answer.status)}
+            {/* Edit Form */}
+            <div className="bg-background px-6 py-5 font-mono">
+              <div className="">
+                <div className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
+                  Edit Answer
+                </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="sidebar-answer"
+                      className="text-xs text-muted-foreground uppercase tracking-wider font-mono"
+                    >
+                      Answer Content *
+                    </Label>
+                    <Textarea
+                      id="sidebar-answer"
+                      value={answerContent}
+                      onChange={(e) => setAnswerContent(e.target.value)}
+                      placeholder="Provide a thoughtful, biblical answer..."
+                      className="bg-cream-200/50 rounded border border-dashed border-border/40 focus:border-border focus:ring-1 focus:ring-primary/20 transition-all min-h-[200px] text-sm font-sans no-scrollbar"
+                      required
+                    />
+                  </div>
+
+                  <div className="border-t border-dashed border-border/40 pt-3">
+                    <div className="flex items-start gap-2">
+                      <input
+                        type="checkbox"
+                        id="sidebar-isOfficial"
+                        checked={isOfficial}
+                        onChange={(e) => setIsOfficial(e.target.checked)}
+                        className="mt-0.5 rounded border-border bg-background text-primary focus:ring-primary/30"
+                      />
+                      <Label
+                        htmlFor="sidebar-isOfficial"
+                        className="text-xs text-foreground cursor-pointer font-mono uppercase tracking-wide"
+                      >
+                        Mark as official
+                      </Label>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-dashed border-border/40 pt-4">
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={onClose}
+                        className="flex-1 border border-dashed border-border/60 bg-background hover:bg-muted/30 font-mono text-xs uppercase tracking-wide"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="flex-1 bg-foreground hover:bg-foreground/90 text-background font-mono text-xs uppercase tracking-wide border border-foreground"
+                      >
+                        {isSubmitting ? "Saving..." : "Save"}
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-3">
-              <div className="flex items-center gap-1">
-                <User className="h-4 w-4" />
-                <span>{answer.answeredBy}</span>
+
+            {/* Status Actions */}
+            <div className="bg-background px-6 py-5 font-mono">
+              <div className="max-w-md">
+                <div className="text-xs text-muted-foreground uppercase tracking-wider mb-3">
+                  Status Actions
+                </div>
+                <div className="space-y-1">
+                  {answer.status !== "published" && (
+                    <button
+                      onClick={() => onUpdateStatus(answer.id, "published")}
+                      className="w-full text-left py-2 px-0 text-xs uppercase tracking-wide font-mono text-foreground hover:text-primary transition-colors border-b border-dashed border-border/30 hover:border-primary/50"
+                    >
+                      → Publish Answer
+                    </button>
+                  )}
+                  {answer.status !== "draft" && (
+                    <button
+                      onClick={() => onUpdateStatus(answer.id, "draft")}
+                      className="w-full text-left py-2 px-0 text-xs uppercase tracking-wide font-mono text-foreground hover:text-primary transition-colors border-b border-dashed border-border/30 hover:border-primary/50"
+                    >
+                      → Move to Draft
+                    </button>
+                  )}
+                  {answer.status !== "archived" && (
+                    <button
+                      onClick={() => onUpdateStatus(answer.id, "archived")}
+                      className="w-full text-left py-2 px-0 text-xs uppercase tracking-wide font-mono text-foreground hover:text-primary transition-colors border-b border-dashed border-border/30 hover:border-primary/50"
+                    >
+                      → Archive Answer
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <span>{new Date(answer.answeredAt).toLocaleDateString()}</span>
-              </div>
-              <Badge
-                variant="outline"
-                className="border-border bg-background"
-              >
-                {answer.topicTitle}
-              </Badge>
-              {answer.isOfficial && (
-                <Badge className="bg-primary text-primary-foreground">
-                  Official
-                </Badge>
-              )}
             </div>
-          </div>
 
-          {/* Edit Form */}
-          <div className="space-y-4 pt-4">
-            <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm">
-              <MessageSquare className="h-4 w-4" />
-              Edit Answer
-            </h4>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="sidebar-answer" className="text-sm font-medium">
-                  Answer Content *
-                </Label>
-                <Textarea
-                  id="sidebar-answer"
-                  value={answerContent}
-                  onChange={(e) => setAnswerContent(e.target.value)}
-                  placeholder="Provide a thoughtful, biblical answer..."
-                  className="bg-cream-200 rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-primary/30 transition-all min-h-[200px]"
-                  required
-                />
+            {/* Delete Action */}
+            <div className="bg-background px-6 py-5 font-mono">
+              <div className="max-w-md">
+                <div className="border-t border-dashed border-border/40 pt-4 mb-3"></div>
+                <div className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
+                  Danger Zone
+                </div>
+                <p className="text-xs text-muted-foreground mb-3 font-sans">
+                  Deleting this answer is permanent and cannot be undone.
+                </p>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="w-full text-left py-2 px-0 text-xs uppercase tracking-wide font-mono text-red-600 hover:text-red-700 transition-colors border-b border-dashed border-red-300 hover:border-red-500">
+                      × Delete Answer
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="bg-background border border-dashed border-border/60 shadow-2xl rounded-none max-w-[90vw] sm:max-w-md font-mono">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-foreground uppercase text-sm tracking-wide">
+                        Delete Answer
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="text-muted-foreground text-xs font-sans">
+                        Are you sure you want to delete this answer? This action
+                        cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                      <AlertDialogCancel className="border border-dashed border-border/60 rounded-none text-xs uppercase tracking-wide">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleDelete}
+                        className="bg-red-600 hover:bg-red-700 text-white rounded-none border border-red-600 text-xs uppercase tracking-wide"
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="sidebar-isOfficial"
-                  checked={isOfficial}
-                  onChange={(e) => setIsOfficial(e.target.checked)}
-                  className="rounded border-border bg-background text-primary focus:ring-primary/30"
-                />
-                <Label
-                  htmlFor="sidebar-isOfficial"
-                  className="text-sm text-foreground"
-                >
-                  Mark as official answer
-                </Label>
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={onClose}
-                  className="flex-1 rounded-xl"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 bg-primary hover:bg-accent text-primary-foreground rounded-xl shadow-md hover:shadow-lg transition-all"
-                >
-                  {isSubmitting ? "Saving..." : "Save Changes"}
-                </Button>
-              </div>
-            </form>
-          </div>
-
-          {/* Status Actions */}
-          <div className="space-y-2 pt-4 border-t border-border">
-            <h4 className="font-semibold text-foreground text-sm mb-3">
-              Status Actions
-            </h4>
-            {answer.status !== "published" && (
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
-                onClick={() => onUpdateStatus(answer.id, "published")}
-              >
-                <CheckCircle className="h-4 w-4" />
-                Publish Answer
-              </Button>
-            )}
-            {answer.status !== "draft" && (
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
-                onClick={() => onUpdateStatus(answer.id, "draft")}
-              >
-                <AlertCircle className="h-4 w-4" />
-                Move to Draft
-              </Button>
-            )}
-            {answer.status !== "archived" && (
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
-                onClick={() => onUpdateStatus(answer.id, "archived")}
-              >
-                <AlertCircle className="h-4 w-4" />
-                Archive Answer
-              </Button>
-            )}
-          </div>
-
-          {/* Delete Action */}
-          <div className="pt-4 border-t border-border">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-2 bg-red-50 border-red-200 text-red-600 hover:bg-red-100 rounded-xl transition-all"
-                >
-                  <Trash2 className="h-4 w-4" />
-                  Delete Answer
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent className="bg-background border-border rounded-2xl max-w-[90vw] sm:max-w-md">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="text-foreground">
-                    Delete Answer
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-muted-foreground">
-                    Are you sure you want to delete this answer? This action
-                    cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-                  <AlertDialogCancel className="rounded-xl">
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDelete}
-                    className="bg-red-600 hover:bg-red-700 text-white rounded-xl"
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  </div>
+    </>
   );
 };
 
 export default AnswerDetailsSidebar;
-
-
- 

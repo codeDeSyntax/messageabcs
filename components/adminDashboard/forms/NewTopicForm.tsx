@@ -26,13 +26,17 @@ interface NewTopicFormData {
 interface NewTopicFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
+  showPreview?: boolean;
 }
 
-export function NewTopicForm({ onSuccess, onCancel }: NewTopicFormProps) {
+export function NewTopicForm({
+  onSuccess,
+  onCancel,
+  showPreview = false,
+}: NewTopicFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
 
   const [formData, setFormData] = useState<NewTopicFormData>({
     title: "",
@@ -48,7 +52,7 @@ export function NewTopicForm({ onSuccess, onCancel }: NewTopicFormProps) {
 
   const handleInputChange = (
     field: keyof NewTopicFormData,
-    value: string | string[]
+    value: string | string[],
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -152,29 +156,6 @@ export function NewTopicForm({ onSuccess, onCancel }: NewTopicFormProps) {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-foreground">
-          {showPreview ? "Preview" : "New"}
-        </h2>
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setShowPreview(!showPreview)}
-            className="flex items-center gap-2"
-          >
-            <Eye className="h-4 w-4" />
-            {showPreview ? "Edit" : "Preview"}
-          </Button>
-          {onCancel && (
-            <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-              Cancel
-            </Button>
-          )}
-        </div>
-      </div>
-
       <div className="flex-1 overflow-y-auto pb-40">
         <Card className="bg-background/50 backdrop-blur-sm border-none">
           <CardContent className="p-3">

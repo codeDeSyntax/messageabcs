@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { ArrowBigLeft, ArrowLeft, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BiblicalTopic } from "@/services/api";
 
@@ -39,15 +39,15 @@ export const ReadingMobileHeader = ({
           onClick={() => router.push("/topics")}
           variant="ghost"
           size="sm"
-          className="p-2 hover:bg-primary-foreground/20 rounded-full backdrop-blur-sm border border-primary-foreground/20"
+          className="p-2 hover:bg-primary-foreground/20 rounded-full backdrop-blur-sm border border-white/50"
         >
-          <ArrowLeft className="h-5 w-5 text-primary-foreground" />
+          <ArrowBigLeft className="h-5 w-5 text-white" />
         </Button>
 
         {/* Title with Background Image */}
         {currentTopic && (
           <div className="fle w-[80%] text-center px-4">
-            <span className="text-sm line-clamp-1 truncate font-medium text-muted drop-shadow-lg">
+            <span className="text-sm line-clamp-1 truncate font-medium text-white/80 drop-shadow-lg">
               {currentTopic.title}
             </span>
           </div>
@@ -69,7 +69,7 @@ export const ReadingMobileHeader = ({
           {isGeneratingShareCard ? (
             <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
           ) : (
-            <Share2 className="h-5 w-5 text-primary-foreground" />
+            <Share2 className="h-5 w-5 text-white" />
           )}
         </Button>
       </div>

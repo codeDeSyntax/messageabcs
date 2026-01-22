@@ -32,7 +32,7 @@ export const ReadingContent = ({
                 {/* Fixed Header with Background Image (Mobile + Desktop) */}
                 <div className="relative flex-shrink-0 border-b border-border">
                   {/* Mobile Header */}
-                  <div className="md:hidden relative h-40 w-full overflow-hidden">
+                  <div className="md:hidden relative h-32 w-full overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center px-6">
                       <div className="text-center">
                         <h1 className="text-2xl font-bold text-foreground mb-2 drop-shadow-lg">
@@ -55,10 +55,10 @@ export const ReadingContent = ({
                     {currentTopic.mainExtract && (
                       <div className="prose prose-lg max-w-none mb-8">
                         <div
-                          className="text-foreground text-xl md:text-xl text-center leading-normal"
+                          className="text-foreground text-xl md:text-xl text-center leading-tight"
                           style={{
                             fontFamily: "'Crimson Pro', Georgia, serif",
-                            lineHeight: "1.8",
+                            // lineHeight: "1.2",
                             // fontSize: "18px",
                           }}
                           dangerouslySetInnerHTML={{

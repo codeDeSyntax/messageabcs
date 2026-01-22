@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { X, Eye } from "lucide-react";
 import { NewTopicForm } from "@/components/adminDashboard/forms/NewTopicForm";
+import { Button } from "@/components/ui/button";
 
 interface NewTopicSidebarProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export function NewTopicSidebar({
   onSuccess,
 }: NewTopicSidebarProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,35 +47,51 @@ export function NewTopicSidebar({
 
       {/* Sidebar */}
       <div
-        className={`fixed right-0 top-0 h-full w-full md:w-[400px] lg:w-[600px] bg-background sh z-[101] rounded-l-2xl transform transition-transform duration-300 ease-out ${
+        className={`fixed right-0 top-0 h-full w-full  max-w-5xl bg-background sh z-[101]  transform transition-transform duration-300 ease-out ${
           isVisible ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="h-full flex flex-col">
+        <div className="h-full md:w-[90%] m-auto flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
-            <h2 className="text-xl font-bold text-foreground">
-              Create New Topic
+          <div className="flex items-center justify-between px-6 py-4 bg-background shadow-sm">
+            <h2 className="text-lg font-semibold text-foreground font-mono uppercase tracking-wide">
+              {showPreview ? "Preview New Topic" : "Create New Topic"}
             </h2>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-lg hover:bg-muted transition-colors"
-              aria-label="Close sidebar"
-            >
-              <X className="h-5 w-5 text-foreground" />
-            </button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowPreview(!showPreview)}
+                className="border border-dashed border-border/60 bg-background hover:bg-muted/30 font-mono text-xs uppercase tracking-wide"
+              >
+                <Eye className="h-3 w-3 mr-1" />
+                {showPreview ? "Edit" : "Preview"}
+              </Button>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-muted/50 transition-colors"
+                aria-label="Close sidebar"
+              >
+                <X className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+              </button>
+            </div>
           </div>
 
           {/* Content */}
           <div
-            className="flex-1 overflow-y-auto p-4"
+            className="flex-1 overflow-y-auto bg-muted/20"
             style={{
               scrollbarGutter: "stable",
               scrollbarColor: "hsl(var(--primary)) hsl(var(--muted))",
               scrollbarWidth: "thin",
             }}
           >
-            <NewTopicForm onSuccess={handleSuccess} onCancel={onClose} />
+            <NewTopicForm
+              onSuccess={handleSuccess}
+              onCancel={onClose}
+              showPreview={showPreview}
+            />
           </div>
         </div>
       </div>

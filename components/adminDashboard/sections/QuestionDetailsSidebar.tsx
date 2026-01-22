@@ -34,7 +34,7 @@ interface QuestionDetailsSidebarProps {
   onSubmitAnswer: (content: string, isOfficial: boolean) => Promise<void>;
   onUpdateStatus: (
     questionId: string,
-    status: "pending" | "answered" | "closed"
+    status: "pending" | "answered" | "closed",
   ) => Promise<void>;
 }
 
@@ -110,189 +110,225 @@ const QuestionDetailsSidebar: React.FC<QuestionDetailsSidebarProps> = ({
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full md:w-[500px] bg-background backdrop-blur rounded-l-2xl border-none border-border shadow-2xl overflow-hidden flex flex-col">
-      <div className="h-full flex flex-col">
-        {/* Sidebar Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
-          <h2 className="text-xl font-bold text-foreground">
-            Question Details
-          </h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="hover:bg-muted rounded-lg p-2 transition-colors"
-          >
-            <XCircle className="h-5 w-5 text-foreground" />
-          </Button>
-        </div>
+    <>
+      <div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] transition-opacity duration-300"
+        onClick={onClose}
+      />
+      <div className="fixed inset-y-0 right-0 w-full max-w-5xl z-[102]  bg-background backdrop-blur  border-none border-border shadow-2xl overflow-hidden flex flex-col">
+        <div className="h-full flex flex-col w-[80%] m-auto  ">
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 py-4 bg-background shadow-sm">
+            <h2 className="text-lg font-semibold text-foreground">
+              Question Details
+            </h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="hover:bg-muted/50 rounded-md p-2 transition-colors"
+            >
+              <XCircle className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+            </Button>
+          </div>
 
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-y-auto p-4"
-          style={{
-            scrollbarGutter: "stable",
-            scrollbarColor: "hsl(var(--primary)) hsl(var(--muted))",
-            scrollbarWidth: "thin",
-          }}
-        >
-          <div className="space-y-6">
-            {/* Question Content */}
-            <div className="bg-cream-200 p-4 rounded-xl shadow-sm border-none border-border">
-              <div className="flex items-center gap-2 mb-3">
-                {getStatusIcon(question.status)}
-                {getStatusBadge(question.status)}
-              </div>
-              <h3 className="text-lg font-semibold text-foreground mb-3">
-                {question.question}
-              </h3>
-              <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <User className="h-4 w-4" />
-                  <span>{question.askedBy}</span>
+          {/* Content Area */}
+          <div
+            className="flex-1 overflow-y-auto bg-muted/20"
+            style={{
+              scrollbarGutter: "stable",
+              scrollbarColor: "hsl(var(--primary)) hsl(var(--muted))",
+              scrollbarWidth: "thin",
+            }}
+          >
+            {/* Receipt-style Details */}
+            <div className="bg-background px-6 py-6 font-mono">
+              <div className="max-w-md space-y-3 text-sm">
+                {/* Question */}
+                <div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                    Question
+                  </div>
+                  <div className="text-foreground font-medium">
+                    {question.question}
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  <span>
+
+                <div className="border-t border-dashed border-border/40 my-3"></div>
+
+                {/* Status */}
+                <div className="flex justify-between items-center">
+                  <div className="text-muted-foreground text-xs uppercase">
+                    Status
+                  </div>
+                  <div className="text-foreground font-semibold uppercase text-xs">
+                    {question.status}
+                  </div>
+                </div>
+
+                {/* Asked By */}
+                <div className="flex justify-between items-center">
+                  <div className="text-muted-foreground text-xs uppercase">
+                    Asked By
+                  </div>
+                  <div className="text-foreground">{question.askedBy}</div>
+                </div>
+
+                {/* Date */}
+                <div className="flex justify-between items-center">
+                  <div className="text-muted-foreground text-xs uppercase">
+                    Date
+                  </div>
+                  <div className="text-foreground">
                     {new Date(question.dateAsked).toLocaleDateString()}
-                  </span>
+                  </div>
                 </div>
-                <Badge
-                  variant="outline"
-                  className="bg-background border-border"
-                >
-                  {question.topicTitle}
-                </Badge>
+
+                {/* Topic */}
+                <div className="flex justify-between items-center">
+                  <div className="text-muted-foreground text-xs uppercase">
+                    Topic
+                  </div>
+                  <div className="text-foreground text-right max-w-[60%]">
+                    {question.topicTitle}
+                  </div>
+                </div>
+
+                <div className="border-t border-dashed border-border/40 my-3"></div>
               </div>
             </div>
 
             {/* Existing Answers */}
             {question.answers && question.answers.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm">
-                  <MessageSquare className="h-4 w-4" />
-                  Existing Answers ({question.answers.length})
-                </h4>
-                {question.answers.map((answer) => (
-                  <div
-                    key={answer.id}
-                    className="bg-cream-200 p-4 rounded-xl shadow-sm border border-border"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium text-foreground">
-                        {answer.adminUser}
-                      </span>
-                      <Badge className="bg-primary text-primary-foreground text-xs">
-                        Official
-                      </Badge>
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        {new Date(answer.dateAnswered).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-sm text-foreground leading-relaxed">
-                      {answer.answer}
-                    </p>
+              <div className="bg-background px-6 py-5 font-mono">
+                <div className="max-w-md">
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
+                    Existing Answers ({question.answers.length})
                   </div>
-                ))}
+                  <div className="space-y-4">
+                    {question.answers.map((answer) => (
+                      <div
+                        key={answer.id}
+                        className="border-l-2 border-dashed border-border/40 pl-3 py-2"
+                      >
+                        <div className="flex justify-between items-center mb-2 text-xs">
+                          <div className="text-foreground font-medium uppercase tracking-wide">
+                            {answer.adminUser}
+                          </div>
+                          <div className="text-muted-foreground">
+                            {new Date(answer.dateAnswered).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <p className="text-sm text-foreground leading-relaxed font-sans">
+                          {answer.answer}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="border-t border-dashed border-border/40 mt-4"></div>
+                </div>
               </div>
             )}
 
             {/* Answer Form */}
-            <div className="space-y-4 pt-4">
-              <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm">
-                <MessageSquare className="h-4 w-4" />
-                {question.answers && question.answers.length > 0
-                  ? "Add Another Answer"
-                  : "Answer Question"}
-              </h4>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="sidebar-answer"
-                    className="text-sm font-medium"
-                  >
-                    Your Answer *
-                  </Label>
-                  <Textarea
-                    id="sidebar-answer"
-                    value={answerContent}
-                    onChange={(e) => setAnswerContent(e.target.value)}
-                    placeholder="Provide a thoughtful, biblical answer..."
-                    className="bg-cream-200 rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-primary/30 transition-all min-h-[200px]"
-                    required
-                  />
+            <div className="bg-background px-6 py-5 font-mono">
+              <div className="">
+                <div className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
+                  {question.answers && question.answers.length > 0
+                    ? "Add Another Answer"
+                    : "Answer Question"}
                 </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="sidebar-answer"
+                      className="text-xs text-muted-foreground uppercase tracking-wider font-mono"
+                    >
+                      Your Answer *
+                    </Label>
+                    <Textarea
+                      id="sidebar-answer"
+                      value={answerContent}
+                      onChange={(e) => setAnswerContent(e.target.value)}
+                      placeholder="Provide a thoughtful, biblical answer..."
+                      className="bg-cream-200/50 rounded border border-dashed border-border/40 focus:border-border focus:ring-1 focus:ring-primary/20 transition-all min-h-[200px] no-scrollbar text-sm font-sans"
+                      required
+                    />
+                  </div>
 
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="sidebar-isOfficial"
-                    checked={isOfficial}
-                    onChange={(e) => setIsOfficial(e.target.checked)}
-                    className="rounded border-border bg-background text-primary focus:ring-primary/30"
-                  />
-                  <Label
-                    htmlFor="sidebar-isOfficial"
-                    className="text-sm text-foreground"
-                  >
-                    Mark as official answer
-                  </Label>
-                </div>
+                  <div className="border-t border-dashed border-border/40 pt-3">
+                    <div className="flex items-start gap-2">
+                      <input
+                        type="checkbox"
+                        id="sidebar-isOfficial"
+                        checked={isOfficial}
+                        onChange={(e) => setIsOfficial(e.target.checked)}
+                        className="mt-0.5 rounded border-border bg-background text-primary focus:ring-primary/30"
+                      />
+                      <Label
+                        htmlFor="sidebar-isOfficial"
+                        className="text-xs text-foreground cursor-pointer font-mono uppercase tracking-wide"
+                      >
+                        Mark as official
+                      </Label>
+                    </div>
+                  </div>
 
-                <div className="flex gap-3 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={onClose}
-                    className="flex-1 rounded-xl"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="flex-1 bg-primary hover:bg-accent text-primary-foreground rounded-xl shadow-md hover:shadow-lg transition-all"
-                  >
-                    {isSubmitting ? "Submitting..." : "Submit Answer"}
-                  </Button>
-                </div>
-              </form>
+                  <div className="border-t border-dashed border-border/40 pt-4">
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={onClose}
+                        className="flex-1 border border-dashed border-border/60 bg-background hover:bg-muted/30 font-mono text-xs uppercase tracking-wide"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="flex-1 bg-foreground hover:bg-foreground/90 text-background font-mono text-xs uppercase tracking-wide border border-foreground"
+                      >
+                        {isSubmitting ? "Submitting..." : "Submit"}
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-2 pt-4 border-t border-border">
-              <h4 className="font-semibold text-foreground text-sm mb-3">
-                Quick Actions
-              </h4>
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
-                onClick={() => onUpdateStatus(question.id, "pending")}
-              >
-                <Clock className="h-4 w-4" />
-                Mark as Pending
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
-                onClick={() => onUpdateStatus(question.id, "answered")}
-              >
-                <CheckCircle className="h-4 w-4" />
-                Mark as Answered
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2 bg-cream-200 border-border hover:bg-muted rounded-xl transition-all"
-                onClick={() => onUpdateStatus(question.id, "closed")}
-              >
-                <XCircle className="h-4 w-4" />
-                Close Question
-              </Button>
+            {/* Quick Actions */}
+            <div className="bg-background px-6 py-5 font-mono">
+              <div className="max-w-md">
+                <div className="text-xs text-muted-foreground uppercase tracking-wider mb-3">
+                  Quick Actions
+                </div>
+                <div className="space-y-1">
+                  <button
+                    onClick={() => onUpdateStatus(question.id, "pending")}
+                    className="w-full text-left py-2 px-0 text-xs uppercase tracking-wide font-mono text-foreground hover:text-primary transition-colors border-b border-dashed border-border/30 hover:border-primary/50"
+                  >
+                    → Mark as Pending
+                  </button>
+                  <button
+                    onClick={() => onUpdateStatus(question.id, "answered")}
+                    className="w-full text-left py-2 px-0 text-xs uppercase tracking-wide font-mono text-foreground hover:text-primary transition-colors border-b border-dashed border-border/30 hover:border-primary/50"
+                  >
+                    → Mark as Answered
+                  </button>
+                  <button
+                    onClick={() => onUpdateStatus(question.id, "closed")}
+                    className="w-full text-left py-2 px-0 text-xs uppercase tracking-wide font-mono text-foreground hover:text-primary transition-colors border-b border-dashed border-border/30 hover:border-primary/50"
+                  >
+                    → Close Question
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

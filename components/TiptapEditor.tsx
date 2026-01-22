@@ -95,6 +95,61 @@ const FontSize = Extension.create({
   },
 });
 
+// Custom LineHeight extension
+const LineHeight = Extension.create({
+  name: "lineHeight",
+
+  addOptions() {
+    return {
+      types: ["paragraph", "heading"],
+    };
+  },
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          lineHeight: {
+            default: null,
+            parseHTML: (element) => element.style.lineHeight || null,
+            renderHTML: (attributes) => {
+              if (!attributes.lineHeight) {
+                return {};
+              }
+
+              return {
+                style: `line-height: ${attributes.lineHeight}`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+
+  addCommands() {
+    return {
+      setLineHeight:
+        (lineHeight) =>
+        ({ chain }) => {
+          return chain()
+            .updateAttributes("paragraph", { lineHeight })
+            .updateAttributes("heading", { lineHeight })
+            .run();
+        },
+      unsetLineHeight:
+        () =>
+        ({ chain }) => {
+          return chain()
+            .updateAttributes("paragraph", { lineHeight: null })
+            .updateAttributes("heading", { lineHeight: null })
+            .run();
+        },
+    };
+  },
+});
+
 interface TiptapEditorProps {
   content: string;
   onChange: (content: string) => void;
@@ -110,6 +165,7 @@ export function TiptapEditor({
 }: TiptapEditorProps) {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showFontSizePicker, setShowFontSizePicker] = useState(false);
+  const [showLineHeightPicker, setShowLineHeightPicker] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
 
@@ -161,7 +217,7 @@ export function TiptapEditor({
       Paragraph.configure({
         HTMLAttributes: {
           class: "tiptap-paragraph",
-          style: "margin-bottom: 1rem; line-height: 1.6;",
+          style: "margin-bottom: 1rem; line-height: 1.2;",
         },
       }),
       HardBreak.configure({
@@ -199,7 +255,7 @@ export function TiptapEditor({
         HTMLAttributes: {
           class: "tiptap-blockquote",
           style:
-            "margin: 1.5rem 0; padding-left: 1rem; border-left: 4px solid #cbd5e0; font-style: italic;",
+            "margin: 1.5rem 0; padding-left: 1rem; border-left: 4px solid #564639; font-style: italic;",
         },
       }),
       Placeholder.configure({
@@ -211,6 +267,7 @@ export function TiptapEditor({
       Underline,
       TextStyle,
       FontSize,
+      LineHeight,
       Color,
       Highlight.configure({
         multicolor: true,
@@ -447,6 +504,68 @@ export function TiptapEditor({
                   }}
                 >
                   Reset Size
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Line Height Picker */}
+          <div className="relative">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowLineHeightPicker(!showLineHeightPicker)}
+              className="h-8 px-2 flex items-center gap-1 shadow shadow-black/20"
+              title="Line Height"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+              <ChevronDown className="h-3 w-3" />
+            </Button>
+
+            {showLineHeightPicker && (
+              <div className="absolute top-10 left-0 z-50 bg-background border rounded-lg p-1 shadow-lg min-w-[140px]">
+                {[
+                  { label: "Single (1.0)", value: "1.0" },
+                  { label: "1.15", value: "1.15" },
+                  { label: "1.5", value: "1.5" },
+                  { label: "Double (2.0)", value: "2.0" },
+                  { label: "2.5", value: "2.5" },
+                  { label: "3.0", value: "3.0" },
+                ].map((lineHeight) => (
+                  <button
+                    key={lineHeight.value}
+                    type="button"
+                    className="w-full text-left px-3 py-2 hover:bg-muted rounded text-sm"
+                    onClick={() => {
+                      editor
+                        .chain()
+                        .focus()
+                        .setLineHeight(lineHeight.value)
+                        .run();
+                      setShowLineHeightPicker(false);
+                    }}
+                  >
+                    {lineHeight.label}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  className="w-full text-left px-3 py-2 hover:bg-muted rounded text-sm border-t mt-1"
+                  onClick={() => {
+                    editor.chain().focus().unsetLineHeight().run();
+                    setShowLineHeightPicker(false);
+                  }}
+                >
+                  Reset Line Height
                 </button>
               </div>
             )}
