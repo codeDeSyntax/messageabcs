@@ -8,6 +8,7 @@ import {
   Edit,
   Trash2,
   Eye,
+  EyeOff,
   Filter,
   MoreHorizontal,
   Image as ImageIcon,
@@ -24,6 +25,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useAdminDashboard } from "@/contexts/AdminDashboardContext";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -54,7 +56,11 @@ import { useToast } from "@/hooks/use-toast";
 import { BiblicalTopicWithCount } from "@/services/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GAME_BUTTON_SMALL } from "@/constants/gameStyles";
-import { useTopicsWithQuestionCounts, useDeleteTopic } from "@/hooks/queries";
+import {
+  useAdminAllTopics,
+  useDeleteTopic,
+  useToggleTopicStatus,
+} from "@/hooks/queries/useTopicsQuery";
 import { EditTopicSidebar } from "./EditTopicSidebar";
 import { NewTopicSidebar } from "./NewTopicSidebar";
 
@@ -74,7 +80,7 @@ interface TopicFormData {
 
 const TopicsManager: React.FC = () => {
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
+  const { searchTerm } = useAdminDashboard();
   const [filterStatus, setFilterStatus] = useState<
     "all" | "active" | "inactive"
   >("all");
@@ -83,27 +89,30 @@ const TopicsManager: React.FC = () => {
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Use TanStack Query for topics
+  // Use TanStack Query for admin topics (includes inactive topics)
   const {
     data: topicsData,
     isLoading: loading,
     refetch: fetchTopics,
-  } = useTopicsWithQuestionCounts({
+  } = useAdminAllTopics({
     page: 1,
-    limit: 50,
+    limit: 100,
   });
 
   // Use TanStack Query mutation for deleting topic
   const deleteTopicMutation = useDeleteTopic();
+
+  // Use TanStack Query mutation for toggling topic status
+  const toggleStatusMutation = useToggleTopicStatus();
 
   // Memoize topics to prevent unnecessary recalculations
   const topics = React.useMemo<AdminTopic[]>(
     () =>
       topicsData?.data?.map((t) => ({
         ...t,
-        isActive: true, // Default to active since no status field in public endpoint
+        isActive: t.isActive ?? true, // Get isActive from backend
       })) || [],
-    [topicsData]
+    [topicsData],
   );
 
   // Apply filters to topics
@@ -115,13 +124,13 @@ const TopicsManager: React.FC = () => {
         (topic) =>
           topic.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           topic.subtitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          topic.mainExtract?.toLowerCase().includes(searchTerm.toLowerCase())
+          topic.mainExtract?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
     if (filterStatus !== "all") {
       filtered = filtered.filter((topic) =>
-        filterStatus === "active" ? topic.isActive : !topic.isActive
+        filterStatus === "active" ? topic.isActive : !topic.isActive,
       );
     }
 
@@ -165,14 +174,12 @@ const TopicsManager: React.FC = () => {
     }
   };
 
-  const toggleTopicStatus = async (topicId: string) => {
+  const toggleTopicStatus = async (topicId: string, currentStatus: boolean) => {
     try {
-      // Note: Backend doesn't support toggle status directly
-      // This would need to be implemented as a full topic update
+      await toggleStatusMutation.mutateAsync(topicId);
       toast({
-        title: "Info",
-        description: "Status toggle not implemented yet",
-        variant: "default",
+        title: "Success",
+        description: `Topic ${currentStatus ? "hidden" : "shown"} successfully`,
       });
     } catch (error) {
       toast({
@@ -189,41 +196,26 @@ const TopicsManager: React.FC = () => {
       <div className="flex-shrink-0 space-y-3 md:space-y-4 pb-4 md:pb-6">
         {/* Header */}
         <div className="flex flex-col gap-3 md:gap-4">
-          {/* Title - Hidden on mobile as it's in top nav */}
-          <div className="hidden md:block">
-            <h2 className="text-2xl  font-medium text-foreground">
-              Topics Management
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Manage biblical topics and their content
-            </p>
-          </div>
-
-          {/* Search and Filter Row */}
-          <div className="flex flex-col md:flex-row gap-2">
-            {/* Search Input - Full width on mobile */}
-            <div className="w-full">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 flex-shrink-0" />
-                <Input
-                  placeholder="Search topics..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-3 bg-primary/10 border-none rounded-full focus:ring-2 focus:ring-primary/30 shadow-sm h-10 text-sm"
-                />
-              </div>
+          {/* Title and Actions Row - Hidden on mobile as it's in top nav */}
+          <div className="hidden md:flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-medium text-foreground">
+                Topics Management
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Manage biblical topics and their content
+              </p>
             </div>
 
-            {/* Filter and Add Button Row */}
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-2">
               <Select
                 value={filterStatus}
                 onValueChange={(value) =>
                   setFilterStatus(value as "all" | "active" | "inactive")
                 }
               >
-                <SelectTrigger className="flex-1 min-w-0 bg-primary/10 border-none rounded-full focus:ring-2 focus:ring-primary/30 shadow-sm h-10 text-sm">
-                  <Filter className="h-4 w-4 mr-1 sm:mr-2 flex-shrink-0" />
+                <SelectTrigger className="w-40 bg-primary/10 border-none rounded-full focus:ring-2 focus:ring-primary/30 shadow-sm h-10 text-sm">
+                  <Filter className="h-4 w-4 mr-2 flex-shrink-0" />
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -235,14 +227,42 @@ const TopicsManager: React.FC = () => {
 
               <button
                 onClick={() => setNewTopicSidebarOpen(true)}
-                className="flex-shrink-0 bg-primary hover:bg-accent text-primary-foreground px-2 sm:px-3 md:px-4 py-2 rounded-full flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md transition-all h-10 min-w-[40px]"
+                className="bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-full flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all h-10"
               >
                 <Plus className="h-4 w-4 flex-shrink-0" />
-                <span className="hidden sm:inline whitespace-nowrap text-sm">
-                  Add Topic
-                </span>
+                <span className="whitespace-nowrap text-sm">Add Topic</span>
               </button>
             </div>
+          </div>
+
+          {/* Mobile Filter and Add Button Row */}
+          <div className="flex md:hidden gap-2 w-full">
+            <Select
+              value={filterStatus}
+              onValueChange={(value) =>
+                setFilterStatus(value as "all" | "active" | "inactive")
+              }
+            >
+              <SelectTrigger className="flex-1 min-w-0 bg-primary/10 border-none rounded-full focus:ring-2 focus:ring-primary/30 shadow-sm h-10 text-sm">
+                <Filter className="h-4 w-4 mr-1 sm:mr-2 flex-shrink-0" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Topics</SelectItem>
+                <SelectItem value="active">Active Only</SelectItem>
+                <SelectItem value="inactive">Inactive Only</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <button
+              onClick={() => setNewTopicSidebarOpen(true)}
+              className="flex-shrink-0 bg-primary hover:bg-accent text-primary-foreground px-2 sm:px-3 md:px-4 py-2 rounded-full flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md transition-all h-10 min-w-[40px]"
+            >
+              <Plus className="h-4 w-4 flex-shrink-0" />
+              <span className="hidden sm:inline whitespace-nowrap text-sm">
+                Add Topic
+              </span>
+            </button>
           </div>
         </div>
 
@@ -286,25 +306,39 @@ const TopicsManager: React.FC = () => {
 
       {/* Scrollable Topics Grid */}
       <div className="flex-1 overflow-y-auto no-scrollbar p-2">
-        <div className="max-w-4xl mx-auto space-y-3 pb-20">
+        <div className="max-w-4xl mx-auto space-y-2 pb-20">
           {loading
             ? // Loading Skeletons
               Array.from({ length: 6 }).map((_, index) => (
                 <div
                   key={`skeleton-${index}`}
-                  className="h-20 rounded-xl overflow-hidden"
+                  className="flex items-start gap-0 p-0 bg-primary/5 rounded-xl border border-border/20"
                 >
-                  <Skeleton className="h-full w-full" />
+                  {/* Image skeleton */}
+                  <div className="flex-shrink-0 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-l-xl overflow-hidden">
+                    <Skeleton className="h-full w-full" />
+                  </div>
+                  {/* Content skeleton */}
+                  <div className="flex-1 p-2 sm:p-2.5 md:p-3 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                  {/* Actions skeleton */}
+                  <div className="flex items-center gap-2 p-2 md:p-3">
+                    <Skeleton className="h-5 w-5 rounded-full" />
+                    <Skeleton className="h-5 w-12" />
+                    <Skeleton className="h-8 w-8 rounded-md" />
+                  </div>
                 </div>
               ))
             : filteredTopics.map((topic) => (
                 <div
                   key={topic.id}
-                  className="flex items-start gap-0 p-0 bg-primary/10 rounded-xl border-none hover:shadow-md hover:shadow-primary/10 transition-all duration-200 cursor-pointer group  w-full relative"
+                  className="flex items-start gap-0 p-0 bg-primary/10 rounded-xl border-none hover:shadow-md hover:shadow-primary/10 transition-all duration-200 cursor-pointer group w-full relative"
                   onClick={() => handleEdit(topic)}
                 >
                   {/* Left: Square Image - Smaller on mobile */}
-                  <div className="flex-shrink-0 w-20 sm:w-24 md:w-32 h-full rounded-l-xl overflow-hidden bg-muted">
+                  <div className="flex-shrink-0 w-16 sm:w-20 md:w-24 h-full rounded-l-xl overflow-hidden bg-muted">
                     {topic.image ? (
                       <img
                         src={topic.image}
@@ -313,18 +347,28 @@ const TopicsManager: React.FC = () => {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                        <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
+                        <BookOpen className="h-5 w-5 sm:h-5 sm:w-5 text-primary-foreground" />
                       </div>
                     )}
                   </div>
 
                   {/* Center: Title and Subtitle */}
-                  <div className="flex-1 min-w-0 p-2 sm:p-3 md:p-4">
-                    <h3 className="text-sm sm:text-base font-semibold text-foreground line-clamp-3 mb-1 sm:mb-2">
-                      {topic.title}
-                    </h3>
+                  <div className="flex-1 min-w-0 p-2 sm:p-2.5 md:p-3">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm sm:text-sm md:text-sm font-semibold text-foreground line-clamp-2 mb-0.5 sm:mb-1 flex-1">
+                        {topic.title}
+                      </h3>
+                      {!topic.isActive && (
+                        <Badge
+                          variant="secondary"
+                          className="text-xs px-2 py-0.5 bg-orange-100 text-orange-700 border-orange-300"
+                        >
+                          Hidden
+                        </Badge>
+                      )}
+                    </div>
                     {topic.subtitle && (
-                      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 sm:line-clamp-2">
+                      <p className="text-xs sm:text-xs md:text-xs text-muted-foreground line-clamp-1">
                         {topic.subtitle}
                       </p>
                     )}
@@ -347,6 +391,25 @@ const TopicsManager: React.FC = () => {
                         align="end"
                         className="w-48 bg-cream-200"
                       >
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleTopicStatus(topic.id, topic.isActive);
+                          }}
+                          className="cursor-pointer"
+                        >
+                          {topic.isActive ? (
+                            <>
+                              <EyeOff className="h-4 w-4 mr-2 text-orange-600" />
+                              <span>Hide Topic</span>
+                            </>
+                          ) : (
+                            <>
+                              <Eye className="h-4 w-4 mr-2 text-green-600" />
+                              <span>Show Topic</span>
+                            </>
+                          )}
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={(e) => {
                             e.stopPropagation();

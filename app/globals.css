@@ -193,6 +193,20 @@ select {
   }
 }
 
+/* Shimmer animation for skeleton loaders */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
 /* Force whitespace preservation for content areas */
 .prose.whitespace-pre-wrap,
 .prose.whitespace-pre-wrap p,

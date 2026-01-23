@@ -15,15 +15,15 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
   height,
   lines = 1,
 }) => {
-  // Glass-style shimmer that matches our theme
+  // Enhanced shimmer with better colors and smoother animation
   const baseClasses =
-    "animate-shimmer bg-gradient-to-r from-muted/30 via-muted/50 to-muted/30 bg-[length:200%_100%]";
+    "animate-shimmer bg-gradient-to-r from-muted/40 via-primary/20 to-muted/40 bg-[length:200%_100%] relative overflow-hidden";
 
   const variantClasses = {
-    text: "h-4 rounded",
-    rectangular: "rounded-md",
+    text: "h-4 rounded-md",
+    rectangular: "rounded-lg",
     circular: "rounded-full",
-    card: "rounded-lg",
+    card: "rounded-xl",
   };
 
   const style: React.CSSProperties = {};
@@ -82,26 +82,26 @@ export const TopicCardSkeleton: React.FC<TopicCardSkeletonProps> = ({
   if (viewMode === "list") {
     return (
       <div
-        className={`flex items-start gap-0 p-0 bg-background/50 rounded-lg border border-border h-20 w-3/4 m-auto ${className}`}
+        className={`flex items-center gap-4 p-3 bg-muted/30 rounded-xl h-20 w-full max-w-4xl mx-auto ${className}`}
       >
-        {/* Left: Square Image Skeleton */}
-        <div className="flex-shrink-0 w-32 h-full rounded-l-lg overflow-hidden">
+        {/* Left: Image Skeleton with pulse */}
+        <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden">
           <LoadingSkeleton variant="rectangular" className="w-full h-full" />
         </div>
 
-        {/* Center: Title and Subtitle Skeleton */}
-        <div className="flex-1 min-w-0 p-4 space-y-2">
-          <LoadingSkeleton variant="text" className="h-4 w-32" />
-          <LoadingSkeleton variant="text" className="h-3 w-24" />
+        {/* Center: Content Skeleton */}
+        <div className="flex-1 min-w-0 space-y-2">
+          <LoadingSkeleton variant="text" className="h-4 w-48" />
+          <LoadingSkeleton variant="text" className="h-3 w-32 opacity-70" />
         </div>
 
-        {/* Right: Three dots menu skeleton */}
-        <div className="flex-shrink-0 p-4">
-          <div className="flex flex-col space-y-0.5">
-            <LoadingSkeleton variant="circular" className="w-1 h-1" />
-            <LoadingSkeleton variant="circular" className="w-1 h-1" />
-            <LoadingSkeleton variant="circular" className="w-1 h-1" />
-          </div>
+        {/* Right: Badge Skeleton */}
+        <div className="flex-shrink-0 flex items-center gap-2">
+          <LoadingSkeleton
+            variant="rectangular"
+            className="w-14 h-6 rounded-full"
+          />
+          <LoadingSkeleton variant="circular" className="w-7 h-7" />
         </div>
       </div>
     );
@@ -111,49 +111,58 @@ export const TopicCardSkeleton: React.FC<TopicCardSkeletonProps> = ({
     <>
       {/* Mobile Card Skeleton */}
       <div
-        className={`relative group cursor-pointer transition-all duration-300 md:hidden h-24 rounded-lg border-none bg-muted/20 flex items-center space-x-3 shadow-sm ${className}`}
+        className={`relative group cursor-pointer transition-all duration-300 md:hidden h-20 rounded-xl bg-muted/30 flex items-center space-x-3 p-2 ${className}`}
       >
         {/* Mobile - Avatar Image Skeleton */}
         <div className="flex-shrink-0">
           <LoadingSkeleton
             variant="rectangular"
-            className="w-20 h-20 rounded-br-3xl border-2 border-primary/20"
+            className="w-16 h-16 rounded-lg"
           />
         </div>
 
         {/* Mobile - Content Skeleton */}
-        <div className="flex-1 min-w-0 space-y-1">
-          <LoadingSkeleton variant="text" className="h-4 w-32" />
-          <LoadingSkeleton variant="text" className="h-3 w-24" />
+        <div className="flex-1 min-w-0 space-y-2">
+          <LoadingSkeleton variant="text" className="h-4 w-40" />
+          <LoadingSkeleton variant="text" className="h-3 w-28 opacity-70" />
+          <div className="flex items-center gap-2">
+            <LoadingSkeleton
+              variant="rectangular"
+              className="h-5 w-12 rounded-full"
+            />
+          </div>
         </div>
 
-        {/* Mobile - Clipped Action Button Skeleton */}
-        <div className="absolute bottom-0 right-0 z-20">
-          <ClippedLoadingSkeleton className="w-12 h-8" />
+        {/* Mobile - Action Icon Skeleton */}
+        <div className="absolute bottom-2 right-2">
+          <LoadingSkeleton variant="circular" className="w-7 h-7" />
         </div>
       </div>
 
       {/* Desktop Grid Card Skeleton */}
       <div className="hidden md:block cursor-pointer transition-all duration-300">
-        <div className="relative flex flex-col items-start gap-0 p-0 bg-background/50 backdrop-blur-sm rounded-lg border border-border shadow-sm h-60">
-          {/* Top: Image and Action Button Skeleton */}
-          <div className="flex-shrink-0 flex justify-between items-center w-full h-1/2 rounded-l-lg overflow-hidden relative">
-            <LoadingSkeleton
-              variant="rectangular"
-              className="w-[80%] h-full m-2 rounded-r-3xl"
-            />
+        <div className="relative flex flex-col gap-0 p-0 bg-muted/30 rounded-xl h-52 overflow-hidden">
+          {/* Top: Image Section */}
+          <div className="flex-shrink-0 w-full h-32 relative overflow-hidden">
+            <LoadingSkeleton variant="rectangular" className="w-full h-full" />
 
-            {/* Action Button Skeleton */}
-            <LoadingSkeleton
-              variant="rectangular"
-              className="absolute right-3 w-[35%] h-10 rounded-xl"
-            />
+            {/* Overlay Badge Skeleton */}
+            <div className="absolute top-2 right-2">
+              <LoadingSkeleton
+                variant="rectangular"
+                className="w-16 h-6 rounded-full"
+              />
+            </div>
           </div>
 
-          {/* Bottom: Title and Subtitle Skeleton */}
-          <div className="flex-1 min-w-0 p-4 space-y-2">
-            <LoadingSkeleton variant="text" className="h-4 w-32" />
-            <LoadingSkeleton variant="text" className="h-3 w-24" />
+          {/* Bottom: Content Section */}
+          <div className="flex-1 p-3 space-y-2">
+            <LoadingSkeleton variant="text" className="h-4 w-3/4" />
+            <LoadingSkeleton variant="text" className="h-3 w-1/2 opacity-70" />
+            <div className="flex items-center gap-2 pt-1">
+              <LoadingSkeleton variant="circular" className="w-5 h-5" />
+              <LoadingSkeleton variant="text" className="h-3 w-14" />
+            </div>
           </div>
         </div>
       </div>

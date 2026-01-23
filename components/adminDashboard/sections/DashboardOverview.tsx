@@ -14,6 +14,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { apiService } from "@/services/api";
 
@@ -86,10 +87,10 @@ const MetricCard: React.FC<MetricCardProps> = ({
 
   return (
     <Card
-      className={`${cardStyles.background} transition-all duration-500  hover:shadow-xl overflow-hidden group`}
+      className={`${cardStyles.background} transition-all duration-300  hover:-translate-y-0.5 overflow-hidden group border-none border-border/40 shadow-none`}
     >
       {/* Abstract gradient overlay */}
-      {cardStyles.gradientOverlay}
+      {/* {cardStyles.gradientOverlay} */}
 
       {/* Subtle shimmer effect on hover */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
@@ -97,28 +98,30 @@ const MetricCard: React.FC<MetricCardProps> = ({
       </div>
 
       <CardContent className="p-6 relative z-10">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-2xl font-bold text-foreground">{value}</p>
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+              {title}
+            </p>
+            <p className="text-3xl font-bold text-foreground mb-1">{value}</p>
             {change && (
-              <div className="flex items-center gap-1 mt-1">
+              <div className="flex items-center gap-1.5 mt-2">
                 <TrendingUp
-                  className={`h-3 w-3 ${
+                  className={`h-4 w-4 ${
                     trend === "up"
                       ? "text-green-500"
                       : trend === "down"
-                      ? "text-red-500"
-                      : "text-muted-foreground"
+                        ? "text-red-500"
+                        : "text-muted-foreground"
                   }`}
                 />
                 <span
-                  className={`text-xs ${
+                  className={`text-sm font-medium ${
                     trend === "up"
                       ? "text-green-600"
                       : trend === "down"
-                      ? "text-red-600"
-                      : "text-muted-foreground"
+                        ? "text-red-600"
+                        : "text-muted-foreground"
                   }`}
                 >
                   {change}
@@ -127,9 +130,9 @@ const MetricCard: React.FC<MetricCardProps> = ({
             )}
           </div>
           <div
-            className={`w-12 h-12 ${cardStyles.iconBg} rounded-xl flex items-center justify-center shadow-sm backdrop-blur-sm border border-border`}
+            className={`w-14 h-14 ${cardStyles.iconBg} rounded-2xl flex items-center justify-center shadow-md backdrop-blur-sm border border-border/30 group-hover:scale-110 transition-transform duration-300`}
           >
-            <Icon className={`h-6 w-6 ${cardStyles.iconColor}`} />
+            <Icon className={`h-7 w-7 ${cardStyles.iconColor}`} />
           </div>
         </div>
       </CardContent>
@@ -214,7 +217,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     });
   };
   const [recentActivity, setRecentActivity] = useState<RecentActivityItem[]>(
-    []
+    [],
   );
   const [loading, setLoading] = useState(true);
 
@@ -252,14 +255,14 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         calculatedStats.totalQuestions = questionsResponse.data.length;
         // Calculate pending vs answered based on answers array
         const answeredQuestions = questionsResponse.data.filter(
-          (q) => q.answers && q.answers.length > 0
+          (q) => q.answers && q.answers.length > 0,
         ).length;
         calculatedStats.pendingQuestions =
           calculatedStats.totalQuestions - answeredQuestions;
         calculatedStats.answeredPercentage =
           calculatedStats.totalQuestions > 0
             ? Math.round(
-                (answeredQuestions / calculatedStats.totalQuestions) * 100
+                (answeredQuestions / calculatedStats.totalQuestions) * 100,
               )
             : 0;
       }
@@ -268,7 +271,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       if (questionsResponse.success && questionsResponse.data) {
         calculatedStats.totalAnswers = questionsResponse.data.reduce(
           (total, q) => total + (q.answers?.length || 0),
-          0
+          0,
         );
       }
 
@@ -296,7 +299,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       } catch (activityError) {
         console.warn(
           "Failed to fetch recent activity, using fallback:",
-          activityError
+          activityError,
         );
         // Fallback to question data if activity endpoint fails
         if (questionsResponse.success && questionsResponse.data) {
@@ -340,8 +343,8 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         stats.monthlyGrowth > 0
           ? ("up" as const)
           : stats.monthlyGrowth < 0
-          ? ("down" as const)
-          : ("neutral" as const),
+            ? ("down" as const)
+            : ("neutral" as const),
     },
     {
       title: "Pending Questions",
@@ -401,153 +404,90 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Card
-              key={i}
-              className="bg-primary/5 backdrop-blur-sm border-none"
-            >
-              <CardContent className="p-6">
-                <div className="animate-pulse">
-                  <div className="h-4 bg-biblical-blue/20 rounded w-3/4 mb-2"></div>
-                  <div className="h-8 bg-biblical-blue/20 rounded w-1/2 mb-2"></div>
-                  <div className="h-3 bg-biblical-blue/20 rounded w-1/3"></div>
+      <div className="h-full flex flex-col">
+        <Card className="bg-background rounded-2xl border-0 flex-1 flex flex-col shadow-none">
+          <CardHeader className="pb-3 px-5 pt-5 flex-shrink-0">
+            <CardTitle className="flex items-center gap-2 text-foreground text-sm font-semibold">
+              <Clock className="h-4 w-4 text-primary" />
+              Recent Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-2 pb-5 flex-1 overflow-hidden">
+            <div className="space-y-2 h-full overflow-y-auto no-scrollbar">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 p-3 rounded-xl bg-primary/5 border border-border/20"
+                >
+                  {/* Icon skeleton */}
+                  <div className="p-2 rounded-lg bg-muted/50 mt-0.5">
+                    <Skeleton className="h-4 w-4" />
+                  </div>
+                  {/* Content skeleton */}
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <Skeleton className="h-3 w-3/4" />
+                    <div className="flex items-center gap-1.5">
+                      <Skeleton className="h-3 w-20" />
+                      <span className="text-xs text-muted-foreground">•</span>
+                      <Skeleton className="h-3 w-16" />
+                    </div>
+                  </div>
+                  {/* Badge skeleton */}
+                  <Skeleton className="h-5 w-16 rounded-full" />
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 ">
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 no-scrollbar">
-        {metrics.map((metric, index) => (
-          <MetricCard
-            key={index}
-            title={metric.title}
-            value={metric.value}
-            change={metric.change}
-            icon={metric.icon}
-            trend={metric.trend}
-          />
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Activity */}
-        <Card className="bg-background backdrop-blur-sm border-none shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-foreground">
-              <Clock className="h-5 w-5 text-primary" />
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="max-h-80 overflow-y-auto no-scrollbar p-2 space-y-4">
-              {recentActivity.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-primary/10"
-                >
-                  <div className="mt-0.5">{getActivityIcon(activity.type)}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {activity.title}
-                    </p>
-                    {activity.description && (
-                      <p className="text-xs text-muted-foreground truncate mt-0.5">
-                        {activity.description}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="outline" className="text-xs px-1 py-0">
-                        {activity.action}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        by {activity.user}
-                      </span>
-                      <span className="text-xs text-muted-foreground">•</span>
-                      <span className="text-xs text-muted-foreground">
-                        {activity.timestamp}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex-shrink-0">
-                    {getStatusBadge(activity.status)}
+    <div className="h-full flex flex-col">
+      {/* Recent Activity - Full Height */}
+      <Card className="bg-background rounded-2xl  border-0  flex-1 flex flex-col shadow-none">
+        <CardHeader className="pb-3 px-5 pt-5 flex-shrink-0">
+          <CardTitle className="flex items-center gap-2 text-foreground text-sm font-semibold">
+            <Clock className="h-4 w-4 text-primary" />
+            Recent Activity
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-2 pb-5 flex-1 overflow-hidden">
+          <div className="space-y-2 h-full overflow-y-auto no-scrollbar">
+            {recentActivity.slice(0, 10).map((activity) => (
+              <div
+                key={activity.id}
+                className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all hover:shadow-sm"
+              >
+                <div className="p-2 rounded-lg bg-primary/10 mt-0.5">
+                  {getActivityIcon(activity.type)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-foreground truncate">
+                    {activity.title}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="text-xs text-muted-foreground truncate">
+                      {activity.user}
+                    </span>
+                    <span className="text-xs text-muted-foreground">•</span>
+                    <span className="text-xs text-muted-foreground">
+                      {activity.timestamp}
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="px-6 pb-6">
-              <Button
-                variant="outline"
-                className="w-full bg-primary/10 hover:bg-primary/15 transition-all duration-300"
-              >
-                View All Activity
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Actions */}
-        <Card className="bg-background backdrop-blur-sm border-none shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex  items-center gap-2 text-foreground">
-              <CheckCircle className="h-5 w-5 text-primary" />
-              Quick Actions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button
-              onClick={handleCreateTopic}
-              className="w-full justify-start gap-3 bg-primary hover:bg-accent text-primary-foreground transition-all duration-200 hover:scale-[1.02] shadow-sm hover:shadow-md"
-            >
-              <BookOpen className="h-4 w-4" />
-              Create New Topic
-            </Button>
-            <Button
-              onClick={handleManageTopics}
-              variant="outline"
-              className="w-full justify-start gap-3 bg-primary/10 hover:bg-primary/15 transition-all duration-200 hover:scale-[1.02]"
-            >
-              <Settings className="h-4 w-4" />
-              Manage Topics
-            </Button>
-            <Button
-              onClick={handleReviewQuestions}
-              variant="outline"
-              className="w-full justify-start gap-3 bg-primary/10 hover:bg-primary/15 transition-all duration-200 hover:scale-[1.02]"
-            >
-              <MessageCircle className="h-4 w-4" />
-              Review Pending Questions
-            </Button>
-            <Button
-              onClick={handleManageAnswers}
-              variant="outline"
-              className="w-full justify-start gap-3 bg-primary/10 hover:bg-primary/15 transition-all duration-200 hover:scale-[1.02]"
-            >
-              <MessageSquare className="h-4 w-4" />
-              Manage Answers
-            </Button>
-            <Button
-              onClick={handleUserManagement}
-              variant="outline"
-              className="w-full justify-start gap-3 bg-primary/10 hover:bg-primary/15 transition-all duration-200 hover:scale-[1.02] opacity-75"
-            >
-              <Users className="h-4 w-4" />
-              User Management
-              <Badge variant="secondary" className="ml-auto text-xs">
-                Coming Soon
-              </Badge>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+                <Badge
+                  variant="secondary"
+                  className="text-xs shrink-0 rounded-full"
+                >
+                  {activity.status}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -84,37 +84,37 @@ const AnswerListItem: React.FC<AnswerListItemProps> = ({
   return (
     <div className="w-full">
       <div
-        className="px-3 md:px-6 py-3 md:py-4 bg-primary/10 transition-all duration-200 rounded-lg cursor-pointer border border-primary/10"
+        className="px-2 md:px-4 py-2 md:py-3 bg-primary/10 transition-all duration-200 rounded-lg cursor-pointer border border-primary/10"
         onClick={() => onClick(answer)}
       >
         {/* Mobile Layout: Stack vertically */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           {/* Question Title */}
-          <div className="flex items-start gap-2">
-            <MessageSquare className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-            <h4 className="text-xs md:text-sm font-medium text-muted-foreground flex-1">
+          <div className="flex items-start gap-1.5">
+            <MessageSquare className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
+            <h4 className="text-xs md:text-xs font-medium text-muted-foreground flex-1">
               Question: {answer.questionTitle}
             </h4>
           </div>
 
           {/* Answer Content Card */}
-          <div className="bg-primary/15 p-3 md:p-4 rounded-lg space-y-2">
+          <div className="bg-primary/15 p-2 md:p-3 rounded-lg space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 {getStatusIcon(answer.status)}
-                <span className="text-xs md:text-sm font-medium text-foreground">
+                <span className="text-xs md:text-xs font-medium text-foreground">
                   Answer
                 </span>
               </div>
               {getStatusBadge(answer.status)}
             </div>
-            <p className="text-sm md:text-base text-foreground line-clamp-2 break-words">
+            <p className="text-sm md:text-sm text-foreground line-clamp-2 break-words">
               {answer.content}
             </p>
           </div>
 
           {/* Metadata - Compact on mobile */}
-          <div className="flex flex-wrap items-center gap-2 md:gap-3 text-xs md:text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-1.5 md:gap-2 text-xs md:text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <User className="h-3 w-3 flex-shrink-0" />
               <span className="truncate max-w-[100px] md:max-w-none">

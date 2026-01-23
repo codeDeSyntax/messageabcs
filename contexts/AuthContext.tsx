@@ -8,6 +8,8 @@ import React, {
   ReactNode,
 } from "react";
 import { apiService } from "@/services/api";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 interface User {
   username: string;
@@ -37,6 +39,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { toast } = useToast();
+
+  // Handle session expiration
+  const handleSessionExpired = React.useCallback(() => {
+    console.log("🔒 Session expired - redirecting to login");
+
+    // Clear auth data
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userData");
+    }
+    setToken(null);
+    setRefreshToken(null);
+    setUser(null);
+    setIsAuthenticated(false);
+
+    // Show user-friendly notification
+    toast({
+      title: "Session Expired",
+      description: "Your session has expired. Please log in again to continue.",
+      variant: "destructive",
+    });
+
+    // Redirect to login page
+    router.push("/login");
+  }, [router, toast]);
+
+  // Set up session expired callback in API service
+  useEffect(() => {
+    apiService.setSessionExpiredCallback(handleSessionExpired);
+  }, [handleSessionExpired]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -90,7 +124,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (
     username: string,
-    password: string
+    password: string,
   ): Promise<boolean> => {
     try {
       const response = await apiService.login(username, password);

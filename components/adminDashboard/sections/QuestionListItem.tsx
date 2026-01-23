@@ -71,24 +71,24 @@ const QuestionListItem: React.FC<QuestionListItemProps> = ({
   return (
     <div className="w-full">
       <div
-        className="px-3 md:px-6 py-3 md:py-4 hover:bg-primary/10 transition-all duration-200 rounded-lg cursor-pointer border border-primary/10" 
+        className="px-2 md:px-4 py-2 md:py-3 hover:bg-primary/10 transition-all duration-200 rounded-lg cursor-pointer border border-primary/10"
         onClick={() => onClick(question)}
       >
         {/* Mobile Layout: Stack vertically */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
-          <div className="flex-1 space-y-2 min-w-0">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-3">
+          <div className="flex-1 space-y-1.5 min-w-0">
             {/* Question Title with Icon */}
-            <div className="flex items-start gap-2 md:gap-3">
+            <div className="flex items-start gap-1.5 md:gap-2">
               <div className="flex-shrink-0 mt-0.5">
                 {getStatusIcon(question.status)}
               </div>
-              <h3 className="text-sm md:text-base font-semibold text-foreground break-words flex-1">
+              <h3 className="text-sm md:text-sm font-semibold text-foreground break-words flex-1">
                 {question.question}
               </h3>
             </div>
 
             {/* Metadata - Compact on mobile */}
-            <div className="flex flex-wrap items-center gap-2 md:gap-3 text-xs md:text-sm text-muted-foreground pl-7 md:pl-8">
+            <div className="flex flex-wrap items-center gap-1.5 md:gap-2 text-xs md:text-xs text-muted-foreground pl-5 md:pl-6">
               <div className="flex items-center gap-1">
                 <User className="h-3 w-3 flex-shrink-0" />
                 <span className="truncate max-w-[100px] md:max-w-none">
@@ -102,7 +102,10 @@ const QuestionListItem: React.FC<QuestionListItemProps> = ({
                 </span>
               </div>
               <Badge variant="outline" className="text-xs  whitespace-nowrap">
-                {question.topicTitle?.slice(0, 30)}{question.topicTitle && question.topicTitle.length > 30 ? "..." : ""}
+                {question.topicTitle?.slice(0, 30)}
+                {question.topicTitle && question.topicTitle.length > 30
+                  ? "..."
+                  : ""}
               </Badge>
             </div>
           </div>
@@ -113,7 +116,7 @@ const QuestionListItem: React.FC<QuestionListItemProps> = ({
           </div>
         </div>
       </div>
-      {showDivider && <div className="bg-primary/12 mt-2 mb-2 h-px"></div>}
+      {showDivider && <div className="bg-primary/12 mt-1.5 mb-1.5 h-px"></div>}
     </div>
   );
 };

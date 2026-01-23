@@ -80,7 +80,7 @@ export function NavigationDrawer({
       { icon: Home, label: "Home", path: "/" },
       { icon: Hash, label: "Topics", path: "/topics" },
       { icon: BookOpen, label: "Reading", path: "/reading" },
-      { icon: MessageCircleQuestion, label: "Q & A", path: "/qa" },
+      { icon: MessageCircleQuestion, label: "Questions-Answers", path: "/qa" },
     ];
 
     if (isAuthenticated && user?.role === "admin") {

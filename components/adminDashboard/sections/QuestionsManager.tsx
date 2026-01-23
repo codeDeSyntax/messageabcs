@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MessageCircle, Search, Filter } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useAdminDashboard } from "@/contexts/AdminDashboardContext";
 import {
   Select,
   SelectContent,
@@ -28,9 +29,9 @@ interface AnswerFormData {
 }
 
 const QuestionsManager: React.FC = () => {
+  const { searchTerm } = useAdminDashboard();
   const [questions, setQuestions] = useState<AdminQuestion[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<
     "all" | "pending" | "answered" | "closed"
   >("all");
@@ -96,19 +97,19 @@ const QuestionsManager: React.FC = () => {
           question.topicTitle
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          question.askedBy?.toLowerCase().includes(searchTerm.toLowerCase())
+          question.askedBy?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
     if (filterStatus !== "all") {
       filtered = filtered.filter(
-        (question) => question.status === filterStatus
+        (question) => question.status === filterStatus,
       );
     }
 
     if (filterPriority !== "all") {
       filtered = filtered.filter(
-        (question) => question.priority === filterPriority
+        (question) => question.priority === filterPriority,
       );
     }
 
@@ -127,15 +128,15 @@ const QuestionsManager: React.FC = () => {
 
   const updateQuestionStatus = async (
     questionId: string,
-    newStatus: "pending" | "answered" | "closed"
+    newStatus: "pending" | "answered" | "closed",
   ) => {
     try {
       setQuestions((prev) =>
         prev.map((question) =>
           question.id === questionId
             ? { ...question, status: newStatus }
-            : question
-        )
+            : question,
+        ),
       );
 
       toast({
@@ -212,17 +213,6 @@ const QuestionsManager: React.FC = () => {
         <Card className="bg-background/20 backdrop-blur-sm border-none w-full">
           <CardContent className="p-4">
             <div className="flex flex-row md:flex-row gap-4">
-              <div className="w-full">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search questions, topics, or users..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-primary/15 focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                  />
-                </div>
-              </div>
               <div className="flex flex-col sm:flex-row gap-2">
                 <Select
                   value={filterStatus}
@@ -252,32 +242,33 @@ const QuestionsManager: React.FC = () => {
           {loading
             ? // Loading Skeletons
               Array.from({ length: 5 }).map((_, index) => (
-                <div key={`skeleton-${index}`} className="px-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-start gap-3">
-                        <Skeleton className="h-5 w-5 rounded-full" />
+                <div
+                  key={`skeleton-${index}`}
+                  className="px-2 md:px-4 py-2 md:py-3"
+                >
+                  <div className="flex items-start justify-between gap-3 p-3 bg-primary/5 rounded-xl border border-border/20">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-start gap-2">
+                        <Skeleton className="h-4 w-4 rounded-full flex-shrink-0" />
                         <div className="flex-1 space-y-2">
-                          <Skeleton className="h-6 w-3/4" />
-                          <div className="flex gap-4">
-                            <Skeleton className="h-4 w-20" />
-                            <Skeleton className="h-4 w-24" />
-                            <Skeleton className="h-4 w-16" />
-                            <Skeleton className="h-4 w-12" />
+                          <Skeleton className="h-4 w-4/5" />
+                          <div className="flex flex-wrap gap-2">
+                            <Skeleton className="h-5 w-16 rounded-full" />
+                            <Skeleton className="h-5 w-20 rounded-full" />
+                            <Skeleton className="h-5 w-14 rounded-full" />
                           </div>
-                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-32" />
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <div className="flex items-center gap-2">
-                        <Skeleton className="h-6 w-16" />
-                        <Skeleton className="h-6 w-14" />
+                        <Skeleton className="h-6 w-16 rounded-md" />
+                        <Skeleton className="h-6 w-14 rounded-md" />
                       </div>
-                      <Skeleton className="h-8 w-8" />
+                      <Skeleton className="h-8 w-8 rounded-md" />
                     </div>
                   </div>
-                  {index < 4 && <div className="bg-primary/6 mt-6 h-px"></div>}
                 </div>
               ))
             : filteredQuestions.map((question, index) => (

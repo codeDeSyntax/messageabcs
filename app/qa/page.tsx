@@ -364,7 +364,7 @@ export default function QA() {
                               Pending Answer
                             </h3>
                             <p className="text-sm text-muted-foreground">
-                              This question hasn't been answered yet
+                              This question {"hasn't "}been answered yet
                             </p>
                           </div>
                         )}

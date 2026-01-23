@@ -83,7 +83,7 @@ export function useCreateTopic() {
 
   return useMutation({
     mutationFn: async (
-      topic: Omit<BiblicalTopic, "id" | "createdAt" | "updatedAt">
+      topic: Omit<BiblicalTopic, "id" | "createdAt" | "updatedAt">,
     ) => {
       const response = await apiService.createTopic(topic);
       if (!response.success) {
@@ -142,6 +142,46 @@ export function useDeleteTopic() {
       // Invalidate all topic queries
       queryClient.invalidateQueries({ queryKey: topicKeys.lists() });
       queryClient.invalidateQueries({ queryKey: topicKeys.withCounts({}) });
+    },
+  });
+}
+
+// Admin Queries
+export function useAdminAllTopics(params?: {
+  page?: number;
+  limit?: number;
+  search?: string;
+}) {
+  return useQuery({
+    queryKey: [...topicKeys.all, "admin-all", params || {}],
+    queryFn: async () => {
+      const response = await apiService.adminGetAllTopics(params);
+      if (!response.success) {
+        throw new Error(response.error || "Failed to fetch all topics");
+      }
+      return {
+        data: response.data || [],
+        pagination: response.pagination,
+      };
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes (shorter for admin views)
+  });
+}
+
+export function useToggleTopicStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiService.adminToggleTopicStatus(id);
+      if (!response.success) {
+        throw new Error(response.error || "Failed to toggle topic status");
+      }
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate all topic queries including admin queries
+      queryClient.invalidateQueries({ queryKey: topicKeys.all });
     },
   });
 }

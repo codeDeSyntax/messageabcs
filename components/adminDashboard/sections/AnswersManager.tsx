@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Search, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useAdminDashboard } from "@/contexts/AdminDashboardContext";
 import {
   Select,
   SelectContent,
@@ -13,8 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiService } from "@/services/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import AnswerListItem from "./AnswerListItem";
-import AnswerDetailsSidebar from './AnswerDetailsSidebar';
-
+import AnswerDetailsSidebar from "./AnswerDetailsSidebar";
 
 // Backend Answer model from admin endpoint
 interface AdminAnswer {
@@ -39,9 +39,9 @@ interface AnswerFormData {
 }
 
 const AnswersManager: React.FC = () => {
+  const { searchTerm } = useAdminDashboard();
   const [answers, setAnswers] = useState<AdminAnswer[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<
     "all" | "published" | "draft" | "archived"
   >("all");
@@ -49,7 +49,7 @@ const AnswersManager: React.FC = () => {
     "all" | "official" | "community"
   >("all");
   const [selectedAnswer, setSelectedAnswer] = useState<AdminAnswer | null>(
-    null
+    null,
   );
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { toast } = useToast();
@@ -120,7 +120,7 @@ const AnswersManager: React.FC = () => {
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
           answer.topicTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          answer.answeredBy.toLowerCase().includes(searchTerm.toLowerCase())
+          answer.answeredBy.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -130,7 +130,7 @@ const AnswersManager: React.FC = () => {
 
     if (filterType !== "all") {
       filtered = filtered.filter((answer) =>
-        filterType === "official" ? answer.isOfficial : !answer.isOfficial
+        filterType === "official" ? answer.isOfficial : !answer.isOfficial,
       );
     }
 
@@ -150,7 +150,7 @@ const AnswersManager: React.FC = () => {
   const handleUpdateAnswer = async (
     answerId: string,
     content: string,
-    isOfficial: boolean
+    isOfficial: boolean,
   ) => {
     const answer = answers.find((a) => a.id === answerId);
     if (!answer) return;
@@ -159,7 +159,7 @@ const AnswersManager: React.FC = () => {
       const response = await apiService.adminUpdateAnswer(
         answer.questionId,
         answerId,
-        content
+        content,
       );
 
       if (response.success) {
@@ -187,13 +187,13 @@ const AnswersManager: React.FC = () => {
 
   const updateAnswerStatus = async (
     answerId: string,
-    newStatus: "published" | "draft" | "archived"
+    newStatus: "published" | "draft" | "archived",
   ) => {
     try {
       setAnswers((prev) =>
         prev.map((answer) =>
-          answer.id === answerId ? { ...answer, status: newStatus } : answer
-        )
+          answer.id === answerId ? { ...answer, status: newStatus } : answer,
+        ),
       );
 
       toast({
@@ -270,17 +270,6 @@ const AnswersManager: React.FC = () => {
           <Card className="bg-background/20 backdrop-blur-sm border-none">
             <CardContent className="p-2 border-none">
               <div className="flex flex-row md:flex-row gap-4">
-                <div className="w-full">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search answers, questions, or authors..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 bg-primary/15 rounded-full focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                    />
-                  </div>
-                </div>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Select
                     value={filterType}
@@ -312,27 +301,26 @@ const AnswersManager: React.FC = () => {
                 Array.from({ length: 5 }).map((_, index) => (
                   <div
                     key={`skeleton-${index}`}
-                    className="w-full px-3 md:px-6"
+                    className="w-full px-2 md:px-4 py-2 md:py-3"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 space-y-3">
-                        <div className="flex items-start gap-3">
-                          <Skeleton className="h-5 w-5 rounded-full" />
+                    <div className="flex items-start justify-between gap-3 p-3 bg-primary/5 rounded-xl border border-border/20">
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-start gap-2">
+                          <Skeleton className="h-4 w-4 rounded-full flex-shrink-0" />
                           <div className="flex-1 space-y-2">
-                            <Skeleton className="h-6 w-3/4" />
-                            <Skeleton className="h-20 w-full" />
-                            <div className="flex gap-4">
-                              <Skeleton className="h-4 w-20" />
-                              <Skeleton className="h-4 w-24" />
-                              <Skeleton className="h-4 w-16" />
+                            <Skeleton className="h-4 w-4/5" />
+                            <div className="p-2 md:p-3 bg-background/50 rounded-lg border border-border/10">
+                              <Skeleton className="h-16 w-full rounded-md" />
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              <Skeleton className="h-5 w-16 rounded-full" />
+                              <Skeleton className="h-5 w-20 rounded-full" />
+                              <Skeleton className="h-5 w-14 rounded-full" />
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    {index < 4 && (
-                      <div className="bg-primary/6 mt-6 h-px"></div>
-                    )}
                   </div>
                 ))
               : filteredAnswers.map((answer, index) => (

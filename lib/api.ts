@@ -15,7 +15,7 @@ console.log("🔗 Environment:", process.env.NODE_ENV); // Debug log
 console.log("🔗 Is Production:", process.env.NODE_ENV === "production"); // Debug log
 console.log(
   "🔗 NEXT_PUBLIC_API_BASE_URL:",
-  process.env.NEXT_PUBLIC_API_BASE_URL
+  process.env.NEXT_PUBLIC_API_BASE_URL,
 ); // Debug log
 console.log("🔗 Final API Base URL:", API_BASE_URL); // Debug log
 
@@ -128,6 +128,13 @@ interface Activity {
 }
 
 class ApiService {
+  // Session expiry callback - can be set by AuthContext
+  private onSessionExpired?: () => void;
+
+  setSessionExpiredCallback(callback: () => void) {
+    this.onSessionExpired = callback;
+  }
+
   private getAuthHeaders(): HeadersInit {
     const token = localStorage.getItem("authToken");
     return {
@@ -138,7 +145,7 @@ class ApiService {
 
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<ApiResponse<T>> {
     const url = `${API_BASE_URL}${endpoint}`;
     console.log("🌐 API Request:", url); // Debug log
@@ -150,6 +157,7 @@ class ApiService {
           ...headers,
           ...options.headers,
         },
+        credentials: "include", // Include cookies for refresh token
       });
     };
 
@@ -179,20 +187,30 @@ class ApiService {
             response = await makeRequest(headers);
             console.log("✅ Token refreshed, request retried successfully");
           } else {
-            // Refresh failed, clear tokens and throw error
+            // Refresh failed, clear tokens and trigger session expired callback
+            console.log("❌ Token refresh failed - session expired");
             localStorage.removeItem("authToken");
             localStorage.removeItem("userData");
-            throw new Error(
-              "Authentication session expired. Please login again."
-            );
+
+            // Trigger session expired callback to handle UI redirect
+            if (this.onSessionExpired) {
+              this.onSessionExpired();
+            }
+
+            throw new Error("Your session has expired. Please log in again.");
           }
         } catch (refreshError) {
-          // Refresh failed, clear tokens and throw error
+          // Refresh failed, clear tokens and trigger session expired callback
+          console.log("❌ Token refresh error - session expired");
           localStorage.removeItem("authToken");
           localStorage.removeItem("userData");
-          throw new Error(
-            "Authentication session expired. Please login again."
-          );
+
+          // Trigger session expired callback to handle UI redirect
+          if (this.onSessionExpired) {
+            this.onSessionExpired();
+          }
+
+          throw new Error("Your session has expired. Please log in again.");
         }
       }
 
@@ -213,7 +231,7 @@ class ApiService {
   // Auth endpoints
   async login(
     username: string,
-    password: string
+    password: string,
   ): Promise<{
     success: boolean;
     token?: string;
@@ -322,7 +340,7 @@ class ApiService {
 
     const query = searchParams.toString();
     return this.request(
-      `/topics/with-question-counts${query ? `?${query}` : ""}`
+      `/topics/with-question-counts${query ? `?${query}` : ""}`,
     );
   }
 
@@ -331,7 +349,7 @@ class ApiService {
   }
 
   async createTopic(
-    topic: Omit<BiblicalTopic, "id" | "createdAt" | "updatedAt">
+    topic: Omit<BiblicalTopic, "id" | "createdAt" | "updatedAt">,
   ): Promise<ApiResponse<BiblicalTopic>> {
     return this.request("/topics", {
       method: "POST",
@@ -341,7 +359,7 @@ class ApiService {
 
   async updateTopic(
     id: string,
-    topic: Partial<Omit<BiblicalTopic, "id" | "createdAt" | "updatedAt">>
+    topic: Partial<Omit<BiblicalTopic, "id" | "createdAt" | "updatedAt">>,
   ): Promise<ApiResponse<BiblicalTopic>> {
     return this.request(`/topics/${id}`, {
       method: "PUT",
@@ -390,7 +408,7 @@ class ApiService {
 
   async addAnswer(
     questionId: string,
-    answer: string
+    answer: string,
   ): Promise<ApiResponse<Question>> {
     return this.request(`/questions/${questionId}/answers`, {
       method: "POST",
@@ -401,7 +419,7 @@ class ApiService {
   async updateAnswer(
     questionId: string,
     answerId: string,
-    answer: string
+    answer: string,
   ): Promise<ApiResponse<Question>> {
     return this.request(`/questions/${questionId}/answers/${answerId}`, {
       method: "PUT",
@@ -411,7 +429,7 @@ class ApiService {
 
   async deleteAnswer(
     questionId: string,
-    answerId: string
+    answerId: string,
   ): Promise<ApiResponse<Question>> {
     return this.request(`/questions/${questionId}/answers/${answerId}`, {
       method: "DELETE",
@@ -501,7 +519,7 @@ class ApiService {
       description: string;
       image: string;
       isActive: boolean;
-    }
+    },
   ): Promise<ApiResponse<BiblicalTopic & { isActive: boolean }>> {
     return this.request(`/admin/topics/${id}`, {
       method: "PUT",
@@ -516,7 +534,7 @@ class ApiService {
   }
 
   async adminToggleTopicStatus(
-    id: number
+    id: number,
   ): Promise<ApiResponse<BiblicalTopic & { isActive: boolean }>> {
     return this.request(`/admin/topics/${id}/toggle-status`, {
       method: "PATCH",
@@ -552,7 +570,7 @@ class ApiService {
 
   async adminUpdateQuestionStatus(
     id: number,
-    status: "pending" | "answered" | "closed"
+    status: "pending" | "answered" | "closed",
   ): Promise<ApiResponse<Question>> {
     return this.request(`/admin/questions/${id}/status`, {
       method: "PATCH",
@@ -562,7 +580,7 @@ class ApiService {
 
   async adminUpdateQuestionPriority(
     id: number,
-    priority: "low" | "medium" | "high"
+    priority: "low" | "medium" | "high",
   ): Promise<ApiResponse<Question>> {
     return this.request(`/admin/questions/${id}/priority`, {
       method: "PATCH",
@@ -575,7 +593,7 @@ class ApiService {
     answer: {
       content: string;
       isOfficial: boolean;
-    }
+    },
   ): Promise<ApiResponse<Question>> {
     return this.request(`/admin/questions/${questionId}/answer`, {
       method: "POST",
@@ -622,7 +640,7 @@ class ApiService {
   async adminUpdateAnswer(
     questionId: string,
     answerId: string,
-    answer: string
+    answer: string,
   ): Promise<ApiResponse<Question>> {
     return this.request(`/questions/${questionId}/answers/${answerId}`, {
       method: "PUT",
@@ -634,7 +652,7 @@ class ApiService {
 
   async adminDeleteAnswer(
     questionId: string,
-    answerId: string
+    answerId: string,
   ): Promise<ApiResponse<Question>> {
     return this.request(`/questions/${questionId}/answers/${answerId}`, {
       method: "DELETE",
@@ -684,7 +702,7 @@ class ApiService {
   }
 
   async createMessage(
-    message: CreateMessageRequest
+    message: CreateMessageRequest,
   ): Promise<ApiResponse<Message>> {
     return this.request("/messages", {
       method: "POST",
@@ -695,7 +713,7 @@ class ApiService {
   async replyToMessage(
     parentId: string,
     content: string,
-    author?: string
+    author?: string,
   ): Promise<ApiResponse<Message>> {
     return this.request("/messages", {
       method: "POST",
@@ -709,7 +727,7 @@ class ApiService {
 
   async updateMessage(
     id: string,
-    content: string
+    content: string,
   ): Promise<ApiResponse<Message>> {
     return this.request(`/messages/${id}`, {
       method: "PUT",
@@ -725,7 +743,7 @@ class ApiService {
 
   async hideMessage(
     id: string,
-    reason?: string
+    reason?: string,
   ): Promise<ApiResponse<Message>> {
     return this.request(`/messages/${id}/hide`, {
       method: "POST",

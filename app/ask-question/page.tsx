@@ -27,6 +27,7 @@ import {
   Send,
   BookOpen,
   HelpCircle,
+  Search,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useTopics, useCreateQuestion } from "@/hooks/queries";
@@ -41,6 +42,7 @@ export default function AskQuestion() {
   const router = useRouter();
   const { toast } = useToast();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [topicSearch, setTopicSearch] = useState("");
 
   // Form state
   const [formData, setFormData] = useState<QuestionFormData>({
@@ -56,6 +58,11 @@ export default function AskQuestion() {
   });
   const topics = topicsData?.data || [];
 
+  // Filter topics based on search
+  const filteredTopics = topics.filter((topic) =>
+    topic.title.toLowerCase().includes(topicSearch.toLowerCase()),
+  );
+
   // Use TanStack Query mutation for creating question
   const createQuestionMutation = useCreateQuestion();
   const isSubmitting = createQuestionMutation.isPending;
@@ -67,7 +74,7 @@ export default function AskQuestion() {
 
   const handleInputChange = (
     field: keyof QuestionFormData,
-    value: string | number
+    value: string | number,
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -145,7 +152,7 @@ export default function AskQuestion() {
       <div className="bg-background/30 backdrop-blur-md inset-0 absolute" />
 
       {/* Fixed Mobile Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-20 bg-background/80 backdrop-blur-md border-b border-border">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-20 bg-background/90 backdrop-blur-md shadow-sm">
         <div className="py-2 px-6 pb-2 flex justify-between items-center">
           <NavigationDrawer
             isOpen={isDrawerOpen}
@@ -165,7 +172,7 @@ export default function AskQuestion() {
       </div>
 
       {/* Fixed Desktop Header */}
-      <div className="hidden md:block fixed top-0 left-0 right-0 z-20 bg-background/80 backdrop-blur-md border-b border-border">
+      <div className="hidden md:block fixed top-0 left-0 right-0 z-20 bg-background/90 backdrop-blur-md shadow-sm">
         <div className="flex justify-center p-6">
           <div className="w-full max-w-4xl flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -190,8 +197,8 @@ export default function AskQuestion() {
         <div className="flex justify-center p-2 md:p-6">
           <div className="w-full max-w-5xl">
             {/* Form Card */}
-            <Card className="bg-background p-0 backdrop-blur-xl border-border shadow-xl">
-              <CardHeader className="border-b border-border">
+            <Card className="bg-background/95 p-0 backdrop-blur-xl border border-border/50 shadow-xl">
+              <CardHeader className="bg-primary/5">
                 <p className="text-muted-foreground font-bold">
                   Ask any question that you have about the subjects you read
                   about
@@ -216,7 +223,7 @@ export default function AskQuestion() {
                         handleInputChange("question", e.target.value)
                       }
                       placeholder="What would you like to know about biblical topics? Be specific and clear..."
-                      className="bg-background/50 border-border min-h-[120px] focus-visible:ring-primary/30 focus:outline-primary text-base"
+                      className="bg-muted/30 border border-border/50 min-h-[120px] focus-visible:ring-2 focus-visible:ring-primary/30 text-base"
                       required
                     />
                     <div className="flex justify-between text-sm text-muted-foreground">
@@ -249,7 +256,7 @@ export default function AskQuestion() {
                       }
                       disabled={loadingTopics}
                     >
-                      <SelectTrigger className="bg-primary/10 border-border focus:ring-2 focus:ring-primary/30 focus:border-primary h-12">
+                      <SelectTrigger className="bg-primary/10 border border-border/50 focus:ring-2 focus:ring-primary/30 h-12">
                         <SelectValue
                           placeholder={
                             loadingTopics
@@ -258,66 +265,87 @@ export default function AskQuestion() {
                           }
                         />
                       </SelectTrigger>
-                      <SelectContent className="max-h-60 overflow-auto no-scrollbar max-w-[70%] w-1/2 bg-primary/20 backdrop-blur p-2">
-                       {/* Other Option */}
-                        <SelectItem value="other" className="cursor-pointer">
+                      <SelectContent className="max-h-72 overflow-auto no-scrollbar w-[100%]  bg-primary/50 backdrop-blur p-2 rounded-2xl">
+                        {/* Search Bar */}
+                        <div className="sticky top-0 p-2 bg-background/95 rounded-full backdrop-blur-sm z-10 mb-2">
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                              placeholder="Search topics..."
+                              value={topicSearch}
+                              onChange={(e) => setTopicSearch(e.target.value)}
+                              className="pl-9 h-9 bg-muted/30 border border-border/50 focus-visible:ring-2 focus-visible:ring-primary/30 rounded-full"
+                              onClick={(e) => e.stopPropagation()}
+                              onKeyDown={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Other Option */}
+                        <SelectItem
+                          value="other"
+                          className="cursor-pointer bg-muted rounded-full h-10 p-0 px-2 py-1"
+                        >
                           <div className="flex items-center gap-3 py-1">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-muted to-muted flex items-center justify-center border border-border">
+                            <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
                               <HelpCircle className="h-4 w-4 text-primary-foreground" />
                             </div>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col text-primary">
                               <span className="font-medium">Other</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-xs ">
                                 General or uncategorized questions
                               </span>
                             </div>
                           </div>
                         </SelectItem>
-                        {topics.map((topic, index) => (
-                          <SelectItem
-                            key={topic.id}
-                            value={topic.id.toString()}
-                            className="focus:bg-muted focus:text-muted p-0 px-2 py-1 focus:text-primary-foreground bg-cream-200 mt-1"
-                          >
-                            <div className="flex items-center gap-3 py-1">
-                              {/* <img
-                                src={topic.image}
-                                alt={topic.title}
-                                className="w-8 h-8 rounded-full object-cover border border-border"
-                              /> */}
-                              <div className="flex items-center gap-2">
-                                {/* numbering */}
-                                <div>
-                                  <Badge className="bg-primary/20 text-primary px-2 py-1 rounded-full text-xs font-medium">
-                                    {index + 1}
-                                  </Badge>
+                        {filteredTopics.length > 0 ? (
+                          filteredTopics.map((topic, index) => (
+                            <SelectItem
+                              key={topic.id}
+                              value={topic.id.toString()}
+                              className="focus:bg-muted focus:text-muted p-0 px-2 py-1 focus:text-primary-foreground bg-cream-200 mt-1 rounded-full"
+                            >
+                              <div className="flex items-center gap-3 py-1">
+                                {/* <img
+                                  src={topic.image}
+                                  alt={topic.title}
+                                  className="w-8 h-8 rounded-full object-cover border border-border"
+                                /> */}
+                                <div className="flex items-center gap-2">
+                                  {/* numbering */}
+                                  <div>
+                                    <Badge className="bg-primary text-muted h-6 w-6 text-center rounded-full text-xs font-medium">
+                                      {index + 1}
+                                    </Badge>
+                                  </div>
+                                  <span className="font-medium">
+                                    {topic.title.slice(0, 35)}
+                                  </span>
                                 </div>
-                                <span className="font-medium">
-                                  {topic.title.slice(0, 30)}
-                                </span>
                               </div>
-                            </div>
-                            {/* horizontal line */}
-                            <div className="border-t w-full border-border" />
-                          </SelectItem>
-                        ))}
-                       
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="px-4 py-8 text-center text-muted-foreground text-sm">
+                            No topics found matching &quot;{topicSearch}&quot;
+                          </div>
+                        )}
                       </SelectContent>
                     </Select>
 
                     {(selectedTopic || isOtherSelected) && (
-                      <Card className="bg-background/50 border-border mt-3">
+                      <Card className="bg-primary/5 border border-border/50 mt-3">
                         <CardContent className="px-4 py-2">
                           <div className="flex items-center gap-3">
                             {isOtherSelected ? (
-                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-muted to-muted flex items-center justify-center border border-border">
+                              <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
                                 <HelpCircle className="h-4 w-4 text-primary-foreground" />
                               </div>
                             ) : (
                               <img
                                 src={selectedTopic!.image}
                                 alt={selectedTopic!.title}
-                                className="w-10 h-10 rounded-full object-cover border border-border"
+                                className="w-10 h-10 rounded-full object-cover"
                               />
                             )}
 
@@ -350,7 +378,7 @@ export default function AskQuestion() {
                         handleInputChange("askedBy", e.target.value)
                       }
                       placeholder="Enter your name or leave blank for Anonymous"
-                      className="bg-background/50 border-border focus:ring-2 focus-visible:ring-primary/30 focus:border-primary h-12"
+                      className="bg-muted/30 border border-border/50 focus:ring-2 focus-visible:ring-primary/30 h-12"
                     />
                     <p className="text-sm text-muted-foreground">
                       Leave blank to ask anonymously. Your question will be
@@ -359,7 +387,7 @@ export default function AskQuestion() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex flex-col md:flex-row justify-end gap-3 pt-6 border-t border-border">
+                  <div className="flex flex-col md:flex-row justify-end gap-3 pt-6 mt-2 bg-primary/5 -mx-3 md:-mx-6 px-3 md:px-6 py-4 rounded-b-lg">
                     <Button
                       type="button"
                       variant="outline"
@@ -397,7 +425,7 @@ export default function AskQuestion() {
             </Card>
 
             {/* Helper Text */}
-            <Card className="mt-4 bg-muted/30 border-border">
+            <Card className="mt-4 bg-muted/20 border border-border/50">
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
                   <MessageCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />

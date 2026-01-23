@@ -55,7 +55,7 @@ export const ReadingContent = ({
                     {currentTopic.mainExtract && (
                       <div className="prose prose-lg max-w-none mb-8">
                         <div
-                          className="text-foreground text-xl md:text-xl text-center leading-tight"
+                          className="text-foreground text-xl md:text-xl text-center leading-tight break-words"
                           style={{
                             fontFamily: "'Crimson Pro', Georgia, serif",
                             // lineHeight: "1.2",
