@@ -170,7 +170,9 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
               Pending Questions
             </span>
           </div>
-          <div className="text-foreground font-bold text-lg">{pendingQuestions}</div>
+          <div className="text-foreground font-bold text-lg">
+            {pendingQuestions}
+          </div>
         </div>
 
         {/* Total Answers */}
@@ -181,7 +183,9 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
               Total Answers
             </span>
           </div>
-          <div className="text-foreground font-bold text-lg">{totalAnswers}</div>
+          <div className="text-foreground font-bold text-lg">
+            {totalAnswers}
+          </div>
         </div>
 
         {/* Active Users */}

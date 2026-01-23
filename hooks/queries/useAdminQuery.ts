@@ -155,7 +155,7 @@ export function useAdminToggleTopicStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id: string) => {
       const response = await apiService.adminToggleTopicStatus(id);
       if (!response.success) {
         throw new Error(response.error || "Failed to toggle topic status");
@@ -230,7 +230,7 @@ export function useAdminUpdateQuestionPriority() {
     }) => {
       const response = await apiService.adminUpdateQuestionPriority(
         id,
-        priority
+        priority,
       );
       if (!response.success) {
         throw new Error(response.error || "Failed to update question priority");
@@ -309,7 +309,7 @@ export function useAdminUpdateAnswer() {
       const response = await apiService.adminUpdateAnswer(
         questionId,
         answerId,
-        answer
+        answer,
       );
       if (!response.success) {
         throw new Error(response.error || "Failed to update answer");

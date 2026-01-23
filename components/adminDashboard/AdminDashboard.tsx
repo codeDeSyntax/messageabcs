@@ -79,13 +79,13 @@ const AdminDashboardContent: React.FC = () => {
         if (questionsResponse.success && questionsResponse.data) {
           const totalQuestions = questionsResponse.data.length;
           const answeredQuestions = questionsResponse.data.filter(
-            (q) => q.answers && q.answers.length > 0
+            (q) => q.answers && q.answers.length > 0,
           ).length;
           pendingQuestions = totalQuestions - answeredQuestions;
-          
+
           totalAnswers = questionsResponse.data.reduce(
             (total, q) => total + (q.answers?.length || 0),
-            0
+            0,
           );
         }
 
@@ -126,7 +126,7 @@ const AdminDashboardContent: React.FC = () => {
       case "overview":
         return (
           <div className="space-y-6" key="overview">
-            <DashboardStats 
+            <DashboardStats
               totalTopics={stats.totalTopics}
               pendingQuestions={stats.pendingQuestions}
               totalAnswers={stats.totalAnswers}
