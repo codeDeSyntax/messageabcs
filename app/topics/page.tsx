@@ -212,63 +212,61 @@ export default function Topics() {
           </div>
 
           {/* Desktop: Board-style Grid Layout */}
-          <div className="hidden md:flex md:flex-col h-full bg-background/20 backdrop-blur-sm border border-border shadow-2xl rounded-lg overflow-hidden">
+          <div className="hidden md:flex md:flex-col h-full bg-background/20 backdrop-blur-sm border border-border shadow-2xl rounded-lg overflow-hidden w-full py-4">
             {/* Header Section - Fixed */}
-            <div className="flex-shrink-0 sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border p-3 px-6">
+            <div className="flex-shrink-0 sticky top-0 z-10 rounded-full bg-cream-200  backdrop-blur-md border-none border-border p-3 w  max-w-[62rem] w-full m-auto">
               {/* Second Row: Title and Search */}
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <Logo className="h-5 " />
                 </div>
 
-                
-
                 <div className="flex w- items-center gap-4">
                   <div className="flex items-center gap-2 relative">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsMenuOpen(!isMenuOpen);
-                    }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-all duration-150 bg-background border border-border hover:bg-muted"
-                  >
-                    <Menu className="h-3.5 w-3.5" />
-                    <span>Menu</span>
-                  </button>
-
-                  {/* Compact Dropdown Menu */}
-                  {isMenuOpen && (
-                    <div
-                      onClick={(e) => e.stopPropagation()}
-                      className="absolute top-full left-0 mt-1 w-48 bg-background border border-border rounded-md shadow-lg overflow-hidden z-50"
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(!isMenuOpen);
+                      }}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-all duration-150 bg-background border border-border hover:bg-muted"
                     >
-                      <nav className="py-1">
-                        {navItems.map((item) => {
-                          const Icon = item.icon as any;
-                          const isActive = pathname === item.path;
+                      <Menu className="h-3.5 w-3.5" />
+                      <span>Menu</span>
+                    </button>
 
-                          return (
-                            <button
-                              key={item.path}
-                              onClick={() => {
-                                router.push(item.path);
-                                setIsMenuOpen(false);
-                              }}
-                              className={`w-full flex items-center gap-2 px-3 py-1.5 text-sm text-left transition-colors ${
-                                isActive
-                                  ? "bg-primary/10 text-primary font-medium"
-                                  : "hover:bg-muted text-foreground"
-                              }`}
-                            >
-                              <Icon className="h-4 w-4" />
-                              <span>{item.label}</span>
-                            </button>
-                          );
-                        })}
-                      </nav>
-                    </div>
-                  )}
-                </div>
+                    {/* Compact Dropdown Menu */}
+                    {isMenuOpen && (
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="absolute top-full left-0 mt-1 w-48 bg-background border border-border rounded-md shadow-lg overflow-hidden z-50"
+                      >
+                        <nav className="py-1">
+                          {navItems.map((item) => {
+                            const Icon = item.icon as any;
+                            const isActive = pathname === item.path;
+
+                            return (
+                              <button
+                                key={item.path}
+                                onClick={() => {
+                                  router.push(item.path);
+                                  setIsMenuOpen(false);
+                                }}
+                                className={`w-full flex items-center gap-2 px-3 py-1.5 text-sm text-left transition-colors ${
+                                  isActive
+                                    ? "bg-primary/10 text-primary font-medium"
+                                    : "hover:bg-muted text-foreground"
+                                }`}
+                              >
+                                <Icon className="h-4 w-4" />
+                                <span>{item.label}</span>
+                              </button>
+                            );
+                          })}
+                        </nav>
+                      </div>
+                    )}
+                  </div>
                   <SearchAndPagination
                     searchQuery={searchQuery}
                     onSearchChange={setSearchQuery}
