@@ -98,7 +98,7 @@ export default function Topics() {
   const navItems = getNavItems();
 
   return (
-    <div className="min-h-screen relative">
+    <div className="h-screen relative bg flex flex-col overflow-hidden">
       {/* CSS Animations */}
       <style>{`
         @keyframes slideUpFade {
@@ -111,6 +111,29 @@ export default function Topics() {
             opacity: 1;
           }
         }
+        
+        /* Themed scrollbar for topics list */
+        .topics-scrollable {
+          scrollbar-width: thin;
+          scrollbar-color: #9a674a #f5e3bb;
+        }
+        
+        .topics-scrollable::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        .topics-scrollable::-webkit-scrollbar-track {
+          background: #f5e3bb;
+        }
+        
+        .topics-scrollable::-webkit-scrollbar-thumb {
+          background: #9a674a;
+          border-radius: 4px;
+        }
+        
+        .topics-scrollable::-webkit-scrollbar-thumb:hover {
+          background: #7d5439;
+        }
       `}</style>
 
       <AnimatedBackground />
@@ -118,7 +141,7 @@ export default function Topics() {
       <div className="bg-background/20 backdrop-blur-md inset-0 absolute" />
 
       {/* Medium-style Sticky Navbar - Full Width */}
-      <nav className="sticky top-0 z-[500] bg-background border-b border-border">
+      <nav className="sticky top-0 z-20 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
             {/* Left: Logo and Menu */}
@@ -129,7 +152,7 @@ export default function Topics() {
                   onOpenChange={setIsDrawerOpen}
                 />
               </div>
-              <Logo className="h-6" />
+              <Logo className="h-4" />
 
               {/* Desktop Menu Dropdown */}
               <div className="hidden md:block relative">
@@ -210,12 +233,12 @@ export default function Topics() {
       </nav>
 
       {/* Main Content Panel - Split Layout */}
-      <div className="flex justify-center relative z-10">
-        <div className="w-full max-w-4xl">
+      <div className="flex-1 flex justify-center relative z-10 h-full  overflow-y-auto topics-scrollable">
+        <div className="w-full max-w-4xl flex flex-col overflow-y-scroll no-scrollbar">
           {/* Mobile: Single Panel Layout */}
           <div className="md:hidden w-full">
             {/* Mobile Search Bar */}
-            <div className="sticky top-14 z-10 bg-background border-b border-border px-4 py-3">
+            <div className="sticky top-0   z-10 bg-background border-b border-border px-4 py-2">
               <SearchAndPagination
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
@@ -226,12 +249,12 @@ export default function Topics() {
             </div>
 
             {/* Mobile Scrollable Content Area */}
-            <div className="px-4 py-6">
+            <div className="flex-1 px-4 py-6 h-full overflow-y-auto no-scrollbar">
               <div>
                 {/* Loading State */}
                 {loading && (
                   <div className="pb-20">
-                    <TopicGridSkeleton count={8} viewMode="list" />
+                    <TopicGridSkeleton count={8} viewMode="grid" />
                   </div>
                 )}
 
@@ -283,9 +306,9 @@ export default function Topics() {
           </div>
 
           {/* Desktop: Grid Layout */}
-          <div className="hidden md:block px-6 lg:px-8 py-8">
+          <div className="hidden md:block flex-1 overflow-y-auto no-scrollbar px-6 lg:px-8 py-8 ">
             {/* Loading State */}
-            {loading && <TopicGridSkeleton count={8} viewMode="list" />}
+            {loading && <TopicGridSkeleton count={8} viewMode="grid" />}
 
             {/* Error State */}
             {error && !loading && (

@@ -188,7 +188,7 @@ export const TopicGridSkeleton: React.FC<TopicGridSkeletonProps> = ({
         <div
           className={`${
             viewMode === "grid"
-              ? "w-3/4 m-auto grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 auto-rows-fr"
+              ? "grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto"
               : "space-y-3"
           }`}
         >
@@ -200,7 +200,7 @@ export const TopicGridSkeleton: React.FC<TopicGridSkeletonProps> = ({
 
       {/* Mobile: Vertical Grid Layout */}
       <div className="md:hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 w-full">
+        <div className="grid grid-cols-1 gap-6 max-w-xl mx-auto px-4">
           {Array.from({ length: count }).map((_, index) => (
             <TopicCardSkeleton key={`mobile-${index}`} viewMode="grid" />
           ))}

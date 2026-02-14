@@ -1,17 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import NextImage from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
-import { BottomNavigation } from "@/components/BottomNavigation";
-import { NavigationDrawer } from "@/components/NavigationDrawer";
-import { ArrowLeft, LogIn, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/Logo";
@@ -25,7 +19,6 @@ export default function Login() {
   const router = useRouter();
   const { toast } = useToast();
   const { login } = useAuth();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -101,209 +94,230 @@ export default function Login() {
 
   return (
     <>
-      {/* Custom CSS for inset game-like inputs */}
+      {/* Medium-style floating label inputs */}
       <style>{`
-        .game-input-inset {
-          box-shadow: 
-            inset 3px 3px 8px rgba(0, 0, 0, 0.15),
-            inset -1px -1px 3px rgba(255, 255, 255, 0.2),
-            0 1px 0 rgba(255, 255, 255, 0.3);
-          background: linear-gradient(145deg, hsl(39 84% 90%), hsl(39 84% 94%));
-          border: 2px solid hsl(32 47% 65%);
+        /* Field container */
+        .field-footprint {
           position: relative;
+          border: 1px solid #d4a574;
+          border-radius: 9999px;
+          background: #faeed1;
+          transition: all 0.2s ease;
         }
         
-        .game-input-inset:focus {
-          box-shadow: 
-            inset 4px 4px 10px rgba(0, 0, 0, 0.2),
-            inset -2px -2px 5px rgba(255, 255, 255, 0.2),
-            0 0 0 3px hsl(25 35% 44% / 0.3);
-          background: linear-gradient(145deg, hsl(39 84% 88%), hsl(39 84% 92%));
-          border-color: hsl(25 35% 44%);
+        .field-footprint:hover {
+          border-color: #b8845f;
         }
         
-        .game-input-inset:hover {
-          box-shadow: 
-            inset 3px 3px 8px rgba(0, 0, 0, 0.18),
-            inset -1px -1px 3px rgba(255, 255, 255, 0.25),
-            0 1px 0 rgba(255, 255, 255, 0.3);
-          background: linear-gradient(145deg, hsl(39 84% 89%), hsl(39 84% 93%));
+        .field-footprint:focus-within {
+          border-color: #9a674a;
+          box-shadow: 0 0 0 1px #9a674a;
         }
         
-        /* Dark mode styles - using your cream & brown theme */
-        .dark .game-input-inset {
-          box-shadow: 
-            inset 3px 3px 8px rgba(0, 0, 0, 0.5),
-            inset -1px -1px 3px rgba(255, 255, 255, 0.03),
-            0 1px 0 rgba(255, 255, 255, 0.05);
-          background: linear-gradient(145deg, hsl(30 12% 20%), hsl(30 12% 25%));
-          border-color: hsl(30 12% 25%);
+        /* Label styling */
+        .typeable-label {
+          position: absolute;
+          left: 0.75rem;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 1;
         }
         
-        .dark .game-input-inset:focus {
-          box-shadow: 
-            inset 4px 4px 10px rgba(0, 0, 0, 0.6),
-            inset -2px -2px 5px rgba(255, 255, 255, 0.04),
-            0 0 0 3px hsl(25 35% 44% / 0.4);
-          background: linear-gradient(145deg, hsl(30 12% 18%), hsl(30 12% 23%));
-          border-color: hsl(25 35% 44%);
+        .label-text {
+          color: #5c3d2a;
+          font-size: 1rem;
+          line-height: 1;
+          background: #faeed1;
+          padding: 0 0.25rem;
         }
         
-        .dark .game-input-inset:hover {
-          box-shadow: 
-            inset 3px 3px 8px rgba(0, 0, 0, 0.55),
-            inset -1px -1px 3px rgba(255, 255, 255, 0.05),
-            0 1px 0 rgba(255, 255, 255, 0.06);
-          background: linear-gradient(145deg, hsl(30 12% 21%), hsl(30 12% 26%));
+        /* Floating state - label moves to sit ON the border */
+        .field-footprint.has-value .typeable-label,
+        .field-footprint:focus-within .typeable-label {
+          top: 0;
+          transform: translateY(-50%);
         }
         
-        /* Placeholder styling for game inputs */
-        .game-input-inset::placeholder {
-          color: hsl(30 12% 50%);
-          text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.2);
+        .field-footprint.has-value .label-text,
+        .field-footprint:focus-within .label-text {
+          font-size: 0.75rem;
+          color: #9a674a;
         }
         
-        .dark .game-input-inset::placeholder {
-          color: hsl(0 0% 65%);
-          text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+        /* Input styling */
+        .field-input {
+          width: 100%;
+          padding: 1.125rem 1rem 0.625rem 1rem;
+          border: none;
+          background: transparent;
+          font-size: 1rem;
+          color: #1c1917;
+          outline: none;
         }
         
-        /* Text color matching your theme */
-        .game-input-inset {
-          color: hsl(30 12% 12%);
+        .field-input::placeholder {
+          opacity: 0;
         }
         
-        .dark .game-input-inset {
-          color: hsl(0 0% 95%);
+        /* End decoration (for password toggle) */
+        .end-decoration {
+          position: absolute;
+          right: 0;
+          top: 0;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 1rem;
+          pointer-events: all;
+          z-index: 2;
         }
         
-        /* Add a subtle pressed effect when typing */
-        .game-input-inset:focus:active {
-          transform: translateY(1px);
+        .toggle-button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0.25rem;
+          color: #5c3d2a;
+          transition: color 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .toggle-button:hover {
+          color: #9a674a;
         }
       `}</style>
 
-      <div className="h-screen overflow-hidden relative">
+      <div className="min-h-screen bg-background relative flex flex-col">
         <AnimatedBackground />
-        <div className="inset-0 absolute bg-primary/5 backdrop-blur-sm" />
-        {/* Mobile Navigation Drawer */}
-        <div className="md:hidden p-6 pb-2 relative z-10 flex justify-between items-center">
-          <NavigationDrawer
-            isOpen={isDrawerOpen}
-            onOpenChange={setIsDrawerOpen}
-          />
-          <Logo />
-        </div>
+        <div className="inset-0 absolute bg-background/90" />
 
         {/* Main Content */}
-        <div className="flex justify-center items-center h-full p-3 pt-0 md:pt-6 relative z-10">
-          <div className="w-full max-w-md flex items-center">
-            <Card className="w-full bg-background/20 backdrop-blur-sm border-border">
-              <CardHeader className="border-b border-border text-center">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center shadow-lg">
-                    <NextImage
-                      alt="appicon"
-                      src="/mabcs.png"
-                      width={64}
-                      height={64}
-                      className="text-primary-foreground"
-                    />
-                  </div>
+        <div className="flex-1 flex flex-col items-center justify-center p-6 relative z-10">
+          <div className="w-full max-w-md">
+            {/* Logo */}
+            <div className="text-center mb-8">
+              <Logo className="h-8 mx-auto mb-6" />
+              <h1 className="text-3xl font-semibold text-foreground mb-2">
+                Welcome back
+              </h1>
+              <p className="text-muted-foreground text-sm">
+                Sign in to manage biblical topics and content
+              </p>
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Username Field */}
+              <div
+                className={`field-footprint ${
+                  formData.username ? "has-value" : ""
+                }`}
+              >
+                <label htmlFor="username" className="typeable-label">
+                  <div className="label-text">Username</div>
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) =>
+                    handleInputChange("username", e.target.value)
+                  }
+                  placeholder="Username"
+                  className="field-input"
+                  required
+                  autoComplete="username"
+                />
+              </div>
+
+              {/* Password Field */}
+              <div
+                className={`field-footprint ${
+                  formData.password ? "has-value" : ""
+                }`}
+              >
+                <label htmlFor="password" className="typeable-label">
+                  <div className="label-text">Password</div>
+                </label>
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) =>
+                    handleInputChange("password", e.target.value)
+                  }
+                  placeholder="Password"
+                  className="field-input pr-12"
+                  required
+                  autoComplete="current-password"
+                />
+                <div className="end-decoration">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="toggle-button"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
-                <CardTitle className="text-foreground text-2xl">
-                  Admin Login
-                </CardTitle>
-                <p className="text-muted-foreground text-sm mt-2">
-                  Sign in to manage topics and content
-                </p>
-              </CardHeader>
+              </div>
 
-              <CardContent className="p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Username */}
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="username"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Username
-                    </Label>
-                    <Input
-                      id="username"
-                      type="text"
-                      value={formData.username}
-                      onChange={(e) => {
-                        e.preventDefault();
-                        handleInputChange("username", e.target.value);
-                      }}
-                      placeholder="Enter your username..."
-                      className="bg-cream-200  rounded-full h-11 px-4 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:bg-cream-100 focus-visible:ring-offset-0"
-                      required
-                      autoComplete="username"
-                    />
-                  </div>
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-foreground hover:bg-foreground/90 text-background py-6 text-base font-medium rounded-full"
+              >
+                {isSubmitting ? "Signing in..." : "Continue"}
+              </Button>
 
-                  {/* Password */}
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="password"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Password
-                    </Label>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        value={formData.password}
-                        onChange={(e) =>
-                          handleInputChange("password", e.target.value)
-                        }
-                        placeholder="Enter your password..."
-                        className=" bg-muted  border-none rounded-full h-11 px-4 pr-12 text-base font-medium transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:bg-cream-100"
-                        required
-                        autoComplete="current-password"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent hover:scale-110 transition-transform duration-200"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
+              {/* Divider */}
+              <div className="flex items-center gap-4 my-6">
+                <div className="flex-1 h-px bg-border"></div>
+                <span className="text-muted-foreground text-sm">OR</span>
+                <div className="flex-1 h-px bg-border"></div>
+              </div>
 
-                  {/* Submit Button */}
-                  <div className="flex items-center gap-4">
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-[40%] bg-primary hover:bg-accent text-primary-foreground py-3"
-                    >
-                      <span>{isSubmitting ? "Signing in..." : "Sign In"}</span>
-                    </Button>
+              {/* Back to Topics Button */}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.push("/topics")}
+                className="w-full rounded-full py-6 text-base font-medium  border-border hover:bg-muted hover:text-text"
+              >
+                Back to Topics
+              </Button>
+            </form>
 
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => router.push("/topics")}
-                      className="w-[40%] hover:bg-primary/20 flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                      Topics
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
+            {/* Footer Links */}
+            <div className="mt-8 text-center">
+              <p className="text-xs text-muted-foreground">
+                <a
+                  href="/topics"
+                  className="hover:text-foreground transition-colors"
+                >
+                  Terms of Use
+                </a>
+                <span className="mx-2">•</span>
+                <a
+                  href="/topics"
+                  className="hover:text-foreground transition-colors"
+                >
+                  Privacy Policy
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>

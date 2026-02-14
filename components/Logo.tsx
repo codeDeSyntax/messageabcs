@@ -21,8 +21,8 @@ export const Logo = ({ variant = "default", className = "" }: LogoProps) => {
         <Image
           src="/mabcs.png"
           alt="Message ABCs Logo"
-          width={32}
-          height={32}
+          width={20}
+          height={20}
           className="rounded-md"
         />
         <div className="h-8 w-px bg-primary/30" />
@@ -39,20 +39,23 @@ export const Logo = ({ variant = "default", className = "" }: LogoProps) => {
   }
 
   return (
-    <div className={`flex items-center gap-2 cursor-pointer ${className}`}  onClick={handleClick}>
+    <div
+      className={`flex items-center gap-2 cursor-pointer ${className}`}
+      onClick={handleClick}
+    >
       <Image
         src="/mabcs.png"
         alt="Message ABCs Logo"
-        width={40}
-        height={40}
+        width={20}
+        height={20}
         className="rounded-md"
       />
       <div className="h-10 w-px bg-primary/30" />
       <div className="flex flex-col leading-none -space-y-1">
-        <span className="text-base md:text-lg font-bold tracking-tight uppercase text-primary transition-colors duration-300">
+        <span className="text-base md:text-sm font-bold tracking-tight uppercase text-primary transition-colors duration-300">
           MESSAGE
         </span>
-        <span className="text-base md:text-lg font-bold tracking-tight uppercase text-foreground transition-colors duration-300">
+        <span className="text-base md:text-sm font-bold tracking-tight uppercase text-foreground transition-colors duration-300">
           ABCS
         </span>
       </div>
