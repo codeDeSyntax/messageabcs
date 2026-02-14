@@ -6,7 +6,7 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { useEffect, useRef, useState } from "react";
 
 export function FloatingWhatsApp() {
-  const phoneNumber = "+233241210004"; // same number as BottomNavigation
+  const phoneNumber = "+233549828492"; // same number as BottomNavigation
   const defaultMessage =
     "Hi! I'm interested in learning more about MessageABCS. I found you through your app.";
 
