@@ -5,6 +5,7 @@ import { Mona_Sans } from "next/font/google";
 import { ClientProviders } from "@/components/ClientProviders";
 import { WebsiteStructuredData } from "@/components/StructuredData";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { Analytics } from "@vercel/analytics/next";
 
 // Import Mona Sans font from Google Fonts
 const monaSans = Mona_Sans({
@@ -71,6 +72,7 @@ export default function RootLayout({
         <WebsiteStructuredData />
         <ClientProviders>{children}</ClientProviders>
         <FloatingWhatsApp />
+        <Analytics />
       </body>
     </html>
   );
