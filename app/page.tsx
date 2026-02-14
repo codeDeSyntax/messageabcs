@@ -292,7 +292,7 @@ export default function Home() {
                     opacity: 0,
                   }}
                 >
-                  EQUALS KNOWING THE TRUTH.
+                  IMPLIES KNOWING THE TRUTH.
                 </p>
               </div>
 

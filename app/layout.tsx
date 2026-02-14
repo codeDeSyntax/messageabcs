@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     siteName: "MessageABCs",
     images: [
       {
-        url: "https://messageabcs.vercel.app/mabcs.png",
+        url: "https://messageabcs.vercel.app/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "MessageABCs - Biblical Truth & Wisdom",
