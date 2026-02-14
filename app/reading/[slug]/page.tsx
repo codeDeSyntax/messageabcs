@@ -59,10 +59,8 @@ export async function generateMetadata({
     topic.mainExtract?.substring(0, 160) ||
     "Discover biblical truth and wisdom.";
 
-  // Use topic image if available, otherwise use site preview image (not icon)
-  const imageUrl = topic.image?.startsWith("http")
-    ? topic.image
-    : `https://messageabcs.vercel.app/og-image.jpg`;
+  // Always use the site preview image for consistent branding
+  const imageUrl = "https://messageabcs.vercel.app/og-image.jpg";
 
   return {
     title,
@@ -78,7 +76,7 @@ export async function generateMetadata({
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: topic.title,
+          alt: "MessageABCs - Biblical Truth & Wisdom",
         },
       ],
     },

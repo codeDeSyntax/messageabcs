@@ -1,7 +1,7 @@
 import "./globals.css";
 import "../styles/game-ui.css";
 import type { Metadata } from "next";
-import { Mona_Sans } from "next/font/google";
+import { Mona_Sans, Source_Serif_4 } from "next/font/google";
 import { ClientProviders } from "@/components/ClientProviders";
 import { WebsiteStructuredData } from "@/components/StructuredData";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
@@ -28,6 +28,13 @@ const monaSans = Mona_Sans({
     "Segoe UI Symbol",
     "Noto Color Emoji",
   ],
+});
+
+// Import Source Serif 4 font for reading content
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-source-serif",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -67,7 +74,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${monaSans.variable} font-sans bg-background text-foreground transition-colors duration-300`}
+        className={`${monaSans.variable} ${sourceSerif.variable} font-sans bg-background text-foreground transition-colors duration-300`}
       >
         <WebsiteStructuredData />
         <ClientProviders>{children}</ClientProviders>

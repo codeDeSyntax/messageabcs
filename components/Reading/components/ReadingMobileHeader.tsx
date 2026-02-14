@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ArrowBigLeft, ArrowLeft, Share2 } from "lucide-react";
+import { ArrowLeft, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BiblicalTopic } from "@/services/api";
 
@@ -19,60 +18,37 @@ export const ReadingMobileHeader = ({
   const router = useRouter();
 
   return (
-    <div className="md:hidden relative z-10 border-b border-border">
-      {/* Background Image Container */}
-      {currentTopic && (
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${currentTopic.image || "/placeholder.svg"})`,
-          }}
-        >
-          {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-primary/40"></div>
-        </div>
-      )}
-
-      <div className="relative w-full flex items-center justify-around px-4 py-3">
+    <header
+      className="md:hidden sticky top-0 z-[500] bg-background/95 backdrop-blur-md border-b border-border/50 transition-all duration-200"
+      style={{ height: "56px" }}
+    >
+      <div className="h-full flex items-center justify-between px-4 max-w-7xl mx-auto">
         {/* Back Button */}
-        <Button
+        <button
           onClick={() => router.push("/topics")}
-          variant="ghost"
-          size="sm"
-          className="p-2 hover:bg-primary-foreground/20 rounded-full backdrop-blur-sm border border-white/50"
+          className="flex items-center justify-center w-9 h-9 hover:bg-muted rounded-full transition-colors duration-200"
+          aria-label="Back to topics"
         >
-          <ArrowBigLeft className="h-5 w-5 text-white" />
-        </Button>
+          <ArrowLeft className="h-5 w-5 text-foreground" />
+        </button>
 
-        {/* Title with Background Image */}
-        {currentTopic && (
-          <div className="fle w-[80%] text-center px-4">
-            <span className="text-sm line-clamp-1 truncate font-medium text-white/80 drop-shadow-lg">
-              {currentTopic.title}
-            </span>
-          </div>
-        )}
+        {/* Spacer */}
+        <div className="flex-1" />
 
-        {/* Settings/Share Button */}
-        <Button
+        {/* Share Button */}
+        <button
           onClick={onShare}
           disabled={isGeneratingShareCard}
-          variant="ghost"
-          size="sm"
-          className="p-2 hover:bg-primary-foreground/20 rounded-full backdrop-blur-sm border border-primary-foreground/20 disabled:opacity-50"
-          title={
-            isGeneratingShareCard
-              ? "Generating share card..."
-              : "Share this topic"
-          }
+          className="flex items-center justify-center w-9 h-9 hover:bg-muted rounded-full transition-colors duration-200 disabled:opacity-50"
+          aria-label="Share this topic"
         >
           {isGeneratingShareCard ? (
-            <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
           ) : (
-            <Share2 className="h-5 w-5 text-white" />
+            <Share2 className="h-5 w-5 text-foreground" />
           )}
-        </Button>
+        </button>
       </div>
-    </div>
+    </header>
   );
 };

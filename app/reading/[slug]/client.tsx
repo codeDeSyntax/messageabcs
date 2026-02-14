@@ -46,7 +46,7 @@ export default function ReadingTopicClient({
     if (
       currentTopic &&
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-        slug
+        slug,
       )
     ) {
       const topicSlug = generateSlug(currentTopic.title);
@@ -91,7 +91,7 @@ export default function ReadingTopicClient({
 
       {/* Main Book Content */}
       <div className="flex justify-center h-full relative z-10">
-        <div className="w-full max-w-7xl h-full">
+        <div className="w-full max-w-3xl h-full">
           <ReadingContent
             currentTopic={currentTopic}
             isGeneratingShareCard={isGeneratingShareCard}

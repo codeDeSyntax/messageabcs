@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Share2, Quote } from "lucide-react";
+import { Share2, Quote, Megaphone } from "lucide-react";
 import { NavigationDrawer } from "@/components/NavigationDrawer";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { BiblicalTopic } from "@/services/api";
+import { OtherTopics } from "./OtherTopics";
 
 interface ReadingContentProps {
   currentTopic: BiblicalTopic;
@@ -29,20 +30,23 @@ export const ReadingContent = ({
             <div className="flex h-full">
               {/* Main Reading Content */}
               <div className="flex-1 flex flex-col h-full bg-background/60 rounded-lg overflow-hidden">
-                {/* Fixed Header with Background Image (Mobile + Desktop) */}
+                {/* Fixed Header with Title (Mobile + Desktop) */}
                 <div className="relative flex-shrink-0 border-b border-border">
-                  {/* Mobile Header */}
-                  <div className="md:hidden relative h-32 w-full overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center px-3 ">
-                      <div className="text-center">
-                        <h1 className="text-[1.3rem] line-clamp-3 font-bold text-foreground mb-2 drop-shadow-lg leading-6">
-                          {currentTopic.title}
-                        </h1>
-                        {currentTopic.subtitle && (
-                          <mark className="text-sm bg-foreground text-background rounded-br-2xl px-3 font-medium drop-shadow-md">
-                            {currentTopic.subtitle}
-                          </mark>
-                        )}
+                  {/* Mobile Header - Compact */}
+                  <div className="md:hidden relative h-16 w-full overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center px-4">
+                      <div className="text-center flex items-center gap-2">
+                        <Megaphone className="h-4 w-4 text-primary flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <h1 className="text-base line-clamp-1 font-semibold text-foreground leading-tight">
+                            {currentTopic.title}
+                          </h1>
+                          {currentTopic.subtitle && (
+                            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                              {currentTopic.subtitle}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -55,12 +59,7 @@ export const ReadingContent = ({
                     {currentTopic.mainExtract && (
                       <div className="prose prose-lg max-w-none mb-8">
                         <div
-                          className="text-foreground text-xl md:text-xl text-center leading-tight break-words"
-                          style={{
-                            fontFamily: "'Crimson Pro', Georgia, serif",
-                            // lineHeight: "1.2",
-                            // fontSize: "18px",
-                          }}
+                          className="reading-content text-foreground text-xl md:text-xl leading-tight break-words"
                           dangerouslySetInnerHTML={{
                             __html: currentTopic.mainExtract,
                           }}
@@ -87,6 +86,9 @@ export const ReadingContent = ({
                         ))}
                       </div>
                     )}
+
+                    {/* Other Topics Section */}
+                    <OtherTopics currentTopicId={currentTopic.id} />
 
                     {/* Share Button */}
                     <div className="mt-12 text-center pb-40">

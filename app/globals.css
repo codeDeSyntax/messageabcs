@@ -223,3 +223,11 @@ select {
 .ProseMirror.whitespace-pre-wrap {
   white-space: pre-wrap !important;
 }
+
+/* Reading content font override */
+.reading-content,
+.reading-content * {
+  font-family:
+    var(--font-source-serif), Georgia, Cambria, "Times New Roman", Times, serif !important;
+  text-align: left !important;
+}
