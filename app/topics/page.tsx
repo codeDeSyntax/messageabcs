@@ -84,7 +84,7 @@ export default function Topics() {
                   onOpenChange={setIsDrawerOpen}
                 />
               </div>
-              <Logo className="h-4" />
+              <Logo />
             </div>
 
             {/* Center: Search Bar (Desktop) */}

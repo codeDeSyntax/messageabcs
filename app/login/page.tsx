@@ -1,11 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { AnimatedBackground } from "@/components/AnimatedBackground";
-import { Eye, EyeOff } from "lucide-react";
+import { HomeArtBackground } from "@/components/HomeArtBackground";
+import { Eye, EyeOff, ArrowLeft, Lock, User, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/Logo";
@@ -29,7 +28,7 @@ export default function Login() {
   });
 
   useEffect(() => {
-    document.title = "Admin Login - MessageABCs";
+    document.title = "Admin Sign In - MessageABCs";
   }, []);
 
   const handleInputChange = (field: keyof LoginForm, value: string) => {
@@ -67,16 +66,16 @@ export default function Login() {
 
       if (success) {
         toast({
-          title: "Welcome!",
-          description: "Login successful",
+          title: "Welcome Back!",
+          description: "Sign in successful",
         });
 
-        // Redirect to admin dashboard or topics page
-        router.push("/topics");
+        // Redirect to admin dashboard
+        router.push("/admin");
       } else {
         toast({
-          title: "Login Failed",
-          description: "Invalid credentials",
+          title: "Authentication Failed",
+          description: "Invalid username or password",
           variant: "destructive",
         });
       }
@@ -93,133 +92,54 @@ export default function Login() {
   };
 
   return (
-    <>
-      {/* Medium-style floating label inputs */}
-      <style>{`
-        /* Field container */
-        .field-footprint {
-          position: relative;
-          border: 1px solid var(--theme-border, #d4a574);
-          border-radius: 9999px;
-          background: var(--theme-canvas, #faeed1);
-          transition: all 0.2s ease;
-        }
-        
-        .field-footprint:hover {
-          border-color: var(--theme-secondary, #b8845f);
-        }
-        
-        .field-footprint:focus-within {
-          border-color: var(--theme-primary, #9a674a);
-          box-shadow: 0 0 0 1px var(--theme-primary, #9a674a);
-        }
-        
-        /* Label styling */
-        .typeable-label {
-          position: absolute;
-          left: 0.75rem;
-          top: 50%;
-          transform: translateY(-50%);
-          pointer-events: none;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-          z-index: 1;
-        }
-        
-        .label-text {
-          color: var(--theme-text-secondary, #5c3d2a);
-          font-size: 1rem;
-          line-height: 1;
-          background: var(--theme-canvas, #faeed1);
-          padding: 0 0.25rem;
-        }
-        
-        /* Floating state - label moves to sit ON the border */
-        .field-footprint.has-value .typeable-label,
-        .field-footprint:focus-within .typeable-label {
-          top: 0;
-          transform: translateY(-50%);
-        }
-        
-        .field-footprint.has-value .label-text,
-        .field-footprint:focus-within .label-text {
-          font-size: 0.75rem;
-          color: var(--theme-primary, #9a674a);
-        }
-        
-        /* Input styling */
-        .field-input {
-          width: 100%;
-          padding: 1.125rem 1rem 0.625rem 1rem;
-          border: none;
-          background: transparent;
-          font-size: 1rem;
-          color: var(--theme-text-primary, #1c1917);
-          outline: none;
-        }
-        
-        .field-input::placeholder {
-          opacity: 0;
-        }
-        
-        /* End decoration (for password toggle) */
-        .end-decoration {
-          position: absolute;
-          right: 0;
-          top: 0;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          padding: 0 1rem;
-          pointer-events: all;
-          z-index: 2;
-        }
-        
-        .toggle-button {
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 0.25rem;
-          color: var(--theme-text-secondary, #5c3d2a);
-          transition: color 0.2s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .toggle-button:hover {
-          color: var(--theme-primary, #9a674a);
-        }
-      `}</style>
+    <div className="min-h-screen bg-[var(--theme-canvas)] relative flex flex-col justify-between overflow-x-hidden selection:bg-primary/20 selection:text-primary">
+      {/* Background artwork */}
+      <HomeArtBackground />
 
-      <div className="min-h-screen bg-background relative flex flex-col">
-        <AnimatedBackground />
-        <div className="inset-0 absolute bg-background/90" />
+      {/* Top Bar with Back Navigation */}
+      <header className="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-border/60 transition-all font-sans"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>Back to Home</span>
+        </button>
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col items-center justify-center p-6 relative z-10">
-          <div className="w-full max-w-md">
-            {/* Logo */}
-            <div className="text-center mb-8">
-              <Logo className="h-8 mx-auto mb-6" />
-              <h1 className="text-3xl font-semibold text-foreground mb-2">
-                Welcome back
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                Sign in to manage biblical topics and content
-              </p>
+        <Logo />
+      </header>
+
+      {/* Main Centered Frameless Sign-In Area */}
+      <main className="relative z-20 flex-1 flex items-center justify-center px-4 py-8 sm:py-16">
+        <div className="w-full max-w-sm space-y-8 text-center sm:text-left">
+          {/* Header */}
+          <div className="space-y-2 text-center">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wider uppercase font-sans">
+              <Lock className="h-3 w-3" />
+              <span>Admin Console</span>
             </div>
 
-            {/* Login Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Username Field */}
-              <div
-                className={`field-footprint ${
-                  formData.username ? "has-value" : ""
-                }`}
+            <h1 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-foreground">
+              Sign in
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground font-sans max-w-xs mx-auto">
+              Enter your credentials to manage scripture topics, questions, and outlines.
+            </p>
+          </div>
+
+          {/* Form Sitting Directly on Background */}
+          <form onSubmit={handleSubmit} className="space-y-4 text-left">
+            {/* Username Field */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="username"
+                className="block text-xs font-semibold text-foreground font-sans"
               >
-                <label htmlFor="username" className="typeable-label">
-                  <div className="label-text">Username</div>
-                </label>
+                Username
+              </label>
+              <div className="relative">
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
                 <input
                   id="username"
                   type="text"
@@ -227,22 +147,24 @@ export default function Login() {
                   onChange={(e) =>
                     handleInputChange("username", e.target.value)
                   }
-                  placeholder="Username"
-                  className="field-input"
+                  placeholder="Enter username"
+                  className="w-full h-11 pl-10 pr-4 rounded-xl bg-background/70 backdrop-blur-xs border border-border/80 shadow-2xs text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all font-sans"
                   required
                   autoComplete="username"
                 />
               </div>
+            </div>
 
-              {/* Password Field */}
-              <div
-                className={`field-footprint ${
-                  formData.password ? "has-value" : ""
-                }`}
+            {/* Password Field */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="password"
+                className="block text-xs font-semibold text-foreground font-sans"
               >
-                <label htmlFor="password" className="typeable-label">
-                  <div className="label-text">Password</div>
-                </label>
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -250,77 +172,66 @@ export default function Login() {
                   onChange={(e) =>
                     handleInputChange("password", e.target.value)
                   }
-                  placeholder="Password"
-                  className="field-input pr-12"
+                  placeholder="Enter password"
+                  className="w-full h-11 pl-10 pr-11 rounded-xl bg-background/70 backdrop-blur-xs border border-border/80 shadow-2xs text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all font-sans"
                   required
                   autoComplete="current-password"
                 />
-                <div className="end-decoration">
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="toggle-button"
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-foreground p-1 transition-colors"
+                  aria-label={
+                    showPassword ? "Hide password" : "Show password"
+                  }
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
               </div>
+            </div>
 
-              {/* Submit Button */}
+            {/* Submit Action */}
+            <div className="pt-2">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-foreground hover:bg-foreground/90 text-background py-6 text-base font-medium rounded-full"
+                className="w-full h-11 rounded-xl bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-xs sm:text-sm shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2"
               >
-                {isSubmitting ? "Signing in..." : "Continue"}
+                {isSubmitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                    <span>Signing in...</span>
+                  </>
+                ) : (
+                  <span>Continue to Admin Console</span>
+                )}
               </Button>
-
-              {/* Divider */}
-              <div className="flex items-center gap-4 my-6">
-                <div className="flex-1 h-px bg-border"></div>
-                <span className="text-muted-foreground text-sm">OR</span>
-                <div className="flex-1 h-px bg-border"></div>
-              </div>
-
-              {/* Back to Topics Button */}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push("/topics")}
-                className="w-full rounded-full py-6 text-base font-medium  border-border hover:bg-muted hover:text-text"
-              >
-                Back to Topics
-              </Button>
-            </form>
-
-            {/* Footer Links */}
-            <div className="mt-8 text-center">
-              <p className="text-xs text-muted-foreground">
-                <a
-                  href="/topics"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Terms of Use
-                </a>
-                <span className="mx-2">•</span>
-                <a
-                  href="/topics"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Privacy Policy
-                </a>
-              </p>
             </div>
-          </div>
+
+            {/* Return / Public links */}
+            <div className="pt-4 text-center">
+              <button
+                type="button"
+                onClick={() => router.push("/topics")}
+                className="text-xs text-muted-foreground hover:text-foreground font-medium underline underline-offset-4 transition-colors font-sans"
+              >
+                Browse Public Studies & Topics
+              </button>
+            </div>
+          </form>
         </div>
-      </div>
-    </>
+      </main>
+
+      {/* Footer */}
+      <footer className="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 text-center text-xs text-muted-foreground font-sans">
+        <p className="text-[11px] text-muted-foreground/70">
+          MessageABCs &copy; {new Date().getFullYear()} &bull; Biblical Truth & Wisdom
+        </p>
+      </footer>
+    </div>
   );
 }

@@ -87,7 +87,7 @@ export default function Home() {
                   isHomePage={true}
                 />
               </div>
-              <Logo className="h-4" />
+              <Logo />
             </div>
 
             {/* Right: Direct Navigation & User Profile */}

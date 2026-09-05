@@ -1,8 +1,12 @@
 "use client";
 
-import { ArrowLeft, Share2 } from "lucide-react";
+import { ArrowLeft, Share2, Bookmark, Check, BookOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { BiblicalTopic } from "@/services/api";
+import { Logo } from "@/components/Logo";
+import { ProfileCard } from "@/components/ProfileCard";
+import { toast } from "sonner";
 
 interface ReadingDesktopHeaderProps {
   currentTopic: BiblicalTopic | null;
@@ -16,56 +20,70 @@ export const ReadingDesktopHeader = ({
   onShare,
 }: ReadingDesktopHeaderProps) => {
   const router = useRouter();
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setIsCopied(true);
+      toast.success("Reading link copied to clipboard!");
+      setTimeout(() => setIsCopied(false), 2000);
+    }
+  };
 
   return (
-    <header
-      className="hidden md:block sticky top-0 z-[500] bg-background/95 backdrop-blur-md border-b border-border/50 transition-all duration-200"
-      style={{ height: "64px" }}
-    >
-      <div className="h-full flex items-center justify-between px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Back Button */}
-        <button
-          onClick={() => router.push("/topics")}
-          className="flex items-center justify-center w-10 h-10 hover:bg-muted rounded-full transition-colors duration-200"
-          aria-label="Back to topics"
-        >
-          <ArrowLeft className="h-5 w-5 text-foreground" />
-        </button>
-
-        {/* Title Section */}
-        {currentTopic && (
-          <div className="flex-1 text-center px-8">
-            <h1 className="text-base lg:text-lg font-semibold text-foreground truncate">
-              {currentTopic.title}
-            </h1>
-            {currentTopic.subtitle && (
-              <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                {currentTopic.subtitle}
-              </p>
-            )}
+    <header className="hidden md:block sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border/70 transition-colors">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-14 gap-4 flex-nowrap">
+          {/* Left: Back Button & Brand Logo */}
+          <div className="flex items-center gap-3 shrink-0 flex-nowrap min-w-max">
+            <button
+              onClick={() => router.push("/topics")}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 border border-border/70 transition-all font-sans shrink-0 whitespace-nowrap"
+              aria-label="Back to Topics"
+            >
+              <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+              <span>Topics</span>
+            </button>
+            <span className="text-border shrink-0 select-none">|</span>
+            <Logo variant="compact" className="shrink-0" />
           </div>
-        )}
 
-        {/* Share Button */}
-        <button
-          onClick={onShare}
-          disabled={isGeneratingShareCard}
-          className="flex items-center gap-2 px-4 h-10 hover:bg-muted rounded-full transition-colors duration-200 disabled:opacity-50 text-sm font-medium text-foreground"
-          aria-label="Share this topic"
-        >
-          {isGeneratingShareCard ? (
-            <>
-              <div className="w-4 h-4 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
-              <span className="hidden lg:inline">Sharing...</span>
-            </>
-          ) : (
-            <>
-              <Share2 className="h-4 w-4" />
-              <span className="hidden lg:inline">Share</span>
-            </>
+          {/* Center: Truncated Topic Title */}
+          {currentTopic && (
+            <div className="flex flex-1 items-center justify-center min-w-0 px-4 text-center">
+              <span className="font-serif text-sm font-medium text-foreground truncate max-w-md">
+                {currentTopic.title}
+              </span>
+            </div>
           )}
-        </button>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2 shrink-0 flex-nowrap min-w-max">
+            {/* Share / Copy Link */}
+            <button
+              onClick={handleCopyLink}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-muted/40 hover:bg-muted/80 text-foreground border border-border/60 transition-all font-sans shrink-0 whitespace-nowrap"
+              title="Copy share link"
+            >
+              {isCopied ? (
+                <>
+                  <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Copied</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="h-3.5 w-3.5 shrink-0" />
+                  <span>Share</span>
+                </>
+              )}
+            </button>
+
+            <ProfileCard />
+          </div>
+        </div>
       </div>
     </header>
   );
 };
+

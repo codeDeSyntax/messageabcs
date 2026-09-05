@@ -7,53 +7,67 @@ interface LogoProps {
 }
 
 export const Logo = ({ variant = "default", className = "" }: LogoProps) => {
-  if (variant === "compact") {
-    return (
-      <Link
-        href="/"
-        className={`inline-flex items-center gap-1.5 sm:gap-2 group transition-opacity hover:opacity-90 ${className}`}
-      >
-        <div className="relative w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 rounded-md sm:rounded-lg overflow-hidden border border-border/80 shadow-2xs">
-          <Image
-            src="/mabcs.png"
-            alt="MessageABCs Logo"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="flex items-baseline gap-1 leading-none">
-          <span className="font-serif font-medium text-xs sm:text-sm text-foreground tracking-tight">
-            Message
-          </span>
-          <span className="hidden sm:inline font-sans font-medium text-[10.5px] sm:text-[11px] text-primary tracking-wide uppercase">
-            ABCs
-          </span>
-        </div>
-      </Link>
-    );
-  }
+  const isCompact = variant === "compact";
+  const imgDimension = isCompact ? 24 : 28;
+  const sizeClass = isCompact ? "w-6 h-6 min-w-6 min-h-6 max-w-6 max-h-6" : "w-7 h-7 min-w-7 min-h-7 max-w-7 max-h-7";
+  const textSizeClass = isCompact ? "text-sm" : "text-base";
+  const badgeSizeClass = isCompact ? "text-[10px]" : "text-xs";
+  const gapClass = isCompact ? "gap-2" : "gap-2.5";
 
   return (
     <Link
       href="/"
-      className={`inline-flex items-center gap-2 sm:gap-2.5 group transition-opacity hover:opacity-90 ${className}`}
+      className={`inline-flex flex-row items-center flex-nowrap shrink-0 whitespace-nowrap select-none group transition-opacity hover:opacity-90 ${gapClass} ${className}`}
+      style={{
+        display: "inline-flex",
+        flexDirection: "row",
+        alignItems: "center",
+        flexWrap: "nowrap",
+        whiteSpace: "nowrap",
+      }}
     >
-      <div className="relative w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 rounded-md sm:rounded-lg overflow-hidden border border-border/80 shadow-2xs group-hover:border-primary/40 transition-colors">
+      <div
+        className={`relative ${sizeClass} shrink-0 rounded-lg overflow-hidden border border-border/80 shadow-2xs group-hover:border-primary/40 transition-colors`}
+        style={{
+          flexShrink: 0,
+          width: `${imgDimension}px`,
+          height: `${imgDimension}px`,
+          minWidth: `${imgDimension}px`,
+          minHeight: `${imgDimension}px`,
+        }}
+      >
         <Image
           src="/mabcs.png"
           alt="MessageABCs Logo"
-          fill
-          className="object-cover"
+          width={imgDimension}
+          height={imgDimension}
+          priority
+          className="object-cover w-full h-full block"
         />
       </div>
-      <div className="flex items-baseline gap-1 leading-none select-none">
-        <span className="font-serif font-medium text-sm sm:text-[17px] text-foreground tracking-tight">
-          Message
-        </span>
-        <span className="hidden sm:inline font-sans font-medium text-xs sm:text-[13px] text-primary tracking-wider uppercase">
+      <span
+        className={`font-serif font-medium ${textSizeClass} text-foreground tracking-tight inline-flex flex-row items-baseline flex-nowrap shrink-0 whitespace-nowrap leading-none`}
+        style={{
+          display: "inline-flex",
+          flexDirection: "row",
+          alignItems: "baseline",
+          flexWrap: "nowrap",
+          whiteSpace: "nowrap",
+          flexShrink: 0,
+        }}
+      >
+        <span className="whitespace-nowrap shrink-0">Message</span>
+        <span
+          className={`font-sans font-bold ${badgeSizeClass} text-primary ml-1 tracking-wider uppercase inline-block whitespace-nowrap shrink-0`}
+          style={{
+            display: "inline-block",
+            whiteSpace: "nowrap",
+            flexShrink: 0,
+          }}
+        >
           ABCs
         </span>
-      </div>
+      </span>
     </Link>
   );
 };
