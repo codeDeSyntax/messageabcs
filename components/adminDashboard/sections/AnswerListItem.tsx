@@ -5,6 +5,7 @@ import {
   MessageSquare,
   CheckCircle,
   AlertCircle,
+  ChevronRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -26,119 +27,83 @@ interface AdminAnswer {
 interface AnswerListItemProps {
   answer: AdminAnswer;
   onClick: (answer: AdminAnswer) => void;
-  showDivider: boolean;
+  showDivider?: boolean;
 }
 
 const AnswerListItem: React.FC<AnswerListItemProps> = ({
   answer,
   onClick,
-  showDivider,
 }) => {
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "published":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "draft":
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
-      case "archived":
-        return <AlertCircle className="h-4 w-4 text-muted-foreground" />;
-      default:
-        return <CheckCircle className="h-4 w-4 text-muted-foreground" />;
-    }
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "published":
-        return (
-          <Badge
-            variant="outline"
-            className="bg-green-50 text-green-700 border-green-200"
-          >
-            Published
-          </Badge>
-        );
       case "draft":
         return (
-          <Badge
-            variant="outline"
-            className="bg-yellow-50 text-yellow-700 border-yellow-200"
-          >
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300/50">
             Draft
-          </Badge>
+          </span>
         );
       case "archived":
         return (
-          <Badge
-            variant="outline"
-            className="bg-gray-50 text-gray-700 border-gray-200"
-          >
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--theme-surface-subtle)] text-[var(--theme-text-secondary)]">
             Archived
-          </Badge>
+          </span>
         );
+      case "published":
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300/50">
+            Published
+          </span>
+        );
     }
   };
 
   return (
-    <div className="w-full">
-      <div
-        className="px-2 md:px-4 py-2 md:py-3 bg-primary/10 transition-all duration-200 rounded-lg cursor-pointer border border-primary/10"
-        onClick={() => onClick(answer)}
-      >
-        {/* Mobile Layout: Stack vertically */}
-        <div className="flex flex-col gap-2">
-          {/* Question Title */}
-          <div className="flex items-start gap-1.5">
-            <MessageSquare className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
-            <h4 className="text-xs md:text-xs font-medium text-muted-foreground flex-1">
-              Question: {answer.questionTitle}
-            </h4>
-          </div>
+    <div
+      className="px-4 py-2.5 hover:bg-[var(--theme-surface)]/60 transition-all duration-150 cursor-pointer rounded-xl group flex items-center justify-between gap-3"
+      onClick={() => onClick(answer)}
+    >
+      <div className="flex items-start gap-3 min-w-0 flex-1">
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-[var(--theme-surface-subtle)] text-[var(--theme-accent)] mt-0.5 group-hover:scale-105 transition-transform">
+          <MessageSquare className="h-4.5 w-4.5" />
+        </div>
 
-          {/* Answer Content Card */}
-          <div className="bg-primary/15 p-2 md:p-3 rounded-lg space-y-1.5">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                {getStatusIcon(answer.status)}
-                <span className="text-xs md:text-xs font-medium text-foreground">
-                  Answer
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-semibold text-[var(--theme-text-secondary)] uppercase tracking-wider line-clamp-1">
+            Re: {answer.questionTitle}
+          </p>
+          <h3 className="text-sm font-semibold text-[var(--theme-text-primary)] group-hover:text-[var(--theme-text-dark)] line-clamp-2 mt-0.5">
+            {answer.content}
+          </h3>
+
+          <div className="flex flex-wrap items-center gap-2 mt-0.5 text-xs text-[var(--theme-text-secondary)]">
+            <span className="flex items-center gap-1 font-medium">
+              <User className="h-3 w-3" />
+              {answer.answeredBy || "Official Staff"}
+            </span>
+            <span>•</span>
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {new Date(answer.answeredAt).toLocaleDateString()}
+            </span>
+            {answer.topicTitle && (
+              <>
+                <span>•</span>
+                <span className="text-[var(--theme-primary)] font-medium truncate max-w-[150px]">
+                  {answer.topicTitle}
                 </span>
-              </div>
-              {getStatusBadge(answer.status)}
-            </div>
-            <p className="text-sm md:text-sm text-foreground line-clamp-2 break-words">
-              {answer.content}
-            </p>
-          </div>
-
-          {/* Metadata - Compact on mobile */}
-          <div className="flex flex-wrap items-center gap-1.5 md:gap-2 text-xs md:text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <User className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate max-w-[100px] md:max-w-none">
-                {answer.answeredBy}
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3 flex-shrink-0" />
-              <span className="whitespace-nowrap">
-                {new Date(answer.answeredAt).toLocaleDateString()}
-              </span>
-            </div>
-            <Badge variant="outline" className="text-xs whitespace-nowrap">
-              {answer.topicTitle}
-            </Badge>
-            {answer.isOfficial && (
-              <Badge className="bg-primary text-primary-foreground text-xs">
-                Official
-              </Badge>
+              </>
             )}
           </div>
         </div>
       </div>
-      {showDivider && <div className="bg-primary/12 mt-2 mb-2 h-px"></div>}
+
+      <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+        {getStatusBadge(answer.status)}
+        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[var(--theme-text-secondary)]/60 group-hover:text-[var(--theme-text-primary)] transition-all">
+          <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </div>
+      </div>
     </div>
   );
 };

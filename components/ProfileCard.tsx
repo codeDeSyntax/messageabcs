@@ -1,17 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import NextImage from "next/image";
-import { Button } from "@/components/ui/button";
-import { LogIn, LogOut, User, ChevronDown } from "lucide-react";
+import Image from "next/image";
+import { LogIn, LogOut, LayoutDashboard, ChevronDown, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import {
-  GAME_BUTTON_VARIANTS,
-  GAME_SHINE_OVERLAY,
-  GAME_ROUNDED,
-  GAME_Z_INDEX,
-} from "@/constants/gameStyles";
 
 interface ProfileCardProps {
   className?: string;
@@ -24,8 +17,6 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [buttonPosition, setButtonPosition] = useState({ top: 0, right: 0 });
 
-  console.log("ProfileCard render - isAuthenticated:", isAuthenticated);
-
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -37,68 +28,64 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
   }, [isOpen]);
 
   const handleLogin = () => {
-    console.log("Login button clicked");
     router.push("/login");
   };
 
   const handleLogout = () => {
-    console.log("Logout clicked");
     logout();
     router.push("/");
     setIsOpen(false);
   };
 
   return (
-    <div className={`block relative ${className}`}>
+    <div className={`relative inline-flex items-center ${className}`}>
       {isAuthenticated ? (
-        <div className="relative">
-          {/* Profile Icon Trigger */}
-          <Button
-            ref={buttonRef}
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              console.log("Profile button clicked, isOpen:", !isOpen);
-              setIsOpen(!isOpen);
-            }}
-            className={`${GAME_BUTTON_VARIANTS.primary}  h-10 w-10 p-0 rounded-full`}
-          >
-            <div className={`${GAME_SHINE_OVERLAY} rounded-full`}></div>
-            <NextImage
-              className={` ${GAME_Z_INDEX.overlay} `}
+        <button
+          ref={buttonRef}
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2 px-2 py-1 rounded-full bg-muted/40 hover:bg-muted/70 border border-border/70 transition-all duration-150 cursor-pointer group"
+          title="Account Menu"
+        >
+          <div className="relative w-6 h-6 rounded-full overflow-hidden border border-border/80 flex-shrink-0">
+            <Image
               src="/mabcs.png"
               alt="Profile"
-              width={40}
-              height={40}
+              fill
+              className="object-cover"
             />
-          </Button>
-        </div>
+          </div>
+          <span className="hidden sm:inline text-xs font-medium text-foreground max-w-[100px] truncate">
+            {user?.username || "Admin"}
+          </span>
+          <ChevronDown className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors" />
+        </button>
       ) : (
-        <Button
-          variant="ghost"
-          size="sm"
+        <button
+          type="button"
           onClick={handleLogin}
-          className={`${GAME_BUTTON_VARIANTS.primary} bg-primary hover:bg-accent h-10 w-10 p-0 rounded-full`}
-          title="Admin Login"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 hover:bg-muted/70 border border-border/70 text-xs font-medium text-foreground transition-all duration-150 shadow-2xs group"
+          title="Admin Sign In"
         >
-          <div className={`${GAME_SHINE_OVERLAY} rounded-full`}></div>
-          <LogIn className={`h-5 w-5 ${GAME_Z_INDEX.overlay}`} />
-        </Button>
+          <LogIn className="h-3.5 w-3.5 text-primary group-hover:translate-x-0.5 transition-transform" />
+          <span className="hidden sm:inline">Sign in</span>
+        </button>
       )}
 
-      {/* Portal-based dropdown to avoid z-index issues */}
+      {/* Portal-based dropdown menu */}
       {isOpen &&
         createPortal(
           <>
-            {/* Overlay to catch outside clicks */}
+            {/* Backdrop overlay */}
             <div
               className="fixed inset-0"
               style={{ zIndex: 999998 }}
               onClick={() => setIsOpen(false)}
             />
-            {/* Dropdown Menu - Glass Card Design */}
+
+            {/* Dropdown Card */}
             <div
-              className="fixed bg-background/95 backdrop-blur-xl border border-border rounded-xl p-4 shadow-2xl min-w-[200px]"
+              className="fixed bg-background/95 backdrop-blur-xl border border-border/80 rounded-2xl p-2.5 shadow-xl min-w-[220px] animate-in fade-in-0 zoom-in-95 duration-100"
               style={{
                 zIndex: 999999,
                 position: "fixed",
@@ -107,44 +94,56 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div>
-                {/* Header */}
-                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-border">
-                  <NextImage
+              {/* User Header */}
+              <div className="flex items-center gap-2.5 p-2 mb-1.5 pb-2.5 border-b border-border/60">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border flex-shrink-0">
+                  <Image
                     src="/mabcs.png"
-                    alt="admin"
-                    width={16}
-                    height={16}
-                    className="text-primary"
+                    alt="admin avatar"
+                    fill
+                    className="object-cover"
                   />
-                  <span className="text-sm font-medium text-foreground">
-                    {user?.username || "Admin"}
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-semibold text-foreground truncate">
+                      {user?.username || "Admin"}
+                    </span>
+                    <span className="bg-primary/15 text-primary text-[9px] font-semibold px-1 py-0.2 rounded inline-flex items-center gap-0.5">
+                      <ShieldCheck className="h-2.5 w-2.5" />
+                      Admin
+                    </span>
+                  </div>
+                  <span className="text-[10.5px] text-muted-foreground truncate">
+                    Administrator Session
                   </span>
                 </div>
+              </div>
 
-                {/* Menu Items */}
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      console.log("PORTAL BUTTON CLICKED - Dashboard");
-                      router.push("/admin?direct=true");
-                      setIsOpen(false);
-                    }}
-                    className="w-full text-left px-3 py-2 text-sm text-foreground/90 hover:bg-primary/10 hover:text-foreground rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-primary/20"
-                  >
-                    Dashboard
-                  </button>
-                  <button
-                    onClick={() => {
-                      console.log("PORTAL BUTTON CLICKED - Logout");
-                      handleLogout();
-                    }}
-                    className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all duration-200 cursor-pointer border border-transparent hover:border-red-500/20 flex items-center gap-2"
-                  >
-                    <LogOut className="h-3 w-3" />
-                    Logout
-                  </button>
-                </div>
+              {/* Menu Links */}
+              <div className="space-y-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    router.push("/admin?direct=true");
+                    setIsOpen(false);
+                  }}
+                  className="w-full text-left px-2.5 py-1.5 text-xs text-foreground/90 hover:text-foreground hover:bg-muted/70 rounded-xl transition-colors cursor-pointer flex items-center gap-2"
+                >
+                  <LayoutDashboard className="h-3.5 w-3.5 text-primary" />
+                  <span>Admin Dashboard</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                  className="w-full text-left px-2.5 py-1.5 text-xs text-destructive hover:bg-destructive/10 rounded-xl transition-colors cursor-pointer flex items-center gap-2"
+                >
+                  <LogOut className="h-3.5 w-3.5 text-destructive" />
+                  <span>Log out</span>
+                </button>
               </div>
             </div>
           </>,
@@ -153,3 +152,4 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
     </div>
   );
 }
+

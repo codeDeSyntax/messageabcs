@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { useAppTheme } from "@/contexts/ThemeContext";
 
 interface LineData {
   id: string;
@@ -27,6 +28,7 @@ interface ParticleData {
 
 export function AnimatedBackground() {
   const { theme } = useTheme();
+  const { theme: appTheme } = useAppTheme();
   const [mounted, setMounted] = useState(false);
   const [verticalLines, setVerticalLines] = useState<LineData[]>([]);
   const [horizontalLines, setHorizontalLines] = useState<LineData[]>([]);
@@ -41,21 +43,21 @@ export function AnimatedBackground() {
 
     // Theme-aware color generation
     const getThemeColors = () => {
-      if (theme === "dark") {
+      if (appTheme === "sky-blue") {
         return {
-          primary: "154, 103, 74", // Brown primary
-          secondary: "250, 238, 209", // Cream secondary
-          gradientFrom: "primary/10",
-          gradientTo: "accent/10",
+          primary: "20, 111, 163", // Sky blue primary (#146fa3)
+          secondary: "194, 231, 255", // Soft sky secondary (#c2e7ff)
+          gradientFrom: "background/30",
+          gradientTo: "muted/20",
           circleColors: {
-            primary: "rgba(154, 103, 74, 0.4)",
-            secondary: "rgba(250, 238, 209, 0.6)",
+            primary: "rgba(20, 111, 163, 0.35)",
+            secondary: "rgba(194, 231, 255, 0.4)",
           },
         };
       } else {
         return {
-          primary: "154, 103, 74", // Brown primary
-          secondary: "250, 238, 209", // Cream secondary
+          primary: "154, 103, 74", // Brown primary (#9a674a)
+          secondary: "250, 238, 209", // Cream secondary (#faeed1)
           gradientFrom: "background/30",
           gradientTo: "muted/20",
           circleColors: {

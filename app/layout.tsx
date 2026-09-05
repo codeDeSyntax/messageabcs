@@ -1,41 +1,44 @@
 import "./globals.css";
 import "../styles/game-ui.css";
 import type { Metadata } from "next";
-import { Mona_Sans, Source_Serif_4 } from "next/font/google";
+import { Inter, Source_Serif_4 } from "next/font/google";
 import { ClientProviders } from "@/components/ClientProviders";
 import { WebsiteStructuredData } from "@/components/StructuredData";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { Analytics } from "@vercel/analytics/next";
 
-// Import Mona Sans font from Google Fonts
-const monaSans = Mona_Sans({
+// Medium UI & Sans-Serif Font Stack
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-mona-sans",
+  variable: "--font-sans",
   display: "swap",
   fallback: [
-    "ui-sans-serif",
-    "system-ui",
-    "-apple-system",
-    "BlinkMacSystemFont",
-    "Segoe UI",
-    "Roboto",
-    "Helvetica Neue",
+    "medium-content-sans-serif-font",
+    "Lucida Grande",
+    "Lucida Sans Unicode",
+    "Lucida Sans",
+    "Geneva",
     "Arial",
-    "Noto Sans",
     "sans-serif",
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji",
   ],
 });
 
-// Import Source Serif 4 font for reading content
+// Medium GT Super & Georgia Serif Font Stack
 const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
-  variable: "--font-source-serif",
+  variable: "--font-serif",
   display: "swap",
+  fallback: [
+    "gt-super",
+    "Georgia",
+    "Cambria",
+    "Times New Roman",
+    "Times",
+    "serif",
+  ],
 });
+
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://messageabcs.vercel.app"),
@@ -45,15 +48,21 @@ export const metadata: Metadata = {
   keywords: ["bible", "biblical", "Christian", "truth", "faith", "MessageABCs"],
   authors: [{ name: "MessageABCs Team" }],
   icons: {
-    icon: "https://messageabcs.vercel.app/mabcs.png",
-    apple: "https://messageabcs.vercel.app/mabcs.png",
+    icon: [
+      { url: "/favicon-new.ico", sizes: "any" },
+      { url: "/mabcs.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/favicon-new.ico",
+    apple: [
+      { url: "/mabcs.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   openGraph: {
     type: "website",
     siteName: "MessageABCs",
     images: [
       {
-        url: "https://messageabcs.vercel.app/og-image.jpg",
+        url: "https://messageabcs.vercel.app/og-image.png",
         width: 1200,
         height: 630,
         alt: "MessageABCs - Biblical Truth & Wisdom",
@@ -63,6 +72,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@messageabcs",
+    images: ["https://messageabcs.vercel.app/og-image.png"],
   },
 };
 
@@ -72,9 +82,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${sourceSerif.variable}`}
+    >
       <body
-        className={`${monaSans.variable} ${sourceSerif.variable} font-sans bg-background text-foreground transition-colors duration-300`}
+        className={`${inter.variable} ${sourceSerif.variable} font-sans bg-background text-foreground transition-colors duration-300 antialiased`}
       >
         <WebsiteStructuredData />
         <ClientProviders>{children}</ClientProviders>

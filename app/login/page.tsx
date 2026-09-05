@@ -99,19 +99,19 @@ export default function Login() {
         /* Field container */
         .field-footprint {
           position: relative;
-          border: 1px solid #d4a574;
+          border: 1px solid var(--theme-border, #d4a574);
           border-radius: 9999px;
-          background: #faeed1;
+          background: var(--theme-canvas, #faeed1);
           transition: all 0.2s ease;
         }
         
         .field-footprint:hover {
-          border-color: #b8845f;
+          border-color: var(--theme-secondary, #b8845f);
         }
         
         .field-footprint:focus-within {
-          border-color: #9a674a;
-          box-shadow: 0 0 0 1px #9a674a;
+          border-color: var(--theme-primary, #9a674a);
+          box-shadow: 0 0 0 1px var(--theme-primary, #9a674a);
         }
         
         /* Label styling */
@@ -126,10 +126,10 @@ export default function Login() {
         }
         
         .label-text {
-          color: #5c3d2a;
+          color: var(--theme-text-secondary, #5c3d2a);
           font-size: 1rem;
           line-height: 1;
-          background: #faeed1;
+          background: var(--theme-canvas, #faeed1);
           padding: 0 0.25rem;
         }
         
@@ -143,7 +143,7 @@ export default function Login() {
         .field-footprint.has-value .label-text,
         .field-footprint:focus-within .label-text {
           font-size: 0.75rem;
-          color: #9a674a;
+          color: var(--theme-primary, #9a674a);
         }
         
         /* Input styling */
@@ -153,7 +153,7 @@ export default function Login() {
           border: none;
           background: transparent;
           font-size: 1rem;
-          color: #1c1917;
+          color: var(--theme-text-primary, #1c1917);
           outline: none;
         }
         
@@ -179,7 +179,7 @@ export default function Login() {
           border: none;
           cursor: pointer;
           padding: 0.25rem;
-          color: #5c3d2a;
+          color: var(--theme-text-secondary, #5c3d2a);
           transition: color 0.2s ease;
           display: flex;
           align-items: center;
@@ -187,7 +187,7 @@ export default function Login() {
         }
         
         .toggle-button:hover {
-          color: #9a674a;
+          color: var(--theme-primary, #9a674a);
         }
       `}</style>
 

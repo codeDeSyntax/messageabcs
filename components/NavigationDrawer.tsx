@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
@@ -14,24 +12,20 @@ import {
   Hash,
   BookOpen,
   MessageCircleQuestion,
-  MessageCircle,
   LayoutDashboard,
-  User,
   LogOut,
   LogIn,
-  Menu,
   X,
-  Sun,
-  Moon,
-  Settings,
+  Palette,
   AlignLeft,
+  ChevronRight,
+  ShieldCheck,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { Logo } from "@/components/Logo";
-import { useTheme } from "next-themes";
+import { useAppTheme } from "@/contexts/ThemeContext";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 interface NavigationDrawerProps {
@@ -48,134 +42,104 @@ export function NavigationDrawer({
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuth();
+  const { theme: appTheme, toggleTheme } = useAppTheme();
 
   const openWhatsApp = () => {
-    const phoneNumber = "+233241210004"; // Replace with your actual WhatsApp number
+    const phoneNumber = "+233241210004";
     const message =
       "Hi! I'm interested in learning more about MessageABCS. I found you through your app.";
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message,
+      message
     )}`;
 
-    // Check if user is on mobile or desktop for better experience
     const isMobile =
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent,
+        navigator.userAgent
       );
 
     if (isMobile) {
-      // On mobile, try to open WhatsApp app directly
       window.location.href = whatsappUrl;
     } else {
-      // On desktop, open in new tab (WhatsApp Web)
       window.open(whatsappUrl, "_blank");
     }
 
     onOpenChange(false);
   };
 
-  // Create dynamic nav items including dashboard for admin
-  const getNavItems = () => {
-    const baseNavItems = [
-      { icon: Home, label: "Home", path: "/" },
-      { icon: Hash, label: "Topics", path: "/topics" },
-      { icon: BookOpen, label: "Reading", path: "/reading" },
-      { icon: MessageCircleQuestion, label: "Questions-Answers", path: "/qa" },
-    ];
+  const navItems = [
+    { icon: Home, label: "Home", path: "/" },
+    { icon: Hash, label: "Topics", path: "/topics" },
+    { icon: BookOpen, label: "Reading", path: "/reading" },
+    { icon: MessageCircleQuestion, label: "Questions & Answers", path: "/qa" },
+  ];
 
-    if (isAuthenticated && user?.role === "admin") {
-      baseNavItems.push({
-        icon: LayoutDashboard,
-        label: "Dashboard",
-        path: "/admin?direct=true",
-      });
-    }
-
-    return baseNavItems;
-  };
-
-  const navItems = getNavItems();
+  if (isAuthenticated && user?.role === "admin") {
+    navItems.push({
+      icon: LayoutDashboard,
+      label: "Admin Dashboard",
+      path: "/admin?direct=true",
+    });
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`md:hidden text-foreground ${isHomePage ? " " : ""}`}
+        <button
+          type="button"
+          aria-label="Open Navigation Menu"
+          className="p-1.5 rounded-lg text-foreground hover:bg-muted/60 transition-colors flex items-center justify-center focus:outline-none"
         >
-          <AlignLeft className="h-6 w-6" />
-        </Button>
+          <AlignLeft className="h-5 w-5" />
+        </button>
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="w-80 bg-background backdrop-blur-md border-r border-primary/20 p-0 flex flex-col h-full rounded-r-2xl"
+        className="w-72 sm:w-80 bg-background/95 backdrop-blur-xl border-r border-border/70 p-0 flex flex-col h-full rounded-r-3xl shadow-2xl"
       >
-        {/* Header with Logo and Brand */}
-        <div className="flex items-center gap-3 p-6 border-b border-primary/20">
-          <Logo variant="compact" />
-          <div className="flex-1">
-            <h2 className="text-xs text-muted-foreground ml-2">
-              The Apostolic Truth
-            </h2>
-          </div>
+        {/* Header with Logo */}
+        <div className="flex items-center px-5 py-4 border-b border-border/60 pr-12">
+          <Logo />
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-3.5 py-4 space-y-1 overflow-y-auto no-scrollbar">
+          <div className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-wider px-3 pb-1">
+            Navigation
+          </div>
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.path;
-            const hasSubmenu =
-              item.label === "Topics" || item.label === "Q & A"; // Add carets for these items
 
             return (
               <button
                 key={item.path}
+                type="button"
                 onClick={() => {
                   router.push(item.path);
                   onOpenChange(false);
                 }}
                 className={`
-                  w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-left group
+                  w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-150 text-left group
                   ${
                     isActive
-                      ? "bg-primary/20 text-foreground"
-                      : "text-muted-foreground hover:bg-primary/10 hover:text-foreground"
+                      ? "bg-primary/15 text-primary font-semibold shadow-2xs"
+                      : "text-foreground/80 hover:bg-muted/60 hover:text-foreground"
                   }
                 `}
               >
                 <Icon
-                  className={`h-4 w-4 transition-colors ${
+                  className={`h-4 w-4 transition-colors flex-shrink-0 ${
                     isActive
                       ? "text-primary"
                       : "text-muted-foreground group-hover:text-primary"
                   }`}
                 />
-                <span className="flex-1 font-normal">{item.label}</span>
-                {hasSubmenu && (
-                  <svg
-                    className={`h-3 w-3 transition-colors ${
-                      isActive
-                        ? "text-primary"
-                        : "text-muted-foreground/50 group-hover:text-primary"
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
+                <span className="flex-1 truncate">{item.label}</span>
+                {isActive && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                 )}
-                {item.label === "Reading" && (
-                  <span className="text-xs px-1.5 py-0.5 rounded-full bg-primary text-white font-medium">
-                    New
-                  </span>
+                {!isActive && (
+                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-foreground/70 transition-colors" />
                 )}
               </button>
             );
@@ -183,64 +147,86 @@ export function NavigationDrawer({
         </nav>
 
         {/* Bottom Section */}
-        <div className="mt-auto border-t border-primary/20">
+        <div className="mt-auto border-t border-border/60 bg-muted/20 p-3.5 space-y-2.5">
+          {/* Dynamic Theme Toggle Pill */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all bg-background/80 hover:bg-background border border-border/60 text-foreground text-left shadow-2xs group"
+            title="Toggle Application Theme"
+          >
+            <div className="flex items-center gap-2.5">
+              <Palette className="h-3.5 w-3.5 text-primary" />
+              <span className="font-medium text-xs">
+                Theme: {appTheme === "sky-blue" ? "Sky Blue" : "Cream & Amber"}
+              </span>
+            </div>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold">
+              Switch
+            </span>
+          </button>
+
           {/* Contact via WhatsApp */}
-          <div className="px-4 py-2">
-            <button
-              onClick={openWhatsApp}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-muted-foreground hover:bg-primary/10 hover:text-foreground text-left group"
-            >
-              <WhatsAppIcon className="h-4 w-4 text-green-600" />
-              <span className="font-normal">Contact on WhatsApp</span>
-            </button>
-          </div>
-          <div className="px-4 py-2">
-            <Separator className="bg-primary/20" />
-          </div>
+          <button
+            type="button"
+            onClick={openWhatsApp}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all bg-background/80 hover:bg-background border border-border/60 text-foreground text-left shadow-2xs group"
+          >
+            <WhatsAppIcon className="h-3.5 w-3.5 text-green-600 flex-shrink-0" />
+            <span className="font-medium flex-1 truncate">Contact on WhatsApp</span>
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-foreground/70 transition-colors" />
+          </button>
 
           {/* Authentication Section */}
-          <div>
+          <div className="pt-1">
             {isAuthenticated ? (
-              <div className="p-4 space-y-3">
-                {/* User Profile - Minimal */}
-                <div className="flex items-center gap-3">
-                  <Logo />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-normal text-foreground truncate">
-                      {user?.username || "Admin User"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {user?.role || "administrator"}
-                    </p>
+              <div className="flex items-center justify-between p-2 rounded-xl bg-background/80 border border-border/60 shadow-2xs">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="relative w-6 h-6 rounded-full overflow-hidden border border-border flex-shrink-0">
+                    <Image
+                      src="/mabcs.png"
+                      alt="admin"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs font-semibold text-foreground truncate max-w-[90px]">
+                        {user?.username || "Admin"}
+                      </span>
+                      <span className="bg-primary/15 text-primary text-[8.5px] font-semibold px-1 rounded inline-flex items-center">
+                        Admin
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Logout Button */}
                 <button
+                  type="button"
                   onClick={() => {
                     logout();
                     router.push("/topics");
                     onOpenChange(false);
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-muted-foreground hover:bg-muted hover:text-foreground text-left group"
+                  className="p-1 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                  title="Sign out"
                 >
-                  <LogOut className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-normal">Sign Out</span>
+                  <LogOut className="h-3.5 w-3.5" />
                 </button>
               </div>
             ) : (
-              <div className="p-4">
-                <button
-                  onClick={() => {
-                    router.push("/login");
-                    onOpenChange(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 text-muted-foreground hover:bg-primary/10 hover:text-foreground text-left group"
-                >
-                  <LogIn className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-normal">Admin Login</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  router.push("/login");
+                  onOpenChange(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all bg-primary hover:bg-primary-hover text-primary-foreground shadow-2xs"
+              >
+                <LogIn className="h-3.5 w-3.5" />
+                <span>Admin Sign In</span>
+              </button>
             )}
           </div>
         </div>
@@ -248,3 +234,4 @@ export function NavigationDrawer({
     </Sheet>
   );
 }
+

@@ -79,19 +79,19 @@ const FontSize = Extension.create({
   addCommands() {
     return {
       setFontSize:
-        (fontSize) =>
-        ({ chain }) => {
+        (fontSize: any) =>
+        ({ chain }: any) => {
           return chain().setMark("textStyle", { fontSize }).run();
         },
       unsetFontSize:
         () =>
-        ({ chain }) => {
+        ({ chain }: any) => {
           return chain()
             .setMark("textStyle", { fontSize: null })
             .removeEmptyTextStyle()
             .run();
         },
-    };
+    } as any;
   },
 });
 
@@ -131,8 +131,8 @@ const LineHeight = Extension.create({
   addCommands() {
     return {
       setLineHeight:
-        (lineHeight) =>
-        ({ chain }) => {
+        (lineHeight: any) =>
+        ({ chain }: any) => {
           return chain()
             .updateAttributes("paragraph", { lineHeight })
             .updateAttributes("heading", { lineHeight })
@@ -140,13 +140,13 @@ const LineHeight = Extension.create({
         },
       unsetLineHeight:
         () =>
-        ({ chain }) => {
+        ({ chain }: any) => {
           return chain()
             .updateAttributes("paragraph", { lineHeight: null })
             .updateAttributes("heading", { lineHeight: null })
             .run();
         },
-    };
+    } as any;
   },
 });
 
@@ -278,7 +278,7 @@ export function TiptapEditor({
           class: "text-primary underline hover:text-accent",
         },
       }),
-    ],
+    ] as any[],
     content,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());

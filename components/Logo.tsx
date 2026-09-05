@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface LogoProps {
   variant?: "default" | "compact";
@@ -6,59 +7,54 @@ interface LogoProps {
 }
 
 export const Logo = ({ variant = "default", className = "" }: LogoProps) => {
-  // click logo function
-  const handleClick = () => {
-    // Navigate to home page
-    window.location.href = "/";
-  };
-
   if (variant === "compact") {
     return (
-      <div
-        className={`flex items-center gap-1.5 ${className}`}
-        onClick={handleClick}
+      <Link
+        href="/"
+        className={`inline-flex items-center gap-1.5 sm:gap-2 group transition-opacity hover:opacity-90 ${className}`}
       >
-        <Image
-          src="/mabcs.png"
-          alt="Message ABCs Logo"
-          width={20}
-          height={20}
-          className="rounded-md"
-        />
-        <div className="h-8 w-px bg-primary/30" />
-        <div className="flex flex-col leading-none -space-y-0.5">
-          <span className="text-xs font-bold text-primary uppercase tracking-tight">
+        <div className="relative w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 rounded-md sm:rounded-lg overflow-hidden border border-border/80 shadow-2xs">
+          <Image
+            src="/mabcs.png"
+            alt="MessageABCs Logo"
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="flex items-baseline gap-1 leading-none">
+          <span className="font-serif font-medium text-xs sm:text-sm text-foreground tracking-tight">
             Message
           </span>
-          <span className="text-xs font-bold text-foreground uppercase tracking-tight">
-            ABCS
+          <span className="hidden sm:inline font-sans font-medium text-[10.5px] sm:text-[11px] text-primary tracking-wide uppercase">
+            ABCs
           </span>
         </div>
-      </div>
+      </Link>
     );
   }
 
   return (
-    <div
-      className={`flex items-center gap-2 cursor-pointer ${className}`}
-      onClick={handleClick}
+    <Link
+      href="/"
+      className={`inline-flex items-center gap-2 sm:gap-2.5 group transition-opacity hover:opacity-90 ${className}`}
     >
-      <Image
-        src="/mabcs.png"
-        alt="Message ABCs Logo"
-        width={20}
-        height={20}
-        className="rounded-md"
-      />
-      <div className="h-10 w-px bg-primary/30" />
-      <div className="flex flex-col leading-none -space-y-1">
-        <span className="text-base md:text-sm font-bold tracking-tight uppercase text-primary transition-colors duration-300">
-          MESSAGE
+      <div className="relative w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 rounded-md sm:rounded-lg overflow-hidden border border-border/80 shadow-2xs group-hover:border-primary/40 transition-colors">
+        <Image
+          src="/mabcs.png"
+          alt="MessageABCs Logo"
+          fill
+          className="object-cover"
+        />
+      </div>
+      <div className="flex items-baseline gap-1 leading-none select-none">
+        <span className="font-serif font-medium text-sm sm:text-[17px] text-foreground tracking-tight">
+          Message
         </span>
-        <span className="text-base md:text-sm font-bold tracking-tight uppercase text-foreground transition-colors duration-300">
-          ABCS
+        <span className="hidden sm:inline font-sans font-medium text-xs sm:text-[13px] text-primary tracking-wider uppercase">
+          ABCs
         </span>
       </div>
-    </div>
+    </Link>
   );
 };
+

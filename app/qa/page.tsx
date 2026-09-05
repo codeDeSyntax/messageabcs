@@ -1,76 +1,107 @@
 "use client";
 
+import { useState, useEffect, useMemo } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle, Plus } from "lucide-react";
-import { useState, useEffect } from "react";
 import { NavigationDrawer } from "@/components/NavigationDrawer";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
+import { ProfileCard } from "@/components/ProfileCard";
 import { AskQuestionModal } from "@/components/AskQuestionModal";
+import { Logo } from "@/components/Logo";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  MessageSquare,
+  Search,
+  CheckCircle2,
+  Clock,
+  Layers,
+  Sparkles,
+  RefreshCw,
+  Plus,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { useQuestions, useTopics } from "@/hooks/queries";
-
-// Import modular components
-import { QASearchHeader } from "@/components/QA/components/QASearchHeader";
 import { QuestionCard } from "@/components/QA/components/QuestionCard";
 import { TopicsSidebar } from "@/components/QA/components/TopicsSidebar";
 
+type StatusFilter = "all" | "answered" | "pending";
+
 export default function QA() {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isAskModalOpen, setIsAskModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  const [isAskModalOpen, setIsAskModalOpen] = useState(false);
-  const [selectedQuestion, setSelectedQuestion] = useState<any | null>(null);
-  const [expandedQuestionId, setExpandedQuestionId] = useState<number | null>(
-    null
-  );
-  const pathname = usePathname();
-  const router = useRouter();
-  const { isAuthenticated, user } = useAuth();
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
-  // Use TanStack Query for data fetching
+  useEffect(() => {
+    document.title = "Q & A - Biblical Insights & Community Answers - MessageABCs";
+  }, []);
+
+  // Fetch questions
   const {
     data: questionsData,
     isLoading: questionsLoading,
+    isError: questionsError,
     refetch: refetchQuestions,
   } = useQuestions({
     page: 1,
-    limit: 20,
+    limit: 100,
     search: searchQuery || undefined,
     topicId: selectedTopic || undefined,
   });
 
+  // Fetch topics for sidebar filter
   const { data: topicsData, isLoading: topicsLoading } = useTopics({
     page: 1,
     limit: 50,
   });
 
-  const questions = questionsData?.data || [];
+  const rawQuestions = questionsData?.data || [];
   const topics = topicsData?.data || [];
   const loading = questionsLoading || topicsLoading;
 
+  // Client-side filtering for status tabs (All / Answered / Pending)
+  const filteredQuestions = useMemo(() => {
+    return rawQuestions.filter((q) => {
+      const hasAnswer = q.answers && q.answers.length > 0;
+      if (statusFilter === "answered") return hasAnswer;
+      if (statusFilter === "pending") return !hasAnswer;
+      return true;
+    });
+  }, [rawQuestions, statusFilter]);
+
+  // Client-side pagination
+  const totalItems = filteredQuestions.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+  const paginatedQuestions = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredQuestions.slice(start, start + itemsPerPage);
+  }, [filteredQuestions, currentPage, itemsPerPage]);
+
+  // Reset page to 1 when filters change
   useEffect(() => {
-    document.title = "Q & A - MessageABCs";
-  }, []);
+    setCurrentPage(1);
+  }, [searchQuery, selectedTopic, statusFilter]);
 
-  // Auto-select first question on initial load only (not on mobile when user manually deselects)
-  useEffect(() => {
-    if (questions.length > 0 && !selectedQuestion && window.innerWidth >= 768) {
-      setSelectedQuestion(questions[0]);
-    }
-  }, [questions]);
-
-  const handleSearch = () => {
-    // Query will automatically refetch when searchQuery changes
-    refetchQuestions();
-  };
-
-  const handleQuestionCreated = () => {
-    // Refresh the questions list when a new question is created
-    refetchQuestions();
-  };
+  const activeTopicObj = useMemo(() => {
+    if (!selectedTopic) return null;
+    return topics.find((t) => t.id === selectedTopic);
+  }, [selectedTopic, topics]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -82,332 +113,470 @@ export default function QA() {
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return date.toLocaleDateString();
+    return date.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
   };
 
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
   return (
-    <div className="h-screen relative overflow-hidden">
-      {/* <AnimatedBackground /> */}
+    <div className="h-screen relative bg flex flex-col overflow-hidden">
+      {/* Dynamic Themed Background */}
+      <AnimatedBackground />
+      <div className="bg-background/40 backdrop-blur-md inset-0 absolute pointer-events-none" />
 
-      {/* Backdrop blur overlay */}
-      <div className="absolute inset-0 bg-background/30  z-10" />
+      {/* Sticky Top Navbar */}
+      <nav className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/60">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-14 gap-3 sm:gap-4">
+            {/* Left: Mobile Drawer Trigger & Logo */}
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              <div className="md:hidden">
+                <NavigationDrawer
+                  isOpen={isDrawerOpen}
+                  onOpenChange={setIsDrawerOpen}
+                />
+              </div>
+              <Logo className="h-4" />
+            </div>
 
-      <div className="relative z-20 h-screen flex flex-col overflow-hidden">
-        {/* Mobile Navigation Drawer */}
-        <div className="md:hidden p-4 pb-2 flex items-center justify-between flex-shrink-0">
-          <NavigationDrawer
-            isOpen={isDrawerOpen}
-            onOpenChange={setIsDrawerOpen}
-          />
-          <h1 className="text-xl font-bold text-foreground ">Q & A</h1>
-          <div className="w-10" />
-        </div>
+            {/* Center: Search Bar (Desktop) */}
+            <div className="hidden md:block flex-1 max-w-md mx-2">
+              <div className="relative">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  type="search"
+                  placeholder="Search questions, answers, topics..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 h-9 text-xs sm:text-sm bg-muted/40 border-border/70 rounded-full focus:bg-background transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
 
-        {/* Main Content */}
-        <div className="flex-1 overflow-hidden">
-          <div className="w-full mx-auto h-full overflow-hidden">
-            {/* Horizontal scrollable container on mobile */}
-            <div className="flex h-full overflow-x-auto md:overflow-x-hidden snap-x snap-mandatory md:snap-none">
-              {/* Left Side - Main Q&A Content (Takes most space) */}
-              <div className="flex-none w-full md:flex-1 lg:w-2/3 xl:w-3/4 flex h-full bg-background/5 rounded-lg overflow-hidden snap-start">
-                {/* Questions List Column */}
-                <div
-                  className={`w-full md:w-5/12 flex flex-col h-full md:border-r border-border ${
-                    selectedQuestion ? "hidden md:flex" : "flex"
+            {/* Right: Direct Navigation & User Profile */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* Mobile Quick Ask Button */}
+              <button
+                type="button"
+                onClick={() => setIsAskModalOpen(true)}
+                className="md:hidden bg-primary hover:bg-primary-hover text-primary-foreground p-1.5 rounded-full text-xs font-semibold transition-all shadow-2xs flex items-center justify-center"
+                aria-label="Ask Question"
+                title="Ask Question"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+
+              <div className="hidden md:flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => router.push("/reading")}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    pathname === "/reading"
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
                 >
-                  {/* Q&A Header - Fixed */}
-                  <div className="hidden md:flex items-center justify-between py-2 px-2 flex-shrink-0 border-b border-border bg-background/50">
-                    <div className="flex-shrink-0">
-                      <h1 className="text-xl lg:text-2xl font-bold text-foreground ">
-                        Q & A
-                      </h1>
-                    </div>
+                  Reading
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push("/topics")}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    pathname === "/topics"
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  Topics
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push("/qa")}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    pathname === "/qa"
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  Q&A
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsAskModalOpen(true)}
+                  className="ml-1 bg-primary hover:bg-primary-hover text-primary-foreground px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>Ask</span>
+                </button>
+              </div>
 
-                    {/* Centered top nav links (desktop) */}
-                    <div className="flex-1 flex justify-center">
-                      <div className="flex items-center gap-1 lg:gap-3">
-                        {(() => {
-                          const baseItems = [
-                            { label: "Home", path: "/" },
-                            { label: "Topics", path: "/topics" },
-                            { label: "Reading", path: "/reading" },
-                            { label: "Q&A", path: "/qa" },
-                          ];
+              <ProfileCard />
+            </div>
+          </div>
+        </div>
+      </nav>
 
-                          if (isAuthenticated && user?.role === "admin") {
-                            baseItems.push({
-                              label: "Dashboard",
-                              path: "/admin?direct=true",
-                            });
-                          }
+      {/* Main Scrollable Content */}
+      <main className="flex-1 overflow-y-auto relative z-10 scroll-smooth">
+        <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5">
+          {/* Mobile Search Bar */}
+          <div className="md:hidden mb-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <Input
+                type="search"
+                placeholder="Search questions or keywords..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-8 py-1.5 h-8 text-xs bg-muted/50 border-border/70 rounded-full"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
 
-                          return baseItems.map((item) => {
-                            const isActive = pathname === item.path;
-                            return (
-                              <button
-                                key={item.path}
-                                onClick={() => router.push(item.path)}
-                                className={`px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm font-medium transition-colors duration-150 ${
-                                  isActive
-                                    ? "bg-primary/20 text-primary"
-                                    : "text-foreground hover:bg-background/40"
-                                }`}
-                              >
-                                {item.label}
-                              </button>
-                            );
-                          });
-                        })()}
-                      </div>
-                    </div>
-
-                    {/* Right placeholder - keep spacing consistent on the right */}
-                    <div className="w-28" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+            {/* Left Stream: Questions Feed (lg:col-span-8) */}
+            <div className="lg:col-span-8 min-w-0">
+              {/* Header Section */}
+              <div className="pb-2.5 sm:pb-3 border-b border-border/75 mb-0.5">
+                <div className="flex items-baseline justify-between flex-wrap gap-2">
+                  <div>
+                    <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-foreground font-serif">
+                      Questions & Answers
+                    </h1>
+                    <p className="text-[11.5px] sm:text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                      Community inquiries, doctrinal clarifications, and verified answers from MessageABCs.
+                    </p>
                   </div>
 
-                  {/* Search and Controls Section - Fixed */}
-                  <QASearchHeader
-                    searchQuery={searchQuery}
-                    onSearchChange={setSearchQuery}
-                    onSearch={handleSearch}
-                    onAskQuestion={() => setIsAskModalOpen(true)}
-                  />
-
-                  {/* Questions Content - SCROLLABLE */}
-                  <div className="flex-1 overflow-y-auto no-scrollbar">
-                    {loading ? (
-                      <div className="space-y-2">
-                        {[...Array(8)].map((_, i) => (
-                          <div key={i} className="p-3 border-b border-border">
-                            <div className="animate-pulse space-y-2">
-                              <div className="h-3 bg-muted/50 rounded w-3/4"></div>
-                              <div className="h-2 bg-muted/50 rounded w-1/2"></div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : questions.length === 0 ? (
-                      <div className="p-8 text-center">
-                        <MessageCircle className="h-12 w-12 mx-auto text-primary mb-3" />
-                        <h3 className="text-lg font-semibold text-foreground mb-2">
-                          No questions yet
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Be the first to ask a question
-                        </p>
-                        <Button
-                          size="sm"
-                          className="bg-primary hover:bg-accent text-primary-foreground"
-                          onClick={() => setIsAskModalOpen(true)}
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Ask Question
-                        </Button>
-                      </div>
-                    ) : (
-                      <div>
-                        {questions.map((question) => (
-                          <div
-                            key={question.id}
-                            onClick={() => setSelectedQuestion(question)}
-                            className={`p-3 border-b border-border cursor-pointer transition-colors hover:bg-muted/50 ${
-                              selectedQuestion?.id === question.id
-                                ? "bg-muted border-l-4 border-l-primary"
-                                : ""
-                            }`}
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="flex-1 min-w-0">
-                                <h4 className="text-sm font-medium text-foreground line-clamp-2 mb-1">
-                                  {question.question}
-                                </h4>
-                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                  <span>{question.askedBy || "Anonymous"}</span>
-                                  <span>·</span>
-                                  <span>{formatDate(question.dateAsked)}</span>
-                                  {question.answers &&
-                                    question.answers.length > 0 && (
-                                      <>
-                                        <span>·</span>
-                                        <span className="text-green-600 font-medium">
-                                          {question.answers.length} answer
-                                          {question.answers.length !== 1
-                                            ? "s"
-                                            : ""}
-                                        </span>
-                                      </>
-                                    )}
-                                </div>
-                              </div>
-                              <MessageCircle
-                                className={`h-4 w-4 flex-shrink-0 ${
-                                  question.answers &&
-                                  question.answers.length > 0
-                                    ? "text-green-500"
-                                    : "text-orange-500"
-                                }`}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  {!loading && !questionsError && (
+                    <span className="text-[11px] font-medium text-muted-foreground bg-muted/60 px-2 py-0.5 rounded-full">
+                      {totalItems} {totalItems === 1 ? "question" : "questions"}
+                    </span>
+                  )}
                 </div>
 
-                {/* Question Detail Column */}
-                <div
-                  className={`w-full md:w-7/12 flex-col h-full bg-background ${
-                    selectedQuestion ? "flex" : "hidden md:flex"
-                  }`}
-                >
-                  {selectedQuestion ? (
-                    <>
-                      {/* Detail Header */}
-                      <div className="p-4 border-b border-border">
-                        {/* Mobile back button */}
-                        <button
-                          onClick={() => setSelectedQuestion(null)}
-                          className="md:hidden flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-3 transition-colors"
+                {/* Filter Tabs & Active Topic Badge */}
+                <div className="flex items-center justify-between flex-wrap gap-2 mt-2.5 pt-1">
+                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setStatusFilter("all")}
+                      className={`flex items-center gap-1 px-3 py-1 rounded-full text-[11.5px] font-medium transition-all ${
+                        statusFilter === "all"
+                          ? "bg-foreground text-background font-semibold shadow-2xs"
+                          : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <span>All Questions</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setStatusFilter("answered")}
+                      className={`flex items-center gap-1 px-3 py-1 rounded-full text-[11.5px] font-medium transition-all ${
+                        statusFilter === "answered"
+                          ? "bg-foreground text-background font-semibold shadow-2xs"
+                          : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <CheckCircle2 className="h-3 w-3" />
+                      <span>Answered</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setStatusFilter("pending")}
+                      className={`flex items-center gap-1 px-3 py-1 rounded-full text-[11.5px] font-medium transition-all ${
+                        statusFilter === "pending"
+                          ? "bg-foreground text-background font-semibold shadow-2xs"
+                          : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <Clock className="h-3 w-3" />
+                      <span>Pending</span>
+                    </button>
+                  </div>
+
+                  {/* Active Topic Filter Pill */}
+                  {activeTopicObj && (
+                    <div className="inline-flex items-center gap-1.5 bg-primary/15 text-primary border border-primary/25 px-2.5 py-0.5 rounded-full text-[11px] font-medium">
+                      <Layers className="h-3 w-3" />
+                      <span className="truncate max-w-[140px]">
+                        Topic: {activeTopicObj.title}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedTopic(null)}
+                        aria-label="Remove topic filter"
+                        className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile Topic Filter Dropdown */}
+                {topics.length > 0 && (
+                  <div className="lg:hidden mt-2 pt-2 border-t border-border/50">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1">
+                        <Select
+                          value={selectedTopic || "all"}
+                          onValueChange={(val) =>
+                            setSelectedTopic(val === "all" ? null : val)
+                          }
                         >
-                          <svg
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M15 19l-7-7 7-7"
-                            />
-                          </svg>
-                          Back to questions
-                        </button>
-                        <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
-                          <Avatar className="h-5 w-5">
-                            <AvatarFallback className="text-xs bg-primary/20 text-primary">
-                              {selectedQuestion.askedBy
-                                ?.charAt(0)
-                                .toUpperCase() || "A"}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="font-medium text-foreground">
-                            {selectedQuestion.askedBy || "Anonymous"}
-                          </span>
-                          <span>·</span>
-                          <span>{formatDate(selectedQuestion.dateAsked)}</span>
-                          {selectedQuestion.topicTitle && (
-                            <>
-                              <span>·</span>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="text-xs px-2 py-0 h-5"
+                          <SelectTrigger className="w-full h-8 text-xs bg-muted/40 border-border/70 rounded-lg px-2.5 flex items-center justify-between focus:ring-1 focus:ring-primary/30">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <Layers className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                              <span className="text-[11.5px] font-medium truncate">
+                                {activeTopicObj
+                                  ? activeTopicObj.title
+                                  : "Filter by Topic (All Topics)"}
+                              </span>
+                            </div>
+                          </SelectTrigger>
+                          <SelectContent className="max-h-64 bg-background/95 backdrop-blur-xl border border-border/80 rounded-xl p-1 shadow-lg">
+                            <SelectItem value="all" className="text-xs py-1.5 px-2">
+                              <span className="font-medium text-xs">All Topics</span>
+                            </SelectItem>
+                            {topics.map((t) => (
+                              <SelectItem
+                                key={t.id}
+                                value={t.id.toString()}
+                                className="text-xs py-1.5 px-2"
                               >
-                                {selectedQuestion.topicTitle}
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                        <h2 className="text-lg md:text-xl font-bold text-foreground leading-relaxed">
-                          {selectedQuestion.question}
-                        </h2>
+                                <div className="flex items-center gap-2">
+                                  <div className="relative w-4.5 h-4.5 rounded-full overflow-hidden flex-shrink-0 border border-border/60">
+                                    <Image
+                                      src={t.image || "/mabcs.png"}
+                                      alt={t.title}
+                                      fill
+                                      className="object-cover"
+                                    />
+                                  </div>
+                                  <span className="text-xs truncate max-w-[220px]">
+                                    {t.title}
+                                  </span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      {selectedTopic && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedTopic(null)}
+                          className="h-8 px-2.5 rounded-lg bg-muted/60 text-muted-foreground hover:text-foreground text-[11px] font-medium transition-colors flex-shrink-0"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Loading State */}
+              {loading && (
+                <div className="divide-y divide-border/60">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`py-4 px-3.5 animate-pulse space-y-2.5 ${
+                        i % 2 !== 0 ? "bg-primary/[0.04]" : "bg-transparent"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-4.5 h-4.5 bg-muted rounded-full" />
+                        <div className="h-3 bg-muted rounded w-24" />
+                        <div className="h-3 bg-muted rounded w-16 ml-auto" />
+                      </div>
+                      <div className="h-3.5 bg-muted rounded w-4/5" />
+                      <div className="h-3 bg-muted rounded w-2/3" />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Error State */}
+              {questionsError && !loading && (
+                <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+                  <div className="w-10 h-10 rounded-full bg-destructive/10 text-destructive flex items-center justify-center mb-2.5">
+                    <RefreshCw className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold text-foreground mb-1">
+                    Unable to load questions
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-3 max-w-sm">
+                    We encountered an issue connecting to the server. Please check your connection and try again.
+                  </p>
+                  <Button
+                    size="sm"
+                    onClick={() => refetchQuestions()}
+                    className="bg-primary hover:bg-primary-hover text-primary-foreground text-xs h-8"
+                  >
+                    <RefreshCw className="h-3 w-3 mr-1.5" />
+                    Retry
+                  </Button>
+                </div>
+              )}
+
+              {/* Question Stream */}
+              {!loading && !questionsError && (
+                <div>
+                  {paginatedQuestions.length > 0 ? (
+                    <div className="w-full">
+                      {paginatedQuestions.map((q, idx) => (
+                        <QuestionCard
+                          key={q.id}
+                          question={q}
+                          index={idx}
+                          formatDate={formatDate}
+                          onTopicClick={(topicId) => setSelectedTopic(topicId)}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-12 text-center px-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-2.5">
+                        <MessageSquare className="h-5 w-5" />
+                      </div>
+                      <h3 className="text-sm font-semibold text-foreground mb-1">
+                        No questions found
+                      </h3>
+                      <p className="text-xs text-muted-foreground mb-3 max-w-sm mx-auto">
+                        {searchQuery
+                          ? `No questions matching "${searchQuery}". Try a different keyword.`
+                          : activeTopicObj
+                          ? `No questions under the topic "${activeTopicObj.title}" yet.`
+                          : "Be the first to ask a question to the community."}
+                      </p>
+                      <Button
+                        size="sm"
+                        onClick={() => setIsAskModalOpen(true)}
+                        className="bg-primary hover:bg-primary-hover text-primary-foreground text-xs h-8"
+                      >
+                        <Plus className="h-3 w-3 mr-1.5" />
+                        Ask a Question
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-6 border-t border-border/40 mt-3">
+                      <div className="text-xs text-muted-foreground">
+                        Showing <span className="font-semibold text-foreground">{startItem}</span>–<span className="font-semibold text-foreground">{endItem}</span> of{" "}
+                        <span className="font-semibold text-foreground">{totalItems}</span> questions
                       </div>
 
-                      {/* Detail Content - Scrollable */}
-                      <div
-                        className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4"
-                        style={{
-                          scrollbarGutter: "stable",
-                          scrollbarColor:
-                            "hsl(var(--primary)) hsl(var(--muted))",
-                          scrollbarWidth: "thin",
-                        }}
-                      >
-                        {selectedQuestion.answers &&
-                        selectedQuestion.answers.length > 0 ? (
-                          selectedQuestion.answers.map(
-                            (answer: any, index: number) => (
-                              <div
-                                key={index}
-                                className="bg-green-50/30 rounded-lg p-3 md:p-4 border-l-4 border-green-500/50"
-                              >
-                                <div className="flex items-center gap-2 mb-3">
-                                  <Image
-                                    src="/mabcs.png"
-                                    alt="admin"
-                                    width={24}
-                                    height={24}
-                                  />
-                                  <div>
-                                    <span className="font-medium text-green-700 text-sm">
-                                      {answer.adminUser}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground ml-2">
-                                      answered {formatDate(answer.dateAnswered)}
-                                    </span>
-                                  </div>
-                                </div>
-                                <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-                                  {answer.answer}
-                                </p>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                          disabled={currentPage === 1}
+                          aria-label="Previous page"
+                          className="p-1.5 rounded-lg border border-border/60 text-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-muted transition-colors"
+                        >
+                          <ChevronLeft className="h-3.5 w-3.5" />
+                        </button>
+
+                        {Array.from({ length: totalPages }, (_, i) => i + 1)
+                          .filter((p) => {
+                            return (
+                              p === 1 ||
+                              p === totalPages ||
+                              Math.abs(p - currentPage) <= 1
+                            );
+                          })
+                          .map((pageNum, idx, arr) => {
+                            const showEllipsis =
+                              idx > 0 && pageNum - arr[idx - 1] > 1;
+                            return (
+                              <div key={pageNum} className="flex items-center">
+                                {showEllipsis && (
+                                  <span className="px-1.5 text-xs text-muted-foreground">
+                                    …
+                                  </span>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => setCurrentPage(pageNum)}
+                                  className={`min-w-[28px] h-7 px-1.5 rounded-lg text-xs font-medium transition-all ${
+                                    currentPage === pageNum
+                                      ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
+                                      : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                                  }`}
+                                >
+                                  {pageNum}
+                                </button>
                               </div>
-                            )
-                          )
-                        ) : (
-                          <div className="flex flex-col items-center justify-center py-12 text-center">
-                            <MessageCircle className="h-12 w-12 text-orange-500 mb-3" />
-                            <h3 className="text-lg font-semibold text-foreground mb-1">
-                              Pending Answer
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              This question {"hasn't "}been answered yet
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-center p-8">
-                      <div>
-                        <MessageCircle className="h-16 w-16 mx-auto text-muted-foreground/30 mb-4" />
-                        <h3 className="text-lg font-medium text-muted-foreground mb-2">
-                          Select a question
-                        </h3>
-                        <p className="text-sm text-muted-foreground/70">
-                          Choose a question from the list to view details
-                        </p>
+                            );
+                          })}
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setCurrentPage(Math.min(totalPages, currentPage + 1))
+                          }
+                          disabled={currentPage === totalPages}
+                          aria-label="Next page"
+                          className="p-1.5 rounded-lg border border-border/60 text-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-muted transition-colors"
+                        >
+                          <ChevronRight className="h-3.5 w-3.5" />
+                        </button>
                       </div>
                     </div>
                   )}
                 </div>
-              </div>
+              )}
+            </div>
 
-              {/* Vertical Divider */}
-              {/* <div className="hidden lg:block w-px bg-gradient-to-b from-blue-500/20 via-blue-500/50 to-blue-500/20"></div> */}
-
-              {/* Right Side - Topics Sidebar */}
+            {/* Right Sidebar: Topics Filter & Ask Widget (Desktop Only) */}
+            <div className="hidden lg:block lg:col-span-4 sticky top-20">
               <TopicsSidebar
                 topics={topics}
-                loading={loading}
+                loading={topicsLoading}
                 selectedTopic={selectedTopic}
-                onTopicSelect={setSelectedTopic}
+                onTopicSelect={(topicId) => setSelectedTopic(topicId)}
+                onAskQuestion={() => setIsAskModalOpen(true)}
               />
             </div>
           </div>
         </div>
-
-        {/* Bottom Navigation removed: top nav links are rendered in the desktop header */}
-      </div>
+      </main>
 
       {/* Ask Question Modal */}
       <AskQuestionModal
         isOpen={isAskModalOpen}
         onClose={() => setIsAskModalOpen(false)}
-        onQuestionCreated={handleQuestionCreated}
+        onQuestionCreated={() => refetchQuestions()}
       />
     </div>
   );

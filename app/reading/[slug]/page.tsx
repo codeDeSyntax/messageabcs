@@ -60,7 +60,7 @@ export async function generateMetadata({
     "Discover biblical truth and wisdom.";
 
   // Always use the site preview image for consistent branding
-  const imageUrl = "https://messageabcs.vercel.app/og-image.jpg";
+  const imageUrl = "https://messageabcs.vercel.app/og-image.png";
 
   return {
     title,

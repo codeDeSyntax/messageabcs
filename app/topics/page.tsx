@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { NavigationDrawer } from "@/components/NavigationDrawer";
-import { useAuth } from "@/hooks/useAuth";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { ProfileCard } from "@/components/ProfileCard";
 import { TopicActionButtons } from "@/components/TopicActionButtons";
@@ -11,23 +10,18 @@ import { TopicGridSkeleton } from "@/components/LoadingSkeleton";
 import { LoadingFailedIcon } from "@/components/LoadingFailedIcon";
 import { Button } from "@/components/ui/button";
 import {
-  Plus,
-  AlertCircle,
   RefreshCw,
-  LayoutGrid,
-  List,
   MessageSquare,
-  Hash,
-  BookOpen,
-  MessageCircleQuestion,
-  MessageCircle,
-  LayoutDashboard,
-  Menu,
+  Sparkles,
+  Flame,
+  Clock,
+  ArrowDownAZ,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { useTopics } from "@/hooks/useTopics";
+import { useTopics, TopicSortOption } from "@/hooks/useTopics";
 
 // Import modular components
-import { TopNavbar } from "@/components/Topics/TopNavbar";
 import { SearchAndPagination } from "@/components/Topics/SearchAndPagination";
 import { TopicCard } from "@/components/Topics/TopicCard";
 import { NoResults } from "@/components/Topics/NoResults";
@@ -35,117 +29,55 @@ import { Logo } from "@/components/Logo";
 
 export default function Topics() {
   const router = useRouter();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const { isAuthenticated, user } = useAuth();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = () => {
-      if (isMenuOpen) setIsMenuOpen(false);
-    };
-
-    if (isMenuOpen) {
-      document.addEventListener("click", handleClickOutside);
-      return () => document.removeEventListener("click", handleClickOutside);
-    }
-  }, [isMenuOpen]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Use the custom hook for topics data management
   const {
     topics: paginatedTopics,
+    totalItems,
     loading,
     error,
     totalPages,
     currentPage,
     searchQuery,
+    sortBy,
+    setSortBy,
     setCurrentPage,
     setSearchQuery,
     refetch,
   } = useTopics({ itemsPerPage: 8 });
 
   useEffect(() => {
-    document.title = "Biblical Topics - MessageABCs";
+    document.title = "Biblical Topics & Study List - MessageABCs";
   }, []);
 
-  // Build nav items for top navigation (admin-only Dashboard)
-  const getNavItems = () => {
-    const baseItems = [
-      { icon: Hash, label: "Topics", path: "/topics" },
-      { icon: BookOpen, label: "Reading", path: "/reading" },
-      { icon: MessageCircleQuestion, label: "Q&A", path: "/qa" },
-      { icon: MessageCircle, label: "Ask", path: "/ask-question" },
-    ];
+  const filterTabs: {
+    id: TopicSortOption;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }[] = [
+    { id: "latest" as TopicSortOption, label: "Latest", icon: Clock },
+    { id: "popular" as TopicSortOption, label: "Most Discussed", icon: Flame },
+    { id: "alphabetical" as TopicSortOption, label: "A – Z", icon: ArrowDownAZ },
+  ];
 
-    if (isAuthenticated && user?.role === "admin") {
-      baseItems.push({
-        icon: LayoutDashboard,
-        label: "Dashboard",
-        path: "/admin?direct=true",
-      });
-    }
-
-    return baseItems;
-  };
-
-  const navItems = getNavItems();
+  // Calculate range for pagination display
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * 8 + 1;
+  const endItem = Math.min(currentPage * 8, totalItems);
 
   return (
     <div className="h-screen relative bg flex flex-col overflow-hidden">
-      {/* CSS Animations */}
-      <style>{`
-        @keyframes slideUpFade {
-          0% {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-          100% {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        
-        /* Themed scrollbar for topics list */
-        .topics-scrollable {
-          scrollbar-width: thin;
-          scrollbar-color: #9a674a #f5e3bb;
-        }
-        
-        .topics-scrollable::-webkit-scrollbar {
-          width: 8px;
-        }
-        
-        .topics-scrollable::-webkit-scrollbar-track {
-          background: #f5e3bb;
-        }
-        
-        .topics-scrollable::-webkit-scrollbar-thumb {
-          background: #9a674a;
-          border-radius: 4px;
-        }
-        
-        .topics-scrollable::-webkit-scrollbar-thumb:hover {
-          background: #7d5439;
-        }
-      `}</style>
-
+      {/* Dynamic Themed Background */}
       <AnimatedBackground />
-      {/* white blur over animation background  */}
-      <div className="bg-background/20 backdrop-blur-md inset-0 absolute" />
+      <div className="bg-background/40 backdrop-blur-md inset-0 absolute pointer-events-none" />
 
-      {/* Medium-style Sticky Navbar - Full Width */}
-      <nav className="sticky top-0 z-20 bg-background border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
-            {/* Left: Logo and Menu */}
-            <div className="flex items-center gap-4">
+      {/* Sticky Top Navbar */}
+      <nav className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/60">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-14 gap-3 sm:gap-4">
+            {/* Left: Mobile Drawer Trigger & Logo */}
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <div className="md:hidden">
                 <NavigationDrawer
                   isOpen={isDrawerOpen}
@@ -153,217 +85,233 @@ export default function Topics() {
                 />
               </div>
               <Logo className="h-4" />
-
-              {/* Desktop Menu Dropdown */}
-              <div className="hidden md:block relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsMenuOpen(!isMenuOpen);
-                  }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Menu className="h-4 w-4" />
-                  Menu
-                </button>
-
-                {/* Dropdown Menu */}
-                {isMenuOpen && (
-                  <div
-                    onClick={(e) => e.stopPropagation()}
-                    className="absolute top-full left-0 mt-1 w-48 bg-background border border-border rounded-lg shadow-lg overflow-hidden z-50"
-                  >
-                    <nav className="py-1">
-                      {navItems.map((item) => {
-                        const Icon = item.icon as any;
-                        const isActive = pathname === item.path;
-
-                        return (
-                          <button
-                            key={item.path}
-                            onClick={() => {
-                              router.push(item.path);
-                              setIsMenuOpen(false);
-                            }}
-                            className={`w-full flex items-center gap-3 px-4 py-2 text-sm text-left transition-colors ${
-                              isActive
-                                ? "bg-primary/10 text-primary font-medium"
-                                : "hover:bg-muted text-foreground"
-                            }`}
-                          >
-                            <Icon className="h-4 w-4" />
-                            <span>{item.label}</span>
-                          </button>
-                        );
-                      })}
-                    </nav>
-                  </div>
-                )}
-              </div>
             </div>
 
-            {/* Center: Search (Desktop) */}
-            <div className="hidden md:block flex-1 max-w-md mx-8">
+            {/* Center: Search Bar (Desktop) */}
+            <div className="hidden md:block flex-1 max-w-md mx-2">
               <SearchAndPagination
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                placeholder="Search topics, scriptures, keywords..."
               />
             </div>
 
-            {/* Right: Actions */}
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => router.push("/ask-question")}
-                size="sm"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-full font-medium transition-all duration-200 flex items-center gap-2"
-              >
-                <MessageSquare className="h-4 w-4" />
-                <span className="hidden sm:inline">Ask</span>
-              </Button>
-
-              <div className="hidden md:block">
-                <ProfileCard />
+            {/* Right: Direct Navigation & User Profile */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="hidden md:flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => router.push("/reading")}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    pathname === "/reading"
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  Reading
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push("/qa")}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    pathname === "/qa"
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  Q&A
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push("/ask-question")}
+                  className="ml-1 bg-primary hover:bg-primary-hover text-primary-foreground px-3 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  <span>Ask</span>
+                </button>
               </div>
+
+              <ProfileCard />
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Main Content Panel - Split Layout */}
-      <div className="flex-1 flex justify-center relative z-10 h-full  overflow-y-auto topics-scrollable">
-        <div className="w-full max-w-4xl flex flex-col overflow-y-scroll no-scrollbar">
-          {/* Mobile: Single Panel Layout */}
-          <div className="md:hidden w-full">
-            {/* Mobile Search Bar */}
-            <div className="sticky top-0   z-10 bg-background border-b border-border px-4 py-2">
-              <SearchAndPagination
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </div>
-
-            {/* Mobile Scrollable Content Area */}
-            <div className="flex-1 px-4 py-6 h-full overflow-y-auto no-scrollbar">
-              <div>
-                {/* Loading State */}
-                {loading && (
-                  <div className="pb-20">
-                    <TopicGridSkeleton count={8} viewMode="grid" />
-                  </div>
-                )}
-
-                {/* Error State */}
-                {error && !loading && (
-                  <div className="flex flex-col items-center justify-center py-16 text-center px-4">
-                    <LoadingFailedIcon className="h-20 w-20 mb-6" />
-                    <h3 className="text-xl font-semibold text-foreground mb-3">
-                      Oops! Something went wrong
-                    </h3>
-                    <p className="text-muted-foreground mb-6 max-w-sm text-sm leading-relaxed">
-                      {
-                        "We couldn't load the biblical topics. Please check your connection and try again."
-                      }
-                    </p>
-                    <Button
-                      onClick={() => refetch()}
-                      className="bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
-                    >
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Try Again
-                    </Button>
-                    <p className="text-xs text-muted-foreground mt-4">
-                      Error: {error}
-                    </p>
-                  </div>
-                )}
-
-                {/* Mobile Content List */}
-                {!loading && !error && (
-                  <div className="pb-40">
-                    {paginatedTopics.length > 0 ? (
-                      <div className="grid grid-cols-1 gap-6 max-w-xl mx-auto px-4">
-                        {paginatedTopics.map((topic) => (
-                          <TopicCard
-                            key={topic.id}
-                            topic={topic}
-                            viewMode="grid"
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <NoResults />
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-y-auto relative z-10 scroll-smooth">
+        <div className="w-full max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+          {/* Mobile Search Bar */}
+          <div className="md:hidden mb-4">
+            <SearchAndPagination
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              placeholder="Search biblical topics..."
+            />
           </div>
 
-          {/* Desktop: Grid Layout */}
-          <div className="hidden md:block flex-1 overflow-y-auto no-scrollbar px-6 lg:px-8 py-8 ">
-            {/* Loading State */}
-            {loading && <TopicGridSkeleton count={8} viewMode="grid" />}
+          {/* Medium-style Reading List Header */}
+          <div className="pb-3 sm:pb-4 border-b border-border/75 mb-1">
+            <div className="flex items-baseline justify-between flex-wrap gap-2">
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground font-serif">
+                  Biblical Topics
+                </h1>
 
-            {/* Error State */}
-            {error && !loading && (
-              <div className="flex flex-col items-center justify-center py-24 text-center px-4">
-                <LoadingFailedIcon className="h-24 w-24 mb-8" />
-                <h3 className="text-2xl font-semibold text-foreground mb-4">
-                  Oops! Something went wrong
-                </h3>
-                <p className="text-muted-foreground mb-8 max-w-md text-base leading-relaxed">
-                  {
-                    "We couldn't load the biblical topics. Please check your internet connection and try again."
-                  }
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 leading-relaxed">
+                  Curated scripture studies, doctrinal insights, and community questions.
                 </p>
-                <Button
-                  onClick={() => refetch()}
-                  className="bg-primary hover:bg-accent text-primary-foreground px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
-                >
-                  <RefreshCw className="h-5 w-5 mr-2" />
-                  Try Again
-                </Button>
-                <div className="mt-6 text-xs text-muted-foreground max-w-lg">
-                  <details className="cursor-pointer">
-                    <summary className="hover:text-foreground">
-                      Technical details
-                    </summary>
-                    <p className="mt-2 text-left bg-background/50 p-3 rounded-md border">
-                      {error}
-                    </p>
-                  </details>
-                </div>
               </div>
-            )}
 
-            {/* Success State - Topic List */}
-            {!loading && !error && (
-              <div>
-                {paginatedTopics.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
-                    {paginatedTopics.map((topic) => (
-                      <TopicCard key={topic.id} topic={topic} viewMode="grid" />
-                    ))}
-                  </div>
-                ) : (
-                  <NoResults />
-                )}
-              </div>
-            )}
+              {!loading && !error && totalItems > 0 && (
+                <span className="text-xs font-medium text-muted-foreground bg-muted/60 px-2.5 py-1 rounded-full">
+                  {totalItems} {totalItems === 1 ? "topic" : "topics"}
+                </span>
+              )}
+            </div>
+
+            {/* Filter & Sort Pills */}
+            <div className="flex items-center gap-1.5 sm:gap-2 mt-3 overflow-x-auto no-scrollbar pb-1">
+              {filterTabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = sortBy === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setSortBy(tab.id)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all flex-shrink-0 ${
+                      isActive
+                        ? "bg-foreground text-background font-semibold shadow-xs"
+                        : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          {/* Loading State */}
+          {loading && (
+            <div className="py-2">
+              <TopicGridSkeleton count={6} />
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <div className="flex flex-col items-center justify-center py-16 text-center px-4">
+              <LoadingFailedIcon className="h-16 w-16 mb-4 text-muted-foreground" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Unable to load topics
+              </h3>
+              <p className="text-muted-foreground mb-6 max-w-sm text-sm leading-relaxed">
+                We encountered an issue connecting to the server. Please check your connection and try again.
+              </p>
+              <Button
+                onClick={() => refetch()}
+                className="bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-2 rounded-lg font-medium shadow-sm transition-all"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Retry
+              </Button>
+            </div>
+          )}
+
+          {/* Topic List Stream */}
+          {!loading && !error && (
+            <div>
+              {paginatedTopics.length > 0 ? (
+                <div className="w-full">
+                  {paginatedTopics.map((topic, index) => (
+                    <TopicCard key={topic.id} topic={topic} index={index} />
+                  ))}
+                </div>
+              ) : (
+                <NoResults
+                  searchQuery={searchQuery}
+                  onClearSearch={() => setSearchQuery("")}
+                />
+              )}
+
+
+              {/* Bottom Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-8 border-t border-border/40 mt-4">
+                  <div className="text-xs text-muted-foreground">
+                    Showing <span className="font-semibold text-foreground">{startItem}</span>–<span className="font-semibold text-foreground">{endItem}</span> of{" "}
+                    <span className="font-semibold text-foreground">{totalItems}</span> topics
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                      disabled={currentPage === 1}
+                      aria-label="Previous page"
+                      className="p-2 rounded-lg border border-border/60 text-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-muted transition-colors"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter((p) => {
+                        // Always show first, last, and pages adjacent to current
+                        return (
+                          p === 1 ||
+                          p === totalPages ||
+                          Math.abs(p - currentPage) <= 1
+                        );
+                      })
+                      .map((pageNum, idx, arr) => {
+                        const showEllipsis =
+                          idx > 0 && pageNum - arr[idx - 1] > 1;
+                        return (
+                          <div key={pageNum} className="flex items-center">
+                            {showEllipsis && (
+                              <span className="px-2 text-xs text-muted-foreground">
+                                …
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setCurrentPage(pageNum)}
+                              className={`min-w-[32px] h-8 px-2 rounded-lg text-xs font-medium transition-all ${
+                                currentPage === pageNum
+                                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                                  : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          </div>
+                        );
+                      })}
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setCurrentPage(Math.min(totalPages, currentPage + 1))
+                      }
+                      disabled={currentPage === totalPages}
+                      aria-label="Next page"
+                      className="p-2 rounded-lg border border-border/60 text-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-muted transition-colors"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      </div>
+      </main>
 
-      {/* Bottom navigation intentionally removed on topics page - desktop nav moved to top */}
-
-      {/* Topic Action Buttons */}
+      {/* Floating Topic Action Buttons (Admin/Create actions if applicable) */}
       <TopicActionButtons />
     </div>
   );
 }
+

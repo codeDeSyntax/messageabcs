@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   BookOpen,
@@ -11,23 +11,10 @@ import {
   EyeOff,
   Filter,
   MoreHorizontal,
-  Image as ImageIcon,
-  Users,
+  ChevronRight,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useAdminDashboard } from "@/contexts/AdminDashboardContext";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +42,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { BiblicalTopicWithCount } from "@/services/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { GAME_BUTTON_SMALL } from "@/constants/gameStyles";
 import {
   useAdminAllTopics,
   useDeleteTopic,
@@ -64,23 +50,13 @@ import {
 import { EditTopicSidebar } from "./EditTopicSidebar";
 import { NewTopicSidebar } from "./NewTopicSidebar";
 
-// Backend BiblicalTopic with admin-specific fields
 type AdminTopic = BiblicalTopicWithCount & {
   isActive: boolean;
 };
 
-interface TopicFormData {
-  title: string;
-  subtitle: string;
-  scriptures: string[];
-  mainExtract: string;
-  quotes: string[];
-  image: string;
-}
-
 const TopicsManager: React.FC = () => {
   const router = useRouter();
-  const { searchTerm } = useAdminDashboard();
+  const { searchTerm, setSearchTerm } = useAdminDashboard();
   const [filterStatus, setFilterStatus] = useState<
     "all" | "active" | "inactive"
   >("all");
@@ -89,7 +65,6 @@ const TopicsManager: React.FC = () => {
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Use TanStack Query for admin topics (includes inactive topics)
   const {
     data: topicsData,
     isLoading: loading,
@@ -99,23 +74,18 @@ const TopicsManager: React.FC = () => {
     limit: 100,
   });
 
-  // Use TanStack Query mutation for deleting topic
   const deleteTopicMutation = useDeleteTopic();
-
-  // Use TanStack Query mutation for toggling topic status
   const toggleStatusMutation = useToggleTopicStatus();
 
-  // Memoize topics to prevent unnecessary recalculations
   const topics = React.useMemo<AdminTopic[]>(
     () =>
       topicsData?.data?.map((t) => ({
         ...t,
-        isActive: t.isActive ?? true, // Get isActive from backend
+        isActive: t.isActive ?? true,
       })) || [],
     [topicsData],
   );
 
-  // Apply filters to topics
   const filteredTopics = React.useMemo(() => {
     let filtered = topics;
 
@@ -191,300 +161,203 @@ const TopicsManager: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      {/* Fixed Header Section */}
-      <div className="flex-shrink-0 space-y-3 md:space-y-4 pb-4 md:pb-6">
-        {/* Header */}
-        <div className="flex flex-col gap-3 md:gap-4">
-          {/* Title and Actions Row - Hidden on mobile as it's in top nav */}
-          <div className="hidden md:flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-medium text-foreground">
-                Topics Management
-              </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                Manage biblical topics and their content
-              </p>
-            </div>
-
-            <div className="flex gap-2">
-              <Select
-                value={filterStatus}
-                onValueChange={(value) =>
-                  setFilterStatus(value as "all" | "active" | "inactive")
-                }
-              >
-                <SelectTrigger className="w-40 bg-primary/10 border-none rounded-full focus:ring-2 focus:ring-primary/30 shadow-sm h-10 text-sm">
-                  <Filter className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Topics</SelectItem>
-                  <SelectItem value="active">Active Only</SelectItem>
-                  <SelectItem value="inactive">Inactive Only</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <button
-                onClick={() => setNewTopicSidebarOpen(true)}
-                className="bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-full flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all h-10"
-              >
-                <Plus className="h-4 w-4 flex-shrink-0" />
-                <span className="whitespace-nowrap text-sm">Add Topic</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Filter and Add Button Row */}
-          <div className="flex md:hidden gap-2 w-full">
-            <Select
-              value={filterStatus}
-              onValueChange={(value) =>
-                setFilterStatus(value as "all" | "active" | "inactive")
-              }
-            >
-              <SelectTrigger className="flex-1 min-w-0 bg-primary/10 border-none rounded-full focus:ring-2 focus:ring-primary/30 shadow-sm h-10 text-sm">
-                <Filter className="h-4 w-4 mr-1 sm:mr-2 flex-shrink-0" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Topics</SelectItem>
-                <SelectItem value="active">Active Only</SelectItem>
-                <SelectItem value="inactive">Inactive Only</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <button
-              onClick={() => setNewTopicSidebarOpen(true)}
-              className="flex-shrink-0 bg-primary hover:bg-accent text-primary-foreground px-2 sm:px-3 md:px-4 py-2 rounded-full flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md transition-all h-10 min-w-[40px]"
-            >
-              <Plus className="h-4 w-4 flex-shrink-0" />
-              <span className="hidden sm:inline whitespace-nowrap text-sm">
-                Add Topic
-              </span>
-            </button>
-          </div>
+    <div className="space-y-4 max-w-4xl pb-16">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 className="text-xl md:text-2xl font-semibold text-[var(--theme-text-primary)] tracking-tight">
+            Topics Management
+          </h2>
+          <p className="text-xs md:text-sm text-[var(--theme-text-secondary)] mt-0.5">
+            Create, update, and manage biblical study topics and extracts
+          </p>
         </div>
 
-        {/* Filters */}
-        {/* <Card className="bg-background/20 backdrop-blur-sm border-border>
-          <CardContent className="p-4">
-            <div className="flex flex-row sm:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search topics..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-primary/15 focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                  />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Select
-                  value={filterStatus}
-                  onValueChange={(value) =>
-                    setFilterStatus(value as "all" | "active" | "inactive")
-                  }
-                >
-                  <SelectTrigger className="w-40 bg-primary/15 focus:ring-2 focus:ring-primary/30 focus:border-primary">
-                    <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Topics</SelectItem>
-                    <SelectItem value="active">Active Only</SelectItem>
-                    <SelectItem value="inactive">Inactive Only</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card> */}
+        <button
+          onClick={() => setNewTopicSidebarOpen(true)}
+          className="self-start sm:self-auto bg-[var(--theme-primary)] hover:bg-[var(--theme-primary-hover)] text-[var(--theme-primary-fg)] px-4 py-2 rounded-2xl flex items-center gap-1.5 text-xs font-semibold transition-all h-9 shadow-none"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>Add Topic</span>
+        </button>
       </div>
 
-      {/* Scrollable Topics Grid */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-2">
-        <div className="max-w-4xl mx-auto space-y-2 pb-20">
-          {loading
-            ? // Loading Skeletons
-              Array.from({ length: 6 }).map((_, index) => (
-                <div
-                  key={`skeleton-${index}`}
-                  className="flex items-start gap-0 p-0 bg-primary/5 rounded-xl border border-border/20"
-                >
-                  {/* Image skeleton */}
-                  <div className="flex-shrink-0 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-l-xl overflow-hidden">
-                    <Skeleton className="h-full w-full" />
-                  </div>
-                  {/* Content skeleton */}
-                  <div className="flex-1 p-2 sm:p-2.5 md:p-3 space-y-2">
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                  {/* Actions skeleton */}
-                  <div className="flex items-center gap-2 p-2 md:p-3">
-                    <Skeleton className="h-5 w-5 rounded-full" />
-                    <Skeleton className="h-5 w-12" />
-                    <Skeleton className="h-8 w-8 rounded-md" />
-                  </div>
-                </div>
-              ))
-            : filteredTopics.map((topic) => (
-                <div
-                  key={topic.id}
-                  className="flex items-start gap-0 p-0 bg-primary/10 rounded-xl border-none hover:shadow-md hover:shadow-primary/10 transition-all duration-200 cursor-pointer group w-full relative"
-                  onClick={() => handleEdit(topic)}
-                >
-                  {/* Left: Square Image - Smaller on mobile */}
-                  <div className="flex-shrink-0 w-16 sm:w-20 md:w-24 h-full rounded-l-xl overflow-hidden bg-muted">
-                    {topic.image ? (
-                      <img
-                        src={topic.image}
-                        alt={topic.title}
-                        className="w-full h-full object-fit"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                        <BookOpen className="h-5 w-5 sm:h-5 sm:w-5 text-primary-foreground" />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Center: Title and Subtitle */}
-                  <div className="flex-1 min-w-0 p-2 sm:p-2.5 md:p-3">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-sm sm:text-sm md:text-sm font-semibold text-foreground line-clamp-2 mb-0.5 sm:mb-1 flex-1">
-                        {topic.title}
-                      </h3>
-                      {!topic.isActive && (
-                        <Badge
-                          variant="secondary"
-                          className="text-xs px-2 py-0.5 bg-orange-100 text-orange-700 border-orange-300"
-                        >
-                          Hidden
-                        </Badge>
-                      )}
-                    </div>
-                    {topic.subtitle && (
-                      <p className="text-xs sm:text-xs md:text-xs text-muted-foreground line-clamp-1">
-                        {topic.subtitle}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Right: Actions Menu */}
-                  <div className="flex-shrink-0 absolute right-2 bottom-2 flex items-center">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button
-                          onClick={(e) => e.stopPropagation()}
-                          className="p-2 rounded-lg bg-muted hover:bg-primary/20 transition-colors"
-                          title="More actions"
-                          aria-label="More actions"
-                        >
-                          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="w-48 bg-cream-200"
-                      >
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleTopicStatus(topic.id, topic.isActive);
-                          }}
-                          className="cursor-pointer"
-                        >
-                          {topic.isActive ? (
-                            <>
-                              <EyeOff className="h-4 w-4 mr-2 text-orange-600" />
-                              <span>Hide Topic</span>
-                            </>
-                          ) : (
-                            <>
-                              <Eye className="h-4 w-4 mr-2 text-green-600" />
-                              <span>Show Topic</span>
-                            </>
-                          )}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEdit(topic);
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <Edit className="h-4 w-4 mr-2 text-primary" />
-                          <span>Edit Topic</span>
-                        </DropdownMenuItem>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <DropdownMenuItem
-                              onClick={(e) => e.stopPropagation()}
-                              className="cursor-pointer text-red-600 focus:text-red-600"
-                              onSelect={(e) => e.preventDefault()}
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              <span>Delete Topic</span>
-                            </DropdownMenuItem>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent className="max-w-[90vw] sm:max-w-md rounded-2xl">
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Topic</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                {' Are you sure you want to delete "' +
-                                  topic.title +
-                                  '"? This action cannot be undone.'}
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-                              <AlertDialogCancel className="rounded-xl">
-                                Cancel
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDelete(topic.id)}
-                                className="bg-red-600 hover:bg-red-700 rounded-xl"
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </div>
-              ))}
+      {/* Main Space Search & Filter Bar - Clean Borderless */}
+      <div className="flex flex-col sm:flex-row items-center gap-2.5">
+        <div className="relative flex-1 w-full">
+          <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--theme-text-secondary)]/70 z-10" />
+          <Input
+            placeholder="Search topics by title, subtitle, or extracts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 h-10 rounded-2xl border-0 bg-[var(--theme-surface)] text-sm placeholder:text-[var(--theme-text-secondary)]/60 focus:bg-[var(--theme-surface-subtle)] focus:ring-1 focus:ring-[var(--theme-primary)] transition-all shadow-none w-full text-[var(--theme-text-primary)]"
+          />
         </div>
 
-        {!loading && filteredTopics.length === 0 && (
-          <div className="p-8 md:p-12 text-center bg-background/5 rounded-2xl mx-2 md:mx-0">
-            <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-base md:text-lg font-semibold text-foreground mb-2">
-              No topics found
-            </h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              {searchTerm || filterStatus !== "all"
-                ? "Try adjusting your search or filters"
-                : "Create your first topic to get started"}
-            </p>
-            {!searchTerm && filterStatus === "all" && (
-              <button
-                onClick={() => setNewTopicSidebarOpen(true)}
-                className="bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-xl flex items-center gap-2 mx-auto shadow-sm hover:shadow-md transition-all"
-              >
-                <Plus className="h-4 w-4" />
-                Add Topic
-              </button>
-            )}
+        <Select
+          value={filterStatus}
+          onValueChange={(value) =>
+            setFilterStatus(value as "all" | "active" | "inactive")
+          }
+        >
+          <SelectTrigger className="w-full sm:w-40 bg-[var(--theme-surface)] border-0 rounded-2xl text-xs font-medium text-[var(--theme-text-dark)] h-10 shadow-none">
+            <Filter className="h-3.5 w-3.5 mr-2 text-[var(--theme-text-secondary)]" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-[var(--theme-canvas)] border-0 rounded-xl shadow-lg">
+            <SelectItem value="all">All Topics</SelectItem>
+            <SelectItem value="active">Active Only</SelectItem>
+            <SelectItem value="inactive">Hidden Only</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Google Settings Style Grouped Container - Borderless, Canvas Integrated */}
+      <div className="rounded-2xl overflow-hidden divide-y divide-[var(--theme-border-subtle)]/60">
+        {loading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex items-center justify-between px-4 py-2.5">
+              <div className="flex items-center gap-3 w-full">
+                <Skeleton className="h-9 w-9 rounded-xl flex-shrink-0" />
+                <div className="space-y-1.5 flex-1">
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-3 w-3/4" />
+                </div>
+              </div>
+            </div>
+          ))
+        ) : filteredTopics.length === 0 ? (
+          <div className="p-8 text-center text-[var(--theme-text-secondary)] text-sm">
+            No topics found matching your search.
           </div>
+        ) : (
+          filteredTopics.map((topic) => (
+            <div
+              key={topic.id}
+              onClick={() => handleEdit(topic)}
+              className="flex items-center justify-between px-4 py-2.5 hover:bg-[var(--theme-surface)]/60 cursor-pointer transition-all duration-150 rounded-xl group gap-3"
+            >
+              {/* Left: Thumbnail & Content */}
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden bg-[var(--theme-surface-subtle)] text-[var(--theme-accent)] flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  {topic.image ? (
+                    <img
+                      src={topic.image}
+                      alt={topic.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <BookOpen className="h-4.5 w-4.5" />
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-[var(--theme-text-primary)] group-hover:text-[var(--theme-text-dark)] truncate">
+                      {topic.title}
+                    </h3>
+                    {!topic.isActive && (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-[var(--theme-badge-bg)] text-[var(--theme-badge-text)]">
+                        Hidden
+                      </span>
+                    )}
+                  </div>
+                  {topic.subtitle && (
+                    <p className="text-xs text-[var(--theme-text-secondary)] truncate mt-0.5">
+                      {topic.subtitle}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: Actions Menu & Chevron */}
+              <div
+                className="flex items-center gap-2 flex-shrink-0"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="p-1.5 rounded-xl hover:bg-[var(--theme-surface-subtle)] text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] transition-colors"
+                      title="More actions"
+                      aria-label="More actions"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-48 bg-[var(--theme-canvas)] border-0 rounded-xl shadow-lg"
+                  >
+                    <DropdownMenuItem
+                      onClick={() => toggleTopicStatus(topic.id, topic.isActive)}
+                      className="cursor-pointer text-[var(--theme-text-primary)] focus:bg-[var(--theme-surface)]"
+                    >
+                      {topic.isActive ? (
+                        <>
+                          <EyeOff className="h-4 w-4 mr-2 text-[var(--theme-text-secondary)]" />
+                          <span>Hide Topic</span>
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-4 w-4 mr-2 text-emerald-600" />
+                          <span>Show Topic</span>
+                        </>
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleEdit(topic)}
+                      className="cursor-pointer text-[var(--theme-text-primary)] focus:bg-[var(--theme-surface)]"
+                    >
+                      <Edit className="h-4 w-4 mr-2 text-[var(--theme-primary)]" />
+                      <span>Edit Topic</span>
+                    </DropdownMenuItem>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <DropdownMenuItem
+                          className="cursor-pointer text-red-600 focus:text-red-700 focus:bg-red-50"
+                          onSelect={(e) => e.preventDefault()}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          <span>Delete Topic</span>
+                        </DropdownMenuItem>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="max-w-[90vw] sm:max-w-md bg-[var(--theme-canvas)] border-0 rounded-2xl shadow-xl">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-[var(--theme-text-primary)]">Delete Topic</AlertDialogTitle>
+                          <AlertDialogDescription className="text-[var(--theme-text-secondary)]">
+                            Are you sure you want to delete &quot;{topic.title}&quot;? This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="gap-2">
+                          <AlertDialogCancel className="rounded-xl border-0 bg-[var(--theme-surface)] text-[var(--theme-text-primary)]">
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDelete(topic.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white rounded-xl"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <div
+                  onClick={() => handleEdit(topic)}
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-[var(--theme-text-secondary)]/60 group-hover:text-[var(--theme-text-primary)] group-hover:bg-[var(--theme-surface-subtle)] transition-all cursor-pointer"
+                >
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </div>
+              </div>
+            </div>
+          ))
         )}
       </div>
 
-      {/* Edit Topic Sidebar */}
+      {/* Edit Topic Sidebar Drawer */}
       <EditTopicSidebar
         isOpen={editingSidebarOpen}
         onClose={() => setEditingSidebarOpen(false)}
@@ -492,7 +365,7 @@ const TopicsManager: React.FC = () => {
         onSuccess={handleEditSuccess}
       />
 
-      {/* New Topic Sidebar */}
+      {/* New Topic Sidebar Drawer */}
       <NewTopicSidebar
         isOpen={newTopicSidebarOpen}
         onClose={() => setNewTopicSidebarOpen(false)}

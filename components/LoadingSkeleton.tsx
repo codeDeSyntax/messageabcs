@@ -57,116 +57,57 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
 
 interface TopicCardSkeletonProps {
   className?: string;
+  index?: number;
   viewMode?: "grid" | "list";
 }
 
 export const TopicCardSkeleton: React.FC<TopicCardSkeletonProps> = ({
   className = "",
-  viewMode = "grid",
+  index = 0,
 }) => {
-  // Add style support to LoadingSkeleton props temporarily
-  const ClippedLoadingSkeleton = ({
-    className: skeletonClassName,
-  }: {
-    className: string;
-  }) => (
-    <div
-      className={`animate-shimmer border-none bg-gradient-to-r from-muted/40 via-muted/60 to-muted/40 bg-[length:200%_100%] ${skeletonClassName}`}
-      style={{
-        clipPath: "polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      }}
-    />
-  );
-
-  // Desktop List View Skeleton
-  if (viewMode === "list") {
-    return (
-      <div
-        className={`flex items-center gap-4 p-3 bg-muted/30 rounded-xl h-20 w-full max-w-4xl mx-auto ${className}`}
-      >
-        {/* Left: Image Skeleton with pulse */}
-        <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden">
-          <LoadingSkeleton variant="rectangular" className="w-full h-full" />
-        </div>
-
-        {/* Center: Content Skeleton */}
-        <div className="flex-1 min-w-0 space-y-2">
-          <LoadingSkeleton variant="text" className="h-4 w-48" />
-          <LoadingSkeleton variant="text" className="h-3 w-32 opacity-70" />
-        </div>
-
-        {/* Right: Badge Skeleton */}
-        <div className="flex-shrink-0 flex items-center gap-2">
-          <LoadingSkeleton
-            variant="rectangular"
-            className="w-14 h-6 rounded-full"
-          />
-          <LoadingSkeleton variant="circular" className="w-7 h-7" />
-        </div>
-      </div>
-    );
-  }
+  const isOdd = index % 2 !== 0;
 
   return (
-    <>
-      {/* Mobile Card Skeleton */}
-      <div
-        className={`relative group cursor-pointer transition-all duration-300 md:hidden h-20 rounded-xl bg-muted/30 flex items-center space-x-3 p-2 ${className}`}
-      >
-        {/* Mobile - Avatar Image Skeleton */}
-        <div className="flex-shrink-0">
-          <LoadingSkeleton
-            variant="rectangular"
-            className="w-16 h-16 rounded-lg"
-          />
+    <div
+      className={`py-3.5 sm:py-4 px-3 sm:px-4 border-b border-border/80 flex items-stretch sm:items-start justify-between gap-3 sm:gap-5 ${
+        isOdd ? "bg-primary/[0.09]" : "bg-primary/[0.015]"
+      } ${className}`}
+    >
+      {/* Left: Text Skeleton */}
+      <div className="flex-1 min-w-0 space-y-2">
+        {/* Author / Source Meta Bar */}
+        <div className="flex items-center gap-2">
+          <LoadingSkeleton variant="circular" className="w-4 h-4" />
+          <LoadingSkeleton variant="text" className="h-3 w-20" />
+          <LoadingSkeleton variant="text" className="h-3 w-14" />
         </div>
 
-        {/* Mobile - Content Skeleton */}
-        <div className="flex-1 min-w-0 space-y-2">
-          <LoadingSkeleton variant="text" className="h-4 w-40" />
-          <LoadingSkeleton variant="text" className="h-3 w-28 opacity-70" />
-          <div className="flex items-center gap-2">
-            <LoadingSkeleton
-              variant="rectangular"
-              className="h-5 w-12 rounded-full"
-            />
-          </div>
+        {/* Title */}
+        <div className="space-y-1 pt-0.5">
+          <LoadingSkeleton variant="text" className="h-4 w-4/5" />
         </div>
 
-        {/* Mobile - Action Icon Skeleton */}
-        <div className="absolute bottom-2 right-2">
-          <LoadingSkeleton variant="circular" className="w-7 h-7" />
+        {/* Excerpt */}
+        <div className="space-y-1">
+          <LoadingSkeleton variant="text" className="h-3 w-full opacity-70" />
+          <LoadingSkeleton variant="text" className="h-3 w-3/4 opacity-70" />
         </div>
-      </div>
 
-      {/* Desktop Grid Card Skeleton */}
-      <div className="hidden md:block cursor-pointer transition-all duration-300">
-        <div className="relative flex flex-col gap-0 p-0 bg-muted/30 rounded-xl h-52 overflow-hidden">
-          {/* Top: Image Section */}
-          <div className="flex-shrink-0 w-full h-32 relative overflow-hidden">
-            <LoadingSkeleton variant="rectangular" className="w-full h-full" />
-
-            {/* Overlay Badge Skeleton */}
-            <div className="absolute top-2 right-2">
-              <LoadingSkeleton
-                variant="rectangular"
-                className="w-16 h-6 rounded-full"
-              />
-            </div>
-          </div>
-
-          {/* Bottom: Content Section */}
-          <div className="flex-1 p-3 space-y-2">
-            <LoadingSkeleton variant="text" className="h-4 w-3/4" />
-            <LoadingSkeleton variant="text" className="h-3 w-1/2 opacity-70" />
-            <div className="flex items-center gap-2 pt-1">
-              <LoadingSkeleton variant="circular" className="w-5 h-5" />
-              <LoadingSkeleton variant="text" className="h-3 w-14" />
-            </div>
-          </div>
+        {/* Footer Meta */}
+        <div className="flex items-center gap-3 pt-1">
+          <LoadingSkeleton variant="text" className="h-3 w-16" />
+          <LoadingSkeleton variant="text" className="h-3 w-14" />
         </div>
       </div>
-    </>
+
+      {/* Right: Thumbnail Skeleton */}
+      <div className="flex-shrink-0 self-stretch sm:self-start flex">
+        <LoadingSkeleton
+          variant="rectangular"
+          className="w-20 sm:w-28 md:w-36 h-full min-h-[5.5rem] sm:min-h-0 sm:h-20 md:h-24 rounded-lg"
+        />
+      </div>
+    </div>
   );
 };
 
@@ -177,35 +118,17 @@ interface TopicGridSkeletonProps {
 }
 
 export const TopicGridSkeleton: React.FC<TopicGridSkeletonProps> = ({
-  count = 8,
+  count = 6,
   className = "",
-  viewMode = "grid",
 }) => {
   return (
-    <div className={className}>
-      {/* Desktop: Board-style Layout with View Mode Support */}
-      <div className="hidden md:block">
-        <div
-          className={`${
-            viewMode === "grid"
-              ? "grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto"
-              : "space-y-3"
-          }`}
-        >
-          {Array.from({ length: count }).map((_, index) => (
-            <TopicCardSkeleton key={`desktop-${index}`} viewMode={viewMode} />
-          ))}
-        </div>
-      </div>
-
-      {/* Mobile: Vertical Grid Layout */}
-      <div className="md:hidden">
-        <div className="grid grid-cols-1 gap-6 max-w-xl mx-auto px-4">
-          {Array.from({ length: count }).map((_, index) => (
-            <TopicCardSkeleton key={`mobile-${index}`} viewMode="grid" />
-          ))}
-        </div>
-      </div>
+    <div className={`w-full max-w-4xl mx-auto ${className}`}>
+      {Array.from({ length: count }).map((_, index) => (
+        <TopicCardSkeleton key={`topic-skel-${index}`} index={index} />
+      ))}
     </div>
   );
 };
+
+
+

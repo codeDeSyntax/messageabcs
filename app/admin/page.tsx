@@ -10,41 +10,24 @@ import { useAuth } from "@/hooks/useAuth";
 const AdminPage: React.FC = () => {
   const searchParams = useSearchParams();
   const { user, isAuthenticated } = useAuth();
-  const [showDashboard, setShowDashboard] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(true);
 
   useEffect(() => {
-    document.title = "Admin Dashboard - MessageABCs";
+    document.title = "Admin Settings - MessageABCs";
+  }, []);
 
-    // Check if user is authenticated and has admin role
-    if (isAuthenticated && user?.role === "admin") {
-      // Check if direct dashboard access is requested via URL parameter
-      if (searchParams.get("direct") === "true") {
-        setShowDashboard(true);
-      }
-    }
-  }, [searchParams, isAuthenticated, user]);
-
-  // Check if user is admin
   const isAdmin = isAuthenticated && user?.role === "admin";
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/3 w-32 h-32 bg-accent/15 rounded-full blur-2xl animate-bounce delay-500"></div>
-        </div>
-
-        <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">
-              Access Denied
-            </h1>
-            <p className="text-muted-foreground">
-              You need admin privileges to access this area.
-            </p>
-          </div>
+      <div className="min-h-screen bg-[var(--theme-canvas)] flex items-center justify-center p-4">
+        <div className="bg-[var(--theme-surface)] border border-[var(--theme-border-subtle)] rounded-3xl p-8 max-w-md text-center shadow-lg">
+          <h1 className="text-xl font-bold text-red-700 mb-2">
+            Access Denied
+          </h1>
+          <p className="text-sm text-[var(--theme-text-secondary)]">
+            You need administrator privileges to access this area.
+          </p>
         </div>
       </div>
     );
@@ -52,17 +35,8 @@ const AdminPage: React.FC = () => {
 
   if (!showDashboard) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/3 w-32 h-32 bg-accent/15 rounded-full blur-2xl animate-bounce delay-500"></div>
-        </div>
-
-        <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-          <AdminAccessCard onAccessAdmin={() => setShowDashboard(true)} />
-        </div>
+      <div className="min-h-screen bg-[var(--theme-canvas)] flex items-center justify-center p-4">
+        <AdminAccessCard onAccessAdmin={() => setShowDashboard(true)} />
       </div>
     );
   }
@@ -70,7 +44,6 @@ const AdminPage: React.FC = () => {
   return <AdminDashboard />;
 };
 
-// Wrap the entire admin page with ProtectedRoute
 export default function ProtectedAdminPage() {
   return (
     <ProtectedRoute redirectTo="/login">

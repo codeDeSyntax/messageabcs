@@ -11,23 +11,27 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: [
-          "Mona Sans",
-          "ui-sans-serif",
-          "system-ui",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica Neue",
+          "var(--font-sans)",
+          "medium-content-sans-serif-font",
+          "Lucida Grande",
+          "Lucida Sans Unicode",
+          "Lucida Sans",
+          "Geneva",
           "Arial",
-          "Noto Sans",
           "sans-serif",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "Segoe UI Symbol",
-          "Noto Color Emoji",
+        ],
+        serif: [
+          "gt-super",
+          "var(--font-serif)",
+          "Georgia",
+          "Cambria",
+          "Times New Roman",
+          "Times",
+          "serif",
         ],
       },
+
+
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -40,17 +44,17 @@ const config: Config = {
       },
       colors: {
         cream: {
-          50: "#fefaf5",
-          100: "#faeed1",
-          200: "#f5e3bb",
-          300: "#f2cdb4",
+          50: "var(--theme-canvas, #fefaf5)",
+          100: "var(--theme-canvas, #faeed1)",
+          200: "var(--theme-surface, #f5e3bb)",
+          300: "var(--theme-surface-subtle, #f2cdb4)",
         },
         brown: {
-          100: "#d4a574",
-          200: "#b8845f",
-          300: "#9a674a",
-          400: "#7d5439",
-          500: "#5c3d2a",
+          100: "var(--theme-secondary, #d4a574)",
+          200: "var(--theme-secondary, #b8845f)",
+          300: "var(--theme-primary, #9a674a)",
+          400: "var(--theme-primary-hover, #7d5439)",
+          500: "var(--theme-text-primary, #5c3d2a)",
         },
         stone: {
           700: "#44403c",
@@ -58,29 +62,43 @@ const config: Config = {
           900: "#1c1917",
           950: "#0c0a09",
         },
-        // Semantic colors
-        background: "#faeed1",
-        foreground: "#1c1917",
+        // Dynamic semantic colors mapped to CSS variables
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
         primary: {
-          DEFAULT: "#9a674a",
-          hover: "#7d5439",
-          light: "#b8845f",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+          hover: "var(--theme-primary-hover, hsl(var(--primary)))",
+          light: "var(--theme-secondary, hsl(var(--secondary)))",
         },
         secondary: {
-          DEFAULT: "#d4a574",
-          hover: "#b8845f",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+          hover: "var(--theme-secondary, hsl(var(--secondary)))",
         },
         muted: {
-          DEFAULT: "#f5e3bb",
-          foreground: "#5c3d2a",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "#7d5439",
-          foreground: "#fefaf5",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
-        border: "#d4a574",
-        input: "#f5e3bb",
-        ring: "#9a674a",
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
       },
       keyframes: {
         "accordion-down": {

@@ -1,5 +1,11 @@
 import React from "react";
-import { BookOpen, MessageCircle, MessageSquare, User } from "lucide-react";
+import {
+  BookOpen,
+  MessageCircle,
+  MessageSquare,
+  ShieldCheck,
+  ChevronRight,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DashboardStatsProps {
@@ -8,6 +14,8 @@ interface DashboardStatsProps {
   totalAnswers?: number;
   activeUsers?: number;
   loading?: boolean;
+  onSectionClick?: (section: "topics" | "questions" | "answers") => void;
+  embedded?: boolean;
 }
 
 export const DashboardStats: React.FC<DashboardStatsProps> = ({
@@ -16,195 +24,168 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
   totalAnswers = 0,
   activeUsers = 0,
   loading = false,
+  onSectionClick,
+  embedded = false,
 }) => {
   if (loading) {
     return (
-      <div className="bg-background rounded-2xl shadow-none border-0 px-6 py-6 font-mono relative overflow-hidden">
-        {/* Islamic Geometric Pattern Background */}
-        <div className="absolute inset-0 pointer-events-none">
-          <svg
-            className="w-full h-full opacity-[0.08]"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <pattern
-                id="islamicPattern"
-                x="0"
-                y="0"
-                width="100"
-                height="100"
-                patternUnits="userSpaceOnUse"
-              >
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="30"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="20"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                />
-                <path
-                  d="M50,20 L50,80 M20,50 L80,50 M35,35 L65,65 M65,35 L35,65"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                />
-                <circle cx="50" cy="50" r="3" fill="currentColor" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#islamicPattern)" />
-          </svg>
-        </div>
-
-        {/* Soft gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/20 via-transparent to-amber-100/10 pointer-events-none"></div>
-
-        {/* Content */}
-        <div className="max-w-2xl space-y-3 text-sm relative z-10">
-          <div className="text-center mb-4">
-            <Skeleton className="h-6 w-48 mx-auto" />
-            <div className="border-t border-dashed border-border/40 mt-3"></div>
+      <div className={embedded ? "flex flex-col h-full" : "space-y-3"}>
+        {!embedded && (
+          <div>
+            <Skeleton className="h-6 w-48 mb-2" />
+            <Skeleton className="h-4 w-72" />
           </div>
-
-          {/* Skeleton Stats */}
+        )}
+        <div className={embedded ? "divide-y divide-[var(--theme-border-subtle)]" : "bg-[var(--theme-surface)] rounded-2xl md:rounded-3xl overflow-hidden divide-y divide-[var(--theme-border-subtle)]"}>
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="flex justify-between items-center py-2">
-              <div className="flex items-center gap-3">
-                <Skeleton className="h-4 w-4 rounded-full" />
-                <Skeleton className="h-3 w-32" />
+            <div key={i} className="flex items-center justify-between p-4 md:p-5">
+              <div className="flex items-center gap-3 md:gap-4">
+                <Skeleton className="h-10 w-10 md:h-11 md:w-11 rounded-2xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-48" />
+                </div>
               </div>
-              <Skeleton className="h-6 w-12" />
+              <Skeleton className="h-7 w-16 rounded-xl" />
             </div>
           ))}
-
-          <div className="border-t border-dashed border-border/40 my-4"></div>
-
-          <div className="text-center">
-            <Skeleton className="h-3 w-40 mx-auto" />
-          </div>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="bg-background rounded-2xl shadow-none border-0 px-6 py-6 font-mono relative overflow-hidden">
-      {/* Islamic Geometric Pattern Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <svg
-          className="w-full h-full opacity-[0.08]"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <pattern
-              id="islamicPattern"
-              x="0"
-              y="0"
-              width="100"
-              height="100"
-              patternUnits="userSpaceOnUse"
-            >
-              <circle
-                cx="50"
-                cy="50"
-                r="30"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.5"
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r="20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.5"
-              />
-              <path
-                d="M50,20 L50,80 M20,50 L80,50 M35,35 L65,65 M65,35 L35,65"
-                stroke="currentColor"
-                strokeWidth="0.5"
-              />
-              <circle cx="50" cy="50" r="3" fill="currentColor" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#islamicPattern)" />
-        </svg>
-      </div>
+  const statItems = [
+    {
+      id: "topics" as const,
+      title: "Biblical Topics",
+      description: "Published topics, sermon outlines, and scripture studies",
+      value: totalTopics,
+      icon: BookOpen,
+      iconBg: "bg-[var(--theme-surface-subtle)] text-[var(--theme-accent)]",
+      badgeText: `${totalTopics} Topics`,
+      clickable: true,
+    },
+    {
+      id: "questions" as const,
+      title: "Pending Questions",
+      description: "Community inquiries awaiting biblical answers",
+      value: pendingQuestions,
+      icon: MessageCircle,
+      iconBg: pendingQuestions > 0 ? "bg-amber-200 text-amber-900" : "bg-[var(--theme-surface-subtle)] text-[var(--theme-accent)]",
+      badgeText: pendingQuestions > 0 ? `${pendingQuestions} Pending` : "All Answered",
+      badgeVariant: pendingQuestions > 0 ? "warning" : "success",
+      clickable: true,
+    },
+    {
+      id: "answers" as const,
+      title: "Published Answers",
+      description: "Verified answers with Message & biblical citations",
+      value: totalAnswers,
+      icon: MessageSquare,
+      iconBg: "bg-[var(--theme-surface-subtle)] text-[var(--theme-accent)]",
+      badgeText: `${totalAnswers} Answers`,
+      clickable: true,
+    },
+    {
+      id: "system" as const,
+      title: "Database & Services",
+      description: "Neon PostgreSQL serverless pool active",
+      value: "Active",
+      icon: ShieldCheck,
+      iconBg: "bg-emerald-100 text-emerald-800",
+      badgeText: "Connected (Neon)",
+      badgeVariant: "success",
+      clickable: false,
+    },
+  ];
 
-      {/* Soft gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/20 via-transparent to-amber-100/10 pointer-events-none"></div>
-
-      {/* Content */}
-      <div className="max-w-2xl space-y-3 text-sm relative z-10">
-        <div className="text-center mb-4">
-          <h3 className="text-lg font-semibold text-foreground uppercase tracking-wider">
-            Dashboard Overview
+  const content = (
+    <div className="flex flex-col">
+      <div className="px-4 py-2.5 border-b border-[var(--theme-border-subtle)] flex items-center justify-between">
+        <div>
+          <h3 className="text-sm md:text-base font-bold text-[var(--theme-text-primary)] tracking-tight">
+            Platform Overview
           </h3>
-          <div className="border-t border-dashed border-border/40 mt-3"></div>
-        </div>
-
-        {/* Total Topics */}
-        <div className="flex justify-between items-center py-2">
-          <div className="flex items-center gap-3">
-            <BookOpen className="h-4 w-4 text-primary" />
-            <span className="text-muted-foreground text-xs uppercase">
-              Total Topics
-            </span>
-          </div>
-          <div className="text-foreground font-bold text-lg">{totalTopics}</div>
-        </div>
-
-        {/* Pending Questions */}
-        <div className="flex justify-between items-center py-2">
-          <div className="flex items-center gap-3">
-            <MessageCircle className="h-4 w-4 text-yellow-600" />
-            <span className="text-muted-foreground text-xs uppercase">
-              Pending Questions
-            </span>
-          </div>
-          <div className="text-foreground font-bold text-lg">
-            {pendingQuestions}
-          </div>
-        </div>
-
-        {/* Total Answers */}
-        <div className="flex justify-between items-center py-2">
-          <div className="flex items-center gap-3">
-            <MessageSquare className="h-4 w-4 text-green-600" />
-            <span className="text-muted-foreground text-xs uppercase">
-              Total Answers
-            </span>
-          </div>
-          <div className="text-foreground font-bold text-lg">
-            {totalAnswers}
-          </div>
-        </div>
-
-        {/* Active Users */}
-        <div className="flex justify-between items-center py-2">
-          <div className="flex items-center gap-3">
-            <User className="h-4 w-4 text-blue-600" />
-            <span className="text-muted-foreground text-xs uppercase">
-              Active Users
-            </span>
-          </div>
-          <div className="text-foreground font-bold text-lg">{activeUsers}</div>
-        </div>
-
-        <div className="border-t border-dashed border-border/40 my-4"></div>
-
-        <div className="text-center text-xs text-muted-foreground uppercase tracking-wider">
-          Last Updated: {new Date().toLocaleDateString()}
+          <p className="text-xs text-[var(--theme-text-secondary)]">
+            Live statistics & system health
+          </p>
         </div>
       </div>
+
+      <div className="divide-y divide-[var(--theme-border-subtle)]">
+        {statItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.id}
+              onClick={() => {
+                if (item.clickable && onSectionClick && item.id !== "system") {
+                  onSectionClick(item.id);
+                }
+              }}
+              className={`
+                flex items-center justify-between px-4 py-2.5 transition-all duration-150 rounded-xl
+                ${
+                  item.clickable
+                    ? "hover:bg-[var(--theme-surface-hover)] cursor-pointer group"
+                    : ""
+                }
+              `}
+            >
+              {/* Left: Icon + Text */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${item.iconBg} transition-transform group-hover:scale-105`}
+                >
+                  <Icon className="h-4.5 w-4.5" />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-sm font-semibold text-[var(--theme-text-primary)] group-hover:text-[var(--theme-text-dark)] transition-colors truncate">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-[var(--theme-text-secondary)] truncate">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: Badge / Indicator + Chevron */}
+              <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                <span
+                  className={`
+                    px-2.5 py-0.5 rounded-full text-xs font-semibold
+                    ${
+                      item.badgeVariant === "warning"
+                        ? "bg-amber-200 text-amber-900"
+                        : item.badgeVariant === "success"
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-[var(--theme-surface-subtle)] text-[var(--theme-accent)]"
+                    }
+                  `}
+                >
+                  {item.badgeText}
+                </span>
+
+                {item.clickable && (
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-text-primary)] transition-all">
+                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  if (embedded) {
+    return content;
+  }
+
+  return (
+    <div className="rounded-2xl overflow-hidden shadow-none divide-y divide-[var(--theme-border-subtle)]">
+      {content}
     </div>
   );
 };

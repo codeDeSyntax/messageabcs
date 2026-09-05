@@ -424,6 +424,21 @@ class ApiService {
     });
   }
 
+  async createAnswer(
+    questionId: string,
+    answerData:
+      | {
+          content: string;
+          answeredBy?: string;
+          isOfficial?: boolean;
+        }
+      | string,
+  ): Promise<ApiResponse<Question>> {
+    const answerText =
+      typeof answerData === "string" ? answerData : answerData.content;
+    return this.addAnswer(questionId, answerText);
+  }
+
   async updateAnswer(
     questionId: string,
     answerId: string,

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { MessageCircle, Search, Filter } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAdminDashboard } from "@/contexts/AdminDashboardContext";
 import {
@@ -16,7 +15,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import QuestionListItem from "./QuestionListItem";
 import QuestionDetailsSidebar from "./QuestionDetailsSidebar";
 
-// Backend Question model with admin-specific fields
 type AdminQuestion = Question & {
   status: "pending" | "answered" | "closed";
   priority: "low" | "medium" | "high";
@@ -29,21 +27,17 @@ interface AnswerFormData {
 }
 
 const QuestionsManager: React.FC = () => {
-  const { searchTerm } = useAdminDashboard();
+  const { searchTerm, setSearchTerm } = useAdminDashboard();
   const [questions, setQuestions] = useState<AdminQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<
     "all" | "pending" | "answered" | "closed"
-  >("all");
-  const [filterPriority, setFilterPriority] = useState<
-    "all" | "low" | "medium" | "high"
   >("all");
   const [selectedQuestion, setSelectedQuestion] =
     useState<AdminQuestion | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { toast } = useToast();
 
-  // Load questions from API
   useEffect(() => {
     fetchQuestions();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -57,36 +51,23 @@ const QuestionsManager: React.FC = () => {
       });
 
       if (response.success && response.data) {
-        // Transform public Question data to AdminQuestion format
         const adminQuestions = response.data.map((q) => ({
           ...q,
           status: (q.answers && q.answers.length > 0
             ? "answered"
             : "pending") as "pending" | "answered" | "closed",
-          priority: "medium" as "low" | "medium" | "high", // Default priority
-          views: 0, // Default views since not tracked
+          priority: "medium" as "low" | "medium" | "high",
+          views: 0,
         }));
         setQuestions(adminQuestions);
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to load questions",
-          variant: "destructive",
-        });
       }
     } catch (error) {
       console.error("Error fetching questions:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load questions",
-        variant: "destructive",
-      });
     } finally {
       setLoading(false);
     }
   };
 
-  // Apply filters to questions
   const filteredQuestions = React.useMemo(() => {
     let filtered = questions;
 
@@ -94,27 +75,19 @@ const QuestionsManager: React.FC = () => {
       filtered = filtered.filter(
         (question) =>
           question.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          question.topicTitle
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          question.askedBy?.toLowerCase().includes(searchTerm.toLowerCase()),
+          question.topicTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          question.askedBy?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (filterStatus !== "all") {
       filtered = filtered.filter(
-        (question) => question.status === filterStatus,
-      );
-    }
-
-    if (filterPriority !== "all") {
-      filtered = filtered.filter(
-        (question) => question.priority === filterPriority,
+        (question) => question.status === filterStatus
       );
     }
 
     return filtered;
-  }, [questions, searchTerm, filterStatus, filterPriority]);
+  }, [questions, searchTerm, filterStatus]);
 
   const handleQuestionClick = (question: AdminQuestion) => {
     setSelectedQuestion(question);
@@ -126,163 +99,128 @@ const QuestionsManager: React.FC = () => {
     setSelectedQuestion(null);
   };
 
-  const updateQuestionStatus = async (
-    questionId: string,
-    newStatus: "pending" | "answered" | "closed",
-  ) => {
-    try {
-      setQuestions((prev) =>
-        prev.map((question) =>
-          question.id === questionId
-            ? { ...question, status: newStatus }
-            : question,
-        ),
-      );
-
-      toast({
-        title: "Success",
-        description: `Question marked as ${newStatus}`,
-      });
-
-      // Close sidebar and refresh
-      setSidebarOpen(false);
-      setSelectedQuestion(null);
-      await fetchQuestions();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update question status",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSubmitAnswer = async (content: string, isOfficial: boolean) => {
+  const handleSubmitAnswer = async (answerData: AnswerFormData) => {
     if (!selectedQuestion) return;
 
     try {
-      await apiService.addAnswer(selectedQuestion.id, content);
+      const response = await apiService.addAnswer(
+        selectedQuestion.id.toString(),
+        answerData.content
+      );
 
-      toast({
-        title: "Success",
-        description: "Answer submitted successfully",
-      });
-
-      await fetchQuestions();
-      setSidebarOpen(false);
-      setSelectedQuestion(null);
+      if (response.success) {
+        toast({
+          title: "Answer Published",
+          description: "Your biblical answer has been recorded successfully.",
+        });
+        await fetchQuestions();
+        handleCloseSidebar();
+      } else {
+        toast({
+          title: "Failed to Publish Answer",
+          description: response.error || "An error occurred while saving your answer.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error submitting answer:", error);
       toast({
         title: "Error",
-        description: "Failed to submit answer",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to publish answer. Please try again.",
         variant: "destructive",
       });
     }
   };
 
-  return (
-    <div className="h-full flex flex-col">
-      {/* Fixed Header Section */}
-      <div className="flex-shrnk-0 space-y-6 pb-6">
-        {/* Header */}
-        {/* <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h2 className="text-2xl  font-bold text-foreground">
-              Questions Management
-            </h2>
-            <p className="text-muted-foreground">
-              Review and answer community questions
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              className={`${GAME_BUTTON_SMALL.warning} text-xs px-3 py-1 cursor-default`}
-            >
-              {questions.filter((q) => q.status === "pending").length} Pending
-            </button>
-            <button
-              className={`${GAME_BUTTON_SMALL.success} text-xs px-3 py-1 cursor-default`}
-            >
-              {questions.filter((q) => q.status === "answered").length} Answered
-            </button>
-          </div>
-        </div> */}
+  const updateQuestionStatus = async (
+    questionId: string,
+    newStatus: "pending" | "answered" | "closed"
+  ) => {
+    setQuestions((prev) =>
+      prev.map((q) => (q.id.toString() === questionId ? { ...q, status: newStatus } : q))
+    );
+    if (selectedQuestion && selectedQuestion.id.toString() === questionId) {
+      setSelectedQuestion((prev) => (prev ? { ...prev, status: newStatus } : null));
+    }
+    toast({
+      title: "Status Updated",
+      description: `Question marked as ${newStatus}.`,
+    });
+  };
 
-        {/* Filters */}
-        <Card className="bg-background/20 backdrop-blur-sm border-none w-full">
-          <CardContent className="p-4">
-            <div className="flex flex-row md:flex-row gap-4">
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Select
-                  value={filterStatus}
-                  onValueChange={(value) =>
-                    setFilterStatus(value as typeof filterStatus)
-                  }
-                >
-                  <SelectTrigger className="w-full sm:w-40 bg-primary/15 focus:ring-2 focus:ring-primary/30 focus:border-primary">
-                    <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="answered">Answered</SelectItem>
-                  </SelectContent>
-                </Select>
+  return (
+    <div className="space-y-4 max-w-4xl pb-16">
+      {/* Section Header */}
+      <div>
+        <h2 className="text-xl md:text-2xl font-semibold text-[var(--theme-text-primary)] tracking-tight">
+          Questions Management
+        </h2>
+        <p className="text-xs md:text-sm text-[var(--theme-text-secondary)] mt-0.5">
+          Review community questions, provide answers, and manage question statuses
+        </p>
+      </div>
+
+      {/* Main Space Search & Filter Bar - Borderless */}
+      <div className="flex flex-col sm:flex-row items-center gap-2.5">
+        <div className="relative flex-1 w-full">
+          <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--theme-text-secondary)]/70 z-10" />
+          <Input
+            placeholder="Search questions by keyword, topic, or user..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 h-10 rounded-2xl border-0 bg-[var(--theme-surface)] text-sm placeholder:text-[var(--theme-text-secondary)]/60 focus:bg-[var(--theme-surface-subtle)] focus:ring-1 focus:ring-[var(--theme-primary)] transition-all shadow-none w-full text-[var(--theme-text-primary)]"
+          />
+        </div>
+
+        <Select
+          value={filterStatus}
+          onValueChange={(value) => setFilterStatus(value as typeof filterStatus)}
+        >
+          <SelectTrigger className="w-full sm:w-40 bg-[var(--theme-surface)] border-0 rounded-2xl text-xs font-medium text-[var(--theme-text-dark)] h-10 shadow-none">
+            <Filter className="h-3.5 w-3.5 mr-2 text-[var(--theme-text-secondary)]" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-[var(--theme-canvas)] border-0 rounded-xl shadow-lg">
+            <SelectItem value="all">All Questions</SelectItem>
+            <SelectItem value="pending">Pending Only</SelectItem>
+            <SelectItem value="answered">Answered Only</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Google Settings Style Grouped Container - Borderless, Canvas Integrated */}
+      <div className="rounded-2xl overflow-hidden divide-y divide-[var(--theme-border-subtle)]/60">
+        {loading ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex items-center justify-between px-4 py-2.5">
+              <div className="flex items-center gap-3 w-full">
+                <Skeleton className="h-9 w-9 rounded-xl flex-shrink-0" />
+                <div className="space-y-1.5 flex-1">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          ))
+        ) : filteredQuestions.length === 0 ? (
+          <div className="p-8 text-center text-[var(--theme-text-secondary)] text-sm">
+            No questions found matching your search.
+          </div>
+        ) : (
+          filteredQuestions.map((question) => (
+            <QuestionListItem
+              key={question.id}
+              question={question}
+              onClick={handleQuestionClick}
+            />
+          ))
+        )}
       </div>
 
-      {/* Scrollable Questions List */}
-      <div className="flex-1 overflow-y-auto no-scrollbar">
-        <div className="pb-20 md:pb-40 flex flex-col items-start justify-center gap-0.5 md:gap-1">
-          {loading
-            ? // Loading Skeletons
-              Array.from({ length: 5 }).map((_, index) => (
-                <div
-                  key={`skeleton-${index}`}
-                  className="px-2 md:px-4 py-2 md:py-3"
-                >
-                  <div className="flex items-start justify-between gap-3 p-3 bg-primary/5 rounded-xl border border-border/20">
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-start gap-2">
-                        <Skeleton className="h-4 w-4 rounded-full flex-shrink-0" />
-                        <div className="flex-1 space-y-2">
-                          <Skeleton className="h-4 w-4/5" />
-                          <div className="flex flex-wrap gap-2">
-                            <Skeleton className="h-5 w-16 rounded-full" />
-                            <Skeleton className="h-5 w-20 rounded-full" />
-                            <Skeleton className="h-5 w-14 rounded-full" />
-                          </div>
-                          <Skeleton className="h-3 w-32" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <div className="flex items-center gap-2">
-                        <Skeleton className="h-6 w-16 rounded-md" />
-                        <Skeleton className="h-6 w-14 rounded-md" />
-                      </div>
-                      <Skeleton className="h-8 w-8 rounded-md" />
-                    </div>
-                  </div>
-                </div>
-              ))
-            : filteredQuestions.map((question, index) => (
-                <QuestionListItem
-                  key={question.id}
-                  question={question}
-                  onClick={handleQuestionClick}
-                  showDivider={index < filteredQuestions.length - 1}
-                />
-              ))}
-        </div>
-      </div>
-
-      {/* Question Details Sidebar */}
+      {/* Question Details Sidebar Drawer */}
       {sidebarOpen && selectedQuestion && (
         <QuestionDetailsSidebar
           question={selectedQuestion}

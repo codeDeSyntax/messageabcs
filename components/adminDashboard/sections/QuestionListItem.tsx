@@ -1,9 +1,8 @@
 import React from "react";
-import { User, Calendar, CheckCircle, XCircle, Clock } from "lucide-react";
+import { User, Calendar, CheckCircle, Clock, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Question } from "@/services/api";
 
-// Backend Question model with admin-specific fields
 type AdminQuestion = Question & {
   status: "pending" | "answered" | "closed";
   priority: "low" | "medium" | "high";
@@ -13,110 +12,89 @@ type AdminQuestion = Question & {
 interface QuestionListItemProps {
   question: AdminQuestion;
   onClick: (question: AdminQuestion) => void;
-  showDivider: boolean;
+  showDivider?: boolean;
 }
 
 const QuestionListItem: React.FC<QuestionListItemProps> = ({
   question,
   onClick,
-  showDivider,
 }) => {
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "pending":
-        return <Clock className="h-5 w-5 text-yellow-500" />;
-      case "answered":
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case "closed":
-        return <XCircle className="h-5 w-5 text-red-500" />;
-      default:
-        return <Clock className="h-5 w-5 text-muted-foreground" />;
-    }
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
         return (
-          <Badge
-            variant="outline"
-            className="bg-yellow-50 text-yellow-700 border-yellow-200"
-          >
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--theme-badge-bg)] text-[var(--theme-badge-text)]">
             Pending
-          </Badge>
+          </span>
         );
       case "answered":
         return (
-          <Badge
-            variant="outline"
-            className="bg-green-50 text-green-700 border-green-200"
-          >
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300/50">
             Answered
-          </Badge>
-        );
-      case "closed":
-        return (
-          <Badge
-            variant="outline"
-            className="bg-red-50 text-red-700 border-red-200"
-          >
-            Closed
-          </Badge>
+          </span>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--theme-surface)] text-[var(--theme-text-secondary)]">
+            {status}
+          </span>
+        );
     }
   };
 
   return (
-    <div className="w-full">
-      <div
-        className="px-2 md:px-4 py-2 md:py-3 hover:bg-primary/10 transition-all duration-200 rounded-lg cursor-pointer border border-primary/10"
-        onClick={() => onClick(question)}
-      >
-        {/* Mobile Layout: Stack vertically */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-3">
-          <div className="flex-1 space-y-1.5 min-w-0">
-            {/* Question Title with Icon */}
-            <div className="flex items-start gap-1.5 md:gap-2">
-              <div className="flex-shrink-0 mt-0.5">
-                {getStatusIcon(question.status)}
-              </div>
-              <h3 className="text-sm md:text-sm font-semibold text-foreground break-words flex-1">
-                {question.question}
-              </h3>
-            </div>
+    <div
+      className="px-4 py-2.5 hover:bg-[var(--theme-surface)]/60 transition-all duration-150 cursor-pointer rounded-xl group flex items-center justify-between gap-3"
+      onClick={() => onClick(question)}
+    >
+      <div className="flex items-start gap-3 min-w-0 flex-1">
+        <div
+          className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-105 transition-transform ${
+            question.status === "answered"
+              ? "bg-emerald-100 text-emerald-800"
+              : "bg-[var(--theme-surface-subtle)] text-[var(--theme-accent)]"
+          }`}
+        >
+          {question.status === "answered" ? (
+            <CheckCircle className="h-4.5 w-4.5" />
+          ) : (
+            <Clock className="h-4.5 w-4.5" />
+          )}
+        </div>
 
-            {/* Metadata - Compact on mobile */}
-            <div className="flex flex-wrap items-center gap-1.5 md:gap-2 text-xs md:text-xs text-muted-foreground pl-5 md:pl-6">
-              <div className="flex items-center gap-1">
-                <User className="h-3 w-3 flex-shrink-0" />
-                <span className="truncate max-w-[100px] md:max-w-none">
-                  {question.askedBy}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3 flex-shrink-0" />
-                <span className="whitespace-nowrap">
-                  {new Date(question.dateAsked).toLocaleDateString()}
-                </span>
-              </div>
-              <Badge variant="outline" className="text-xs  whitespace-nowrap">
-                {question.topicTitle?.slice(0, 30)}
-                {question.topicTitle && question.topicTitle.length > 30
-                  ? "..."
-                  : ""}
-              </Badge>
-            </div>
-          </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-semibold text-[var(--theme-text-primary)] group-hover:text-[var(--theme-text-dark)] line-clamp-2">
+            {question.question}
+          </h3>
 
-          {/* Status Badge - Top right on mobile, right side on desktop */}
-          <div className="flex items-center gap-2 pl-7 md:pl-0">
-            {getStatusBadge(question.status)}
+          <div className="flex flex-wrap items-center gap-2 mt-0.5 text-xs text-[var(--theme-text-secondary)]">
+            <span className="flex items-center gap-1 font-medium">
+              <User className="h-3 w-3" />
+              {question.askedBy || "Anonymous"}
+            </span>
+            <span>•</span>
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {new Date(question.dateAsked).toLocaleDateString()}
+            </span>
+            {question.topicTitle && (
+              <>
+                <span>•</span>
+                <span className="text-[var(--theme-primary)] font-medium truncate max-w-[150px]">
+                  {question.topicTitle}
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
-      {showDivider && <div className="bg-primary/12 mt-1.5 mb-1.5 h-px"></div>}
+
+      <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+        {getStatusBadge(question.status)}
+        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[var(--theme-text-secondary)]/60 group-hover:text-[var(--theme-text-primary)] transition-all">
+          <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </div>
+      </div>
     </div>
   );
 };
